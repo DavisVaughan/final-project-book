@@ -128,6 +128,20 @@
 
 \usepackage{booktabs}
 
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}{Lemma}[chapter]
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{corollary}{Corollary}[chapter]
+\newtheorem{proposition}{Proposition}[chapter]
+\theoremstyle{definition}
+\newtheorem{example}{Example}[chapter]
+\theoremstyle{definition}
+\newtheorem{exercise}{Exercise}[chapter]
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{solution}{Solution}
 \begin{document}
 \maketitle
 
@@ -148,7 +162,13 @@ The instructions for the report can be found
 An R package has been created to accompany the report. It contains a
 number of helper functions for cleaning data, manipulating the time
 series, and creating the hedging strategies. The package is named,
-\texttt{ratekit} and can be found on Github \href{}{here}.
+\texttt{ratekit} and can be found on Github
+\href{https://github.com/DavisVaughan/ratekit}{here}.
+
+The book is intended to provide a summary of the methods used in the
+project. In each section of the book is a link to the script that was
+actually run to generate the results for the project. Those scripts are
+more in depth and cover every aspect of the project.
 
 This report was written with
 \href{https://bookdown.org/yihui/bookdown/}{bookdown}, a book authoring
@@ -380,6 +400,123 @@ This leaves us with 459 rows of data for our project, spanning
 
 \hypertarget{rates}{%
 \chapter{Fixed Income Features Calculations}\label{rates}}
+
+In this chapter, I will construct spot rates, zero coupon bond prices,
+excess returns, and yield factors. These features will be used later in
+hedging strategies and for general exploration of the data.
+
+The following packages are required in this chapter.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(readr)}
+\KeywordTok{library}\NormalTok{(ratekit)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{spot-rates}{%
+\section{Spot Rates}\label{spot-rates}}
+
+Script)
+\href{./R/04-spot-rates-and-prices.R}{04-spot-rates-and-prices.R}
+
+Spot rates series can be constructed from the 6 parameters in the rates
+dataset. The following formula is used to construct the spot rates. It
+is integrated form of the Svensson extension of the Nelson and Siegal
+approach to calculating instantaneous forward rates. Svensson added a
+second hump term to the model that Nelson and Siegal created.
+Integrating the instantaneous forward rates gives us the spot rates.
+
+\includegraphics[width=26.67in]{images/spot-rates}
+
+To reconstruct this, I used a programming concept known as a
+\emph{function factory}. This is a specialized function that returns a
+function. This extends naturally to this use case because the outer
+function can accept the time series of the 6 parameters, and the inner
+function that get's returned is parameterized by \texttt{n},
+corresponding to the n-year spot rate at time t. The
+\texttt{spot\_rate\_factory()} function lives in \texttt{ratekit}, and
+looks like this.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{spot_rate_factory}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function(beta_0, beta_1, beta_2, beta_3, tau_1, tau_2) {
+## 
+##   # Spot rate function based on Equation 22 of
+##   # Gurkaynak, Sack and Wright (2006)
+##   spot_rate_n <- function(n) {
+##     beta_0 +
+##     beta_1 *  (1 - exp( -n / tau_1)) / (n / tau_1) +
+##     beta_2 * ((1 - exp( -n / tau_1)) / (n / tau_1) - exp( -n / tau_1)) +
+##     beta_3 * ((1 - exp( -n / tau_2)) / (n / tau_2) - exp( -n / tau_2))
+##   }
+## 
+##   spot_rate_n
+## }
+## <environment: namespace:ratekit>
+\end{verbatim}
+
+As you can see, it accepts the 6 parameters, and returns a function
+parameterized by \texttt{n}. Because we want to calculate the spot rate
+for a number of different years, this parameterized function will be
+very useful. Below is an example usage of this concept.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# The monthly parameters from the Data chapter}
+\NormalTok{parameters_monthly <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/cleaned/parameters/parameters_monthly.rds"}\NormalTok{)}
+
+\CommentTok{# The generated function. The function signature is generate_spot_rates(n)}
+\NormalTok{generate_spot_rates <-}\StringTok{ }\KeywordTok{with}\NormalTok{(}
+  \DataTypeTok{data =}\NormalTok{ parameters_monthly, }
+  \DataTypeTok{expr =} \KeywordTok{spot_rate_factory}\NormalTok{(BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)}
+\NormalTok{)}
+
+\CommentTok{# Calculate the series of 1 year, 3 year, and 5 year spot rates}
+\NormalTok{parameters_monthly }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(date) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{spot_1_yr =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{1}\NormalTok{),}
+    \DataTypeTok{spot_3_yr =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{3}\NormalTok{),}
+    \DataTypeTok{spot_5_yr =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A time tibble: 459 x 4
+## # Index: date
+##    date       spot_1_yr spot_3_yr spot_5_yr
+##    <date>         <dbl>     <dbl>     <dbl>
+##  1 1980-01-31     11.8      10.9      10.6 
+##  2 1980-02-29     14.5      13.2      12.4 
+##  3 1980-03-31     15.1      13.1      12.1 
+##  4 1980-04-30     10.7      10.1      10.2 
+##  5 1980-05-30      8.71      9.10      9.41
+##  6 1980-06-30      8.53      9.10      9.35
+##  7 1980-07-31      9.08      9.74      9.95
+##  8 1980-08-29     11.1      11.3      11.2 
+##  9 1980-09-30     11.8      11.6      11.4 
+## 10 1980-10-31     13.0      12.3      12.2 
+## # ... with 449 more rows
+\end{verbatim}
+
+\hypertarget{zero-coupon-bond-prices}{%
+\section{Zero Coupon Bond Prices}\label{zero-coupon-bond-prices}}
+
+Script)
+\href{./R/04-spot-rates-and-prices.R}{04-spot-rates-and-prices.R}
+
+n-year zero coupon bond prices can be calculated easily from their
+corresponding spot rates. Below is the relationship between the two.
+
+\begin{center}\includegraphics[width=8.08in]{images/zero-prices} \end{center}
 
 \bibliography{book.bib,packages.bib}
 

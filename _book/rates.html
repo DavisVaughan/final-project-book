@@ -167,6 +167,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In this chapter, I will construct spot rates, zero coupon bond prices,
 excess returns, and yield factors. These features will be used later in
 hedging strategies and for general exploration of the data.</p>
+<p>The following packages are required in this chapter.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">library</span>(readr)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">library</span>(ratekit)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw">library</span>(dplyr)</a></code></pre></div>
 <div id="spot-rates" class="section level2">
 <h2><span class="header-section-number">3.1</span> Spot Rates</h2>
 <p>Script) <a href="./R/04-spot-rates-and-prices.R">04-spot-rates-and-prices.R</a></p>
@@ -183,7 +187,7 @@ to this use case because the outer function can accept the time series of the
 6 parameters, and the inner function that get’s returned is parameterized by
 <code>n</code>, corresponding to the n-year spot rate at time t. The <code>spot_rate_factory()</code>
 function lives in <code>ratekit</code>, and looks like this.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">spot_rate_factory</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">spot_rate_factory</a></code></pre></div>
 <pre><code>## function(beta_0, beta_1, beta_2, beta_3, tau_1, tau_2) {
 ## 
 ##   # Spot rate function based on Equation 22 of
@@ -197,29 +201,28 @@ function lives in <code>ratekit</code>, and looks like this.</p>
 ## 
 ##   spot_rate_n
 ## }
-## &lt;bytecode: 0x7fce7a7e7208&gt;
 ## &lt;environment: namespace:ratekit&gt;</code></pre>
 <p>As you can see, it accepts the 6 parameters, and returns a function parameterized
 by <code>n</code>. Because we want to calculate the spot rate for a number of different
 years, this parameterized function will be very useful. Below is an example
 usage of this concept.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># The monthly parameters from the Data chapter</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">parameters_monthly &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/cleaned/parameters/parameters_monthly.rds&quot;</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co"># The generated function. The function signature is generate_spot_rates(n)</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">generate_spot_rates &lt;-<span class="st"> </span><span class="kw">with</span>(</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">  <span class="dt">data =</span> parameters_monthly, </a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">  <span class="dt">expr =</span> <span class="kw">spot_rate_factory</span>(BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">)</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co"># Calculate the series of 1 year, 3 year, and 5 year spot rates</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">parameters_monthly <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="st">  </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb3-14" data-line-number="14">    <span class="dt">spot_1_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb3-15" data-line-number="15">    <span class="dt">spot_3_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">3</span>),</a>
-<a class="sourceLine" id="cb3-16" data-line-number="16">    <span class="dt">spot_5_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb3-17" data-line-number="17">  )</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># The monthly parameters from the Data chapter</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">parameters_monthly &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/cleaned/parameters/parameters_monthly.rds&quot;</span>)</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co"># The generated function. The function signature is generate_spot_rates(n)</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">generate_spot_rates &lt;-<span class="st"> </span><span class="kw">with</span>(</a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">  <span class="dt">data =</span> parameters_monthly, </a>
+<a class="sourceLine" id="cb12-7" data-line-number="7">  <span class="dt">expr =</span> <span class="kw">spot_rate_factory</span>(BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)</a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">)</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co"># Calculate the series of 1 year, 3 year, and 5 year spot rates</span></a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">parameters_monthly <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="st">  </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb12-14" data-line-number="14">    <span class="dt">spot_1_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">    <span class="dt">spot_3_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb12-16" data-line-number="16">    <span class="dt">spot_5_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">5</span>)</a>
+<a class="sourceLine" id="cb12-17" data-line-number="17">  )</a></code></pre></div>
 <pre><code>## # A time tibble: 459 x 4
 ## # Index: date
 ##    date       spot_1_yr spot_3_yr spot_5_yr
