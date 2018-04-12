@@ -19,7 +19,12 @@ The instructions for the report can be found [here](./instructions/Hedging_Proje
 An R package has been created to accompany the report. It contains a number of 
 helper functions for cleaning data, manipulating the time series, and creating
 the hedging strategies. The package is named, `ratekit` and can be found on
-Github [here]().
+Github [here](https://github.com/DavisVaughan/ratekit).
+
+The book is intended to provide a summary of the methods used in the project.
+In each section of the book is a link to the script that was actually run to 
+generate the results for the project. Those scripts are more in depth and cover
+every aspect of the project.
 
 This report was written with [bookdown](https://bookdown.org/yihui/bookdown/), a
 book authoring package for R.

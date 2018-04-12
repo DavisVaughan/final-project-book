@@ -10,6 +10,14 @@ In this chapter, I will construct spot rates, zero coupon bond prices,
 excess returns, and yield factors. These features will be used later in
 hedging strategies and for general exploration of the data.
 
+The following packages are required in this chapter.
+
+```{r, warning=FALSE, message=FALSE}
+library(readr)
+library(ratekit)
+library(dplyr)
+```
+
 ## Spot Rates
 
 Script) [04-spot-rates-and-prices.R](./R/04-spot-rates-and-prices.R)
@@ -41,7 +49,7 @@ by `n`. Because we want to calculate the spot rate for a number of different
 years, this parameterized function will be very useful. Below is an example
 usage of this concept.
 
-```{r}
+```{r, warning=FALSE, message=FALSE}
 # The monthly parameters from the Data chapter
 parameters_monthly <- read_rds("data/cleaned/parameters/parameters_monthly.rds")
 
