@@ -1,0 +1,32 @@
+--- 
+title: "Finn 6211 - Final Project"
+author: "Davis Vaughan"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies."
+---
+
+# Introduction {#titlepage}
+
+This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.
+
+The instructions for the report can be found [here](./instructions/Hedging_Project_S18.pdf).
+
+An R package has been created to accompany the report. It contains a number of 
+helper functions for cleaning data, manipulating the time series, and creating
+the hedging strategies. The package is named, `ratekit` and can be found on
+Github [here]().
+
+This report was written with [bookdown](https://bookdown.org/yihui/bookdown/), a
+book authoring package for R.
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```

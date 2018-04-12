@@ -1,0 +1,120 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+# Data {#data}
+
+## Getting the data {#retrieve}
+
+Script) [01-download.R](./R/01-download.R)
+
+The data is retrieved from the Federal Reserve website, under the discussion
+series: _The U.S. Treasury Yield Curve: 1961 to the Present_. The link for that
+site is [here](https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html).
+The specific data set that was downloaded was the XLS file included on that site.
+
+The data was immediately opened in Excel, and was resaved as an `xlsx` file.
+The format of the data is not a true `xls` file, instead it is some kind of `xml`
+file. This does not play nicely with R's packages for importing Excel data, so
+a resave was necessary and is done manually.
+
+`ratekit` provides the `download_rates_xls()` helper function for this.
+
+## Cleaning {#cleaning}
+
+Script) [02-cleaning.R](./R/02-cleaning.R)
+
+Data is brought in using the `readxl` package and the `ratekit` helper, `read_rates()`.
+This function reads the rectangle of rates data only, and sets any `-999.99` values
+to `NA`. These are often found through the dataset, and I assume they are meant
+to represent missing values. To visualize the `NA` values in the dataset, I use
+the `visdat` package.
+
+First, let's look at what is immediately brought in by `read_rates()`. We will
+need a few packages throughout the chapter, so let's load those now as well.
+
+```{r, message=FALSE, warning=FALSE}
+library(visdat)
+library(ratekit)
+library(dplyr)
+library(tibbletime)
+
+raw <- read_rates("data/raw/feds200628.xlsx")
+
+raw
+```
+
+Not a bad start, but I'm worried about missing values. Also, what are those
+column names?
+
+The column names in the data correspond to different types and lengths of rates used in the 
+paper. The key for understanding the column names is below:
+
+```{r meta, echo=FALSE}
+meta <- readRDS("data/cleaned/meta/meta.rds")
+knitr::kable(meta)
+```
+
+Using `vis_dat()`, we can take a look at our dataset all at once to determine
+which data points to exclude.
+
+```{r missing_vals, fig.width=10, fig.height=6, cache=TRUE}
+vis_dat(raw, warn_large_data = FALSE)
+```
+
+A clear pattern is seen in the missing values, with the number of missing values
+increasing as you go further back in time and look at longer rates (10 year VS 30 year). 
+This might be a bit difficult to see if you look at everything, but becomes clearer
+if you zoom in on just one set of series.
+
+```{r par_yield_missing, echo=FALSE, fig.width=10, fig.height=6, cache=TRUE}
+par_yld <- select(raw, date, contains("SVENPY"))
+vis_dat(par_yld)
+```
+
+The parameters are affected by this as well, but not as much, with only `TAU2` 
+being affected.
+
+```{r parameters_missing, echo=FALSE, fig.width=10, fig.height=6, cache=TRUE}
+params <- select(raw, date, contains("BETA"), contains("TAU"))
+vis_dat(params)
+```
+
+Since the parameters are all we care about for this project, I decided to throw
+out any row with an `NA` value for `TAU2`. This threw out every data
+point before 1980. We can ensure that we don't have any missing values now 
+with `vis_miss()`.
+
+```{r parameters_clean, fig.width=10, fig.height=6, cache=TRUE}
+# This is the cleaned parameter set, cleaned using 02-cleaning.R
+parameters <- readRDS("data/cleaned/parameters/parameters.rds")
+vis_miss(parameters)
+```
+
+## Monthly and Ascending {#monthly}
+
+Script) [03-to-monthly-and-ascending.R](./R/03-to-monthly-and-ascending.R)
+
+At this point, our dataset looks like this:
+
+```{r}
+parameters <- readRDS("data/cleaned/parameters/parameters.rds")
+parameters
+```
+
+We want monthly data, and we will need to put it in ascending order. We can
+convert to monthly with `as_period()` from `tibbletime`, and arrange it by
+ascending date with `arrange()` from `dplyr`.
+
+```{r}
+parameters_monthly <- parameters %>%
+  as_tbl_time(date) %>%
+  arrange(date) %>% 
+  as_period("monthly", side = "end")
+
+parameters_monthly
+```
+
+This leaves us with `r nrow(parameters_monthly)` rows of data for our project, 
+spanning `r min(parameters_monthly$date)` to `r max(parameters_monthly$date)`.
