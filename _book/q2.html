@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Finn 6211 - Final Project</title>
+  <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Finn 6211 - Final Project" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Finn 6211 - Final Project" />
+  
+  <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  
+
+<meta name="author" content="Davis Vaughan">
+
+
+<meta name="date" content="2018-04-17">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="q1.html">
+<link rel="next" href="references.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Finn 6216 - Final Project</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>2</b> Data</a><ul>
+<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Getting the data</a></li>
+<li class="chapter" data-level="2.2" data-path="data.html"><a href="data.html#cleaning"><i class="fa fa-check"></i><b>2.2</b> Cleaning</a></li>
+<li class="chapter" data-level="2.3" data-path="data.html"><a href="data.html#monthly"><i class="fa fa-check"></i><b>2.3</b> Monthly and Ascending</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
+<li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
+<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
+<li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
+<li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="q1.html"><a href="q1.html"><i class="fa fa-check"></i><b>4</b> Question 1</a><ul>
+<li class="chapter" data-level="4.1" data-path="q1.html"><a href="q1.html#summary-statistics"><i class="fa fa-check"></i><b>4.1</b> Summary Statistics</a></li>
+<li class="chapter" data-level="4.2" data-path="q1.html"><a href="q1.html#autocorrelations"><i class="fa fa-check"></i><b>4.2</b> Autocorrelations</a></li>
+<li class="chapter" data-level="4.3" data-path="q1.html"><a href="q1.html#correlations"><i class="fa fa-check"></i><b>4.3</b> Correlations</a></li>
+<li class="chapter" data-level="4.4" data-path="q1.html"><a href="q1.html#time-series-visualizations"><i class="fa fa-check"></i><b>4.4</b> Time Series Visualizations</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="q2.html"><a href="q2.html"><i class="fa fa-check"></i><b>5</b> Question 2</a><ul>
+<li class="chapter" data-level="5.1" data-path="q2.html"><a href="q2.html#regression"><i class="fa fa-check"></i><b>5.1</b> Regression</a></li>
+<li class="chapter" data-level="5.2" data-path="q2.html"><a href="q2.html#one-year-spot-rate"><i class="fa fa-check"></i><b>5.2</b> One Year Spot Rate</a></li>
+<li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
+<li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
+<li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
+<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Finn 6211 - Final Project</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="q2" class="section level1">
+<h1><span class="header-section-number">Chapter 5</span> Question 2</h1>
+<p><strong>Question:</strong></p>
+<p><em>Can the three yield curve factors explain the time-series variation in spot rates? Regress <span class="math inline">\(y_t(1)\)</span> on a constant and <span class="math inline">\(X_t\)</span> and comment on the regression statistics. Perform the same analysis for <span class="math inline">\(y_t(5)\)</span> and <span class="math inline">\(y_t(10)\)</span>.</em></p>
+<p>In this section, the following packages are used:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">library</span>(readr)</a>
+<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="kw">library</span>(dplyr)</a>
+<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="kw">library</span>(tidyr)</a>
+<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="kw">library</span>(ratekit)</a>
+<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="kw">library</span>(ggplot2)</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="kw">library</span>(broom)</a>
+<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="kw">library</span>(purrr)</a></code></pre></div>
+<p>We will need the data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates along
+with the yield curve factors. These have already been calculated in the scripts referenced in <a href="rates.html#spot-rates">3.1</a> and <a href="rates.html#yield-curve-factors">3.5</a> so we can just load them in.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">rates_and_prices    &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/computed/rates_and_prices.rds&quot;</span>)</a>
+<a class="sourceLine" id="cb28-2" data-line-number="2">yield_curve_factors &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/computed/yield_curve_factors.rds&quot;</span>)</a>
+<a class="sourceLine" id="cb28-3" data-line-number="3">n &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;10&quot;</span>)</a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb28-5" data-line-number="5">spot_rates_q2 &lt;-<span class="st"> </span>rates_and_prices <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-6" data-line-number="6"><span class="st">  </span><span class="co">#filter(maturity_nm %in% n) %&gt;%</span></a>
+<a class="sourceLine" id="cb28-7" data-line-number="7"><span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb28-8" data-line-number="8"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>zero_price)</a>
+<a class="sourceLine" id="cb28-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb28-10" data-line-number="10">spot_rates_q2</a></code></pre></div>
+<pre><code>## # A tibble: 6,426 x 4
+##   maturity maturity_nm date       spot_rate
+##      &lt;dbl&gt; &lt;chr&gt;       &lt;date&gt;         &lt;dbl&gt;
+## 1   0.0833 1/12        1980-01-31    0.126 
+## 2   0.0833 1/12        1980-02-29    0.136 
+## 3   0.0833 1/12        1980-03-31    0.161 
+## 4   0.0833 1/12        1980-04-30    0.116 
+## 5   0.0833 1/12        1980-05-30    0.0795
+## # ... with 6,421 more rows</code></pre>
+<div id="regression" class="section level2">
+<h2><span class="header-section-number">5.1</span> Regression</h2>
+<p>Using the concept of multiple models from the book, <a href="http://r4ds.had.co.nz/many-models.html"><code>R 4 Data Science</code></a>, implementing
+these regressions in R is incredibly straightforward. First, we shard the series into separate data frames.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">nested_spot &lt;-<span class="st"> </span>spot_rates_q2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">  </span><span class="co"># Add on the curve factors</span></a>
+<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">  </span><span class="kw">left_join</span>(yield_curve_factors, <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">  </span></a>
+<a class="sourceLine" id="cb30-5" data-line-number="5"><span class="st">  </span><span class="co"># Group by maturity and nest</span></a>
+<a class="sourceLine" id="cb30-6" data-line-number="6"><span class="st">  </span><span class="kw">group_by</span>(maturity) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-7" data-line-number="7"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>maturity_nm, <span class="op">-</span>date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="st">  </span><span class="kw">nest</span>()</a></code></pre></div>
+<p>Then we apply the linear model to each shard. The far right column, <code>model</code> contains
+the results of the linear models. I went ahead and calculated models for every
+maturity because I am going to use them in some exploration later.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">nested_models &lt;-<span class="st"> </span>nested_spot <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb31-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(data, <span class="op">~</span><span class="st"> </span><span class="kw">lm</span>(spot_rate <span class="op">~</span><span class="st"> </span>level <span class="op">+</span><span class="st"> </span>slope <span class="op">+</span><span class="st"> </span>curvature, <span class="dt">data =</span> .x)))</a>
+<a class="sourceLine" id="cb31-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb31-4" data-line-number="4">nested_models</a></code></pre></div>
+<pre><code>## # A tibble: 14 x 3
+##    maturity data               model   
+##       &lt;dbl&gt; &lt;list&gt;             &lt;list&gt;  
+##  1   0.0833 &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  2   0.25   &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  3   0.917  &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  4   1      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  5   2      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  6   2.92   &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  7   3      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  8   4.92   &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+##  9   5      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+## 10   6.92   &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+## 11   7      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+## 12   8      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+## 13   9.92   &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;
+## 14  10      &lt;tibble [459 × 4]&gt; &lt;S3: lm&gt;</code></pre>
+</div>
+<div id="one-year-spot-rate" class="section level2">
+<h2><span class="header-section-number">5.2</span> One Year Spot Rate</h2>
+<p>As you can see below, all estimates for the 1 year spot rate model are highly significant,
+and the Adjusted <span class="math inline">\(R^2\)</span> is nearing 100%, suggesting that the model can explain
+essentially all of the variation in the spot rate.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Term</th>
+<th align="right">Estimate</th>
+<th align="right">Standard Error</th>
+<th align="right">Statistic</th>
+<th align="right">P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.001014021</td>
+<td align="right">0.0001280165</td>
+<td align="right">7.921022</td>
+<td align="right">1.8e-14</td>
+</tr>
+<tr class="even">
+<td align="left">level</td>
+<td align="right">0.989941953</td>
+<td align="right">0.0015226534</td>
+<td align="right">650.142657</td>
+<td align="right">0.0e+00</td>
+</tr>
+<tr class="odd">
+<td align="left">slope</td>
+<td align="right">0.264774017</td>
+<td align="right">0.0034323179</td>
+<td align="right">77.141460</td>
+<td align="right">0.0e+00</td>
+</tr>
+<tr class="even">
+<td align="left">curvature</td>
+<td align="right">-0.428350107</td>
+<td align="right">0.0057618892</td>
+<td align="right">-74.341954</td>
+<td align="right">0.0e+00</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="right">R Squared</th>
+<th align="right">R Squared Adj</th>
+<th align="right">Residual Std Error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.9995224</td>
+<td align="right">0.9995193</td>
+<td align="right">0.0008223</td>
+</tr>
+</tbody>
+</table>
+<p>A chart of the realized VS predicted time series confirms how well the variation
+is explained. It is important to remember that this model is not predicting
+future rates, and is simply used to gather intuition about past rates.</p>
+<div class="figure"><span id="fig:unnamed-chunk-35"></span>
+<img src="final-project-book_files/figure-html/unnamed-chunk-35-1.png" alt="One year spot rate: In sample predictions VS realized" width="960" />
+<p class="caption">
+Figure 5.1: One year spot rate: In sample predictions VS realized
+</p>
+</div>
+</div>
+<div id="five-year-spot-rate" class="section level2">
+<h2><span class="header-section-number">5.3</span> Five Year Spot Rate</h2>
+<p>The model for the 5 year rate is similar to the 1 year rate in terms of explanatory power.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Term</th>
+<th align="right">Estimate</th>
+<th align="right">Standard Error</th>
+<th align="right">Statistic</th>
+<th align="right">P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-0.001326488</td>
+<td align="right">0.0001178948</td>
+<td align="right">-11.25146</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">level</td>
+<td align="right">1.010756975</td>
+<td align="right">0.0014022642</td>
+<td align="right">720.80351</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">slope</td>
+<td align="right">0.862622600</td>
+<td align="right">0.0031609403</td>
+<td align="right">272.90063</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">curvature</td>
+<td align="right">-0.237885069</td>
+<td align="right">0.0053063231</td>
+<td align="right">-44.83049</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="right">R Squared</th>
+<th align="right">R Squared Adj</th>
+<th align="right">Residual Std Error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.9995226</td>
+<td align="right">0.9995194</td>
+<td align="right">0.0007572</td>
+</tr>
+</tbody>
+</table>
+<p><br> </br></p>
+<div class="figure"><span id="fig:unnamed-chunk-38"></span>
+<img src="final-project-book_files/figure-html/unnamed-chunk-38-1.png" alt="Five year spot rate: In sample predictions VS realized" width="960" />
+<p class="caption">
+Figure 5.2: Five year spot rate: In sample predictions VS realized
+</p>
+</div>
+</div>
+<div id="ten-year-spot-rate" class="section level2">
+<h2><span class="header-section-number">5.4</span> Ten Year Spot Rate</h2>
+<p>And again, the 10 year model performs well too.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Term</th>
+<th align="right">Estimate</th>
+<th align="right">Standard Error</th>
+<th align="right">Statistic</th>
+<th align="right">P-Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">0.001285415</td>
+<td align="right">9.632731e-05</td>
+<td align="right">13.34424</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">level</td>
+<td align="right">0.990119282</td>
+<td align="right">1.145736e-03</td>
+<td align="right">864.17722</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">slope</td>
+<td align="right">1.041806029</td>
+<td align="right">2.582683e-03</td>
+<td align="right">403.38126</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">curvature</td>
+<td align="right">0.101703126</td>
+<td align="right">4.335593e-03</td>
+<td align="right">23.45772</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="right">R Squared</th>
+<th align="right">R Squared Adj</th>
+<th align="right">Residual Std Error</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.9996166</td>
+<td align="right">0.9996141</td>
+<td align="right">0.0006187</td>
+</tr>
+</tbody>
+</table>
+<p><br> </br></p>
+<div class="figure"><span id="fig:unnamed-chunk-41"></span>
+<img src="final-project-book_files/figure-html/unnamed-chunk-41-1.png" alt="Ten year spot rate: In sample predictions VS realized" width="960" />
+<p class="caption">
+Figure 5.3: Ten year spot rate: In sample predictions VS realized
+</p>
+</div>
+</div>
+<div id="decomposing-the-spot-curve" class="section level2">
+<h2><span class="header-section-number">5.5</span> Decomposing the Spot Curve</h2>
+<p>Although not specifically asked for, I thought it might be interesting to
+decompose and plot the spot curve at a few particular points in time. We will
+need a few functions to do so. The functions essentially allow us to abstract
+away all the work so that we can just check out the spot rate graph at any date.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1">extract_rates &lt;-<span class="st"> </span><span class="cf">function</span>(.rates_and_prices, .date) {</a>
+<a class="sourceLine" id="cb33-2" data-line-number="2">  .rates_and_prices <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-3" data-line-number="3"><span class="st">    </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-4" data-line-number="4"><span class="st">    </span><span class="kw">as_tbl_time</span>(date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-5" data-line-number="5"><span class="st">    </span><span class="kw">group_by</span>(maturity) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-6" data-line-number="6"><span class="st">    </span><span class="kw">filter_time</span>(<span class="op">~</span>.date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb33-7" data-line-number="7"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>zero_price)</a>
+<a class="sourceLine" id="cb33-8" data-line-number="8">}</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">tidy_models &lt;-<span class="st"> </span><span class="cf">function</span>(.nested_models, .date) {</a>
+<a class="sourceLine" id="cb34-2" data-line-number="2">  coefs &lt;-<span class="st"> </span>.nested_models <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">coef =</span> <span class="kw">map</span>(model, tidy)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="st">    </span><span class="kw">unnest</span>(coef) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(maturity, term, estimate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(term, estimate) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-7" data-line-number="7"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span><span class="st">`</span><span class="dt">(Intercept)</span><span class="st">`</span>)</a>
+<a class="sourceLine" id="cb34-8" data-line-number="8">  </a>
+<a class="sourceLine" id="cb34-9" data-line-number="9">  yield_fct &lt;-<span class="st"> </span>yield_curve_factors <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-10" data-line-number="10"><span class="st">    </span><span class="kw">as_tbl_time</span>(date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-11" data-line-number="11"><span class="st">    </span><span class="kw">filter_time</span>(<span class="op">~</span>.date)</a>
+<a class="sourceLine" id="cb34-12" data-line-number="12">  </a>
+<a class="sourceLine" id="cb34-13" data-line-number="13">  <span class="co"># Multiply the date&#39;s yield curve factors by the coefficients to get the</span></a>
+<a class="sourceLine" id="cb34-14" data-line-number="14">  <span class="co"># decomp of the term</span></a>
+<a class="sourceLine" id="cb34-15" data-line-number="15">  decomp &lt;-<span class="st"> </span>coefs <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb34-16" data-line-number="16"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">level =</span> level <span class="op">*</span><span class="st"> </span>yield_fct<span class="op">$</span>level,</a>
+<a class="sourceLine" id="cb34-17" data-line-number="17">           <span class="dt">slope =</span> slope <span class="op">*</span><span class="st"> </span>yield_fct<span class="op">$</span>slope,</a>
+<a class="sourceLine" id="cb34-18" data-line-number="18">           <span class="dt">curvature =</span> curvature <span class="op">*</span><span class="st"> </span>yield_fct<span class="op">$</span>curvature)</a>
+<a class="sourceLine" id="cb34-19" data-line-number="19">  </a>
+<a class="sourceLine" id="cb34-20" data-line-number="20">  decomp</a>
+<a class="sourceLine" id="cb34-21" data-line-number="21">}</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">tidy_decomposed_spot_rate &lt;-<span class="st"> </span><span class="cf">function</span>(.rates_and_prices, .nested_models, .date) {</a>
+<a class="sourceLine" id="cb35-2" data-line-number="2">  .rates_and_prices <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-3" data-line-number="3"><span class="st">    </span><span class="kw">extract_rates</span>(.date) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb35-4" data-line-number="4"><span class="st">    </span><span class="kw">left_join</span>(<span class="kw">tidy_models</span>(.nested_models, .date), <span class="st">&quot;maturity&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-5" data-line-number="5"><span class="st">    </span><span class="kw">gather</span>(<span class="st">&quot;line&quot;</span>, <span class="st">&quot;value&quot;</span>, <span class="op">-</span>(maturity<span class="op">:</span>date)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb35-6" data-line-number="6"><span class="st">    </span><span class="kw">select</span>(maturity, line, value)</a>
+<a class="sourceLine" id="cb35-7" data-line-number="7">}</a></code></pre></div>
+<p>What would these three functions work together to give? Well, for example, we can
+try looking at January of 2012. For that date, we get the spot curve values along
+with the level, slope and curvature components from each maturity’s model.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">rates_and_prices <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="st">  </span><span class="kw">tidy_decomposed_spot_rate</span>(nested_models, <span class="st">&quot;2012-01&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="st">  </span><span class="kw">spread</span>(line, value)</a></code></pre></div>
+<pre><code>## # A tibble: 14 x 5
+##    maturity curvature   level     slope spot_rate
+##       &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+##  1   0.0833  2.89e- 3 0.00225 -1.04e- 3   0.00254
+##  2   0.25    2.51e-18 0.00225  1.25e-18   0.00225
+##  3   0.917  -5.37e- 3 0.00222  3.00e- 3   0.00158
+##  4   1      -5.65e- 3 0.00222  3.30e- 3   0.00155
+##  5   2      -6.59e- 3 0.00225  6.23e- 3   0.00188
+##  6   2.92   -5.83e- 3 0.00226  8.12e- 3   0.00307
+##  7   3      -5.73e- 3 0.00226  8.26e- 3   0.00320
+##  8   4.92   -3.24e- 3 0.00227  1.07e- 2   0.00723
+##  9   5      -3.14e- 3 0.00227  1.07e- 2   0.00743
+## 10   6.92   -9.69e- 4 0.00226  1.20e- 2   0.0121 
+## 11   7      -8.88e- 4 0.00226  1.21e- 2   0.0123 
+## 12   8       1.24e-17 0.00225  1.25e- 2   0.0147 
+## 13   9.92    1.30e- 3 0.00223  1.30e- 2   0.0188 
+## 14  10       1.34e- 3 0.00223  1.30e- 2   0.0190</code></pre>
+<p>This extends naturally to charting the decomposed spot rate.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="co"># A charting function with custom themes</span></a>
+<a class="sourceLine" id="cb38-2" data-line-number="2">chart_decomposed_spot_rate &lt;-<span class="st"> </span><span class="cf">function</span>(.decomposed_spot) {</a>
+<a class="sourceLine" id="cb38-3" data-line-number="3">  .decomposed_spot <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb38-4" data-line-number="4"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">linetype =</span> <span class="kw">case_when</span>(</a>
+<a class="sourceLine" id="cb38-5" data-line-number="5">      line <span class="op">==</span><span class="st"> &quot;spot_rate&quot;</span> <span class="op">~</span><span class="st"> &quot;a&quot;</span>, <span class="co"># this works by alphabetical. first is solid, then dashed</span></a>
+<a class="sourceLine" id="cb38-6" data-line-number="6">      <span class="ot">TRUE</span> <span class="op">~</span><span class="st"> &quot;b&quot;</span></a>
+<a class="sourceLine" id="cb38-7" data-line-number="7">    )) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb38-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> maturity, <span class="dt">y =</span> value, <span class="dt">color =</span> line, <span class="dt">linetype =</span> linetype)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-9" data-line-number="9"><span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-10" data-line-number="10"><span class="st">    </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;loess&quot;</span>, <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-11" data-line-number="11"><span class="st">    </span><span class="kw">theme_minimal</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-12" data-line-number="12"><span class="st">    </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Dark2&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-13" data-line-number="13"><span class="st">    </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Maturity&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Component Value&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;Component&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb38-14" data-line-number="14"><span class="st">    </span><span class="kw">guides</span>(<span class="dt">linetype =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb38-15" data-line-number="15">}</a></code></pre></div>
+<div class="figure"><span id="fig:unnamed-chunk-47"></span>
+<img src="final-project-book_files/figure-html/unnamed-chunk-47-1.png" alt="Decomposed Spot Rate for January 2012" width="960" />
+<p class="caption">
+Figure 5.4: Decomposed Spot Rate for January 2012
+</p>
+</div>
+<p>The spot rate in January of 1981 was definitely an interesting time period! It’s
+essentially inverted, with lower maturity bonds having higher spot rates than
+longer maturity bonds.</p>
+<div class="figure"><span id="fig:unnamed-chunk-48"></span>
+<img src="final-project-book_files/figure-html/unnamed-chunk-48-1.png" alt="Decomposed Spot Rate for January 1981" width="960" />
+<p class="caption">
+Figure 5.5: Decomposed Spot Rate for January 1981
+</p>
+</div>
+</div>
+<div id="coefficient-stability" class="section level2">
+<h2><span class="header-section-number">5.6</span> Coefficient Stability</h2>
+<p>Another question worth asking is how stable the coefficients are throughout time.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1"><span class="kw">library</span>(rsample)</a></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;rsample&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     fill</code></pre>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb42-1" data-line-number="1">splits &lt;-<span class="st"> </span>spot_rates_q2 <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-2" data-line-number="2"><span class="st">  </span><span class="co"># Add on the curve factors</span></a>
+<a class="sourceLine" id="cb42-3" data-line-number="3"><span class="st">  </span><span class="kw">left_join</span>(yield_curve_factors, <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-4" data-line-number="4"><span class="st">  </span></a>
+<a class="sourceLine" id="cb42-5" data-line-number="5"><span class="st">  </span><span class="co"># Group by maturity and nest</span></a>
+<a class="sourceLine" id="cb42-6" data-line-number="6"><span class="st">  </span><span class="kw">group_by</span>(maturity) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-7" data-line-number="7"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>maturity_nm) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-8" data-line-number="8"><span class="st">  </span><span class="kw">nest</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-9" data-line-number="9"><span class="st">  </span><span class="kw">filter</span>(maturity <span class="op">==</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-10" data-line-number="10"><span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-11" data-line-number="11"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>maturity) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-12" data-line-number="12"><span class="st">  </span><span class="kw">rolling_origin</span>(<span class="dt">initial =</span> <span class="dv">100</span>, <span class="dt">assess =</span> <span class="dv">1</span>, <span class="dt">cumulative =</span> <span class="ot">FALSE</span>) </a>
+<a class="sourceLine" id="cb42-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb42-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb42-15" data-line-number="15">splits<span class="op">$</span>rolling_models &lt;-<span class="st"> </span>splits<span class="op">$</span>splits <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-16" data-line-number="16"><span class="st">  </span><span class="kw">map</span>(</a>
+<a class="sourceLine" id="cb42-17" data-line-number="17">    <span class="op">~</span><span class="st"> </span>{</a>
+<a class="sourceLine" id="cb42-18" data-line-number="18">      <span class="kw">lm</span>(spot_rate <span class="op">~</span><span class="st"> </span>level <span class="op">+</span><span class="st"> </span>slope <span class="op">+</span><span class="st"> </span>curvature, <span class="dt">data =</span> <span class="kw">analysis</span>(.x))</a>
+<a class="sourceLine" id="cb42-19" data-line-number="19">      </a>
+<a class="sourceLine" id="cb42-20" data-line-number="20">    }</a>
+<a class="sourceLine" id="cb42-21" data-line-number="21">  )</a>
+<a class="sourceLine" id="cb42-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb42-23" data-line-number="23">splits<span class="op">$</span>tidied &lt;-<span class="st"> </span><span class="kw">map</span>(splits<span class="op">$</span>rolling_models, tidy)</a>
+<a class="sourceLine" id="cb42-24" data-line-number="24"></a>
+<a class="sourceLine" id="cb42-25" data-line-number="25">splits<span class="op">$</span>enddate &lt;-<span class="st"> </span><span class="kw">map</span>(splits<span class="op">$</span>splits, <span class="op">~</span><span class="kw">assessment</span>(.x) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(date))</a>
+<a class="sourceLine" id="cb42-26" data-line-number="26">splits &lt;-<span class="st"> </span>splits <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unnest</span>(enddate)</a>
+<a class="sourceLine" id="cb42-27" data-line-number="27"></a>
+<a class="sourceLine" id="cb42-28" data-line-number="28"><span class="kw">unnest</span>(splits, tidied) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-29" data-line-number="29"><span class="st">  </span><span class="kw">filter</span>(term <span class="op">==</span><span class="st"> &quot;level&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb42-30" data-line-number="30"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> estimate)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb42-31" data-line-number="31"><span class="st">  </span><span class="kw">geom_line</span>()</a></code></pre></div>
+<p><img src="final-project-book_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+</div>
+<div id="do-we-need-all-three-factors" class="section level2">
+<h2><span class="header-section-number">5.7</span> Do We Need All Three Factors?</h2>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="q1.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["final-project-book.pdf", "final-project-book.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

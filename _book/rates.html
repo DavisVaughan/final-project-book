@@ -25,7 +25,7 @@
 <meta name="author" content="Davis Vaughan">
 
 
-<meta name="date" content="2018-04-12">
+<meta name="date" content="2018-04-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="data.html">
-<link rel="next" href="references.html">
+<link rel="next" href="q1.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -140,6 +140,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
 <li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
+<li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
+<li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="q1.html"><a href="q1.html"><i class="fa fa-check"></i><b>4</b> Question 1</a><ul>
+<li class="chapter" data-level="4.1" data-path="q1.html"><a href="q1.html#summary-statistics"><i class="fa fa-check"></i><b>4.1</b> Summary Statistics</a></li>
+<li class="chapter" data-level="4.2" data-path="q1.html"><a href="q1.html#autocorrelations"><i class="fa fa-check"></i><b>4.2</b> Autocorrelations</a></li>
+<li class="chapter" data-level="4.3" data-path="q1.html"><a href="q1.html#correlations"><i class="fa fa-check"></i><b>4.3</b> Correlations</a></li>
+<li class="chapter" data-level="4.4" data-path="q1.html"><a href="q1.html#time-series-visualizations"><i class="fa fa-check"></i><b>4.4</b> Time Series Visualizations</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="q2.html"><a href="q2.html"><i class="fa fa-check"></i><b>5</b> Question 2</a><ul>
+<li class="chapter" data-level="5.1" data-path="q2.html"><a href="q2.html#regression"><i class="fa fa-check"></i><b>5.1</b> Regression</a></li>
+<li class="chapter" data-level="5.2" data-path="q2.html"><a href="q2.html#one-year-spot-rate"><i class="fa fa-check"></i><b>5.2</b> One Year Spot Rate</a></li>
+<li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
+<li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
+<li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
+<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -193,11 +211,16 @@ function lives in <code>ratekit</code>, and looks like this.</p>
 ##   # Spot rate function based on Equation 22 of
 ##   # Gurkaynak, Sack and Wright (2006)
 ##   spot_rate_n &lt;- function(n) {
+## 
+##     spot_rate_percentage &lt;-
 ##     beta_0 +
 ##     beta_1 *  (1 - exp( -n / tau_1)) / (n / tau_1) +
 ##     beta_2 * ((1 - exp( -n / tau_1)) / (n / tau_1) - exp( -n / tau_1)) +
 ##     beta_3 * ((1 - exp( -n / tau_2)) / (n / tau_2) - exp( -n / tau_2))
+## 
+##     spot_rate_percentage / 100
 ##   }
+## 
 ## 
 ##   spot_rate_n
 ## }
@@ -215,29 +238,26 @@ usage of this concept.</p>
 <a class="sourceLine" id="cb12-7" data-line-number="7">  <span class="dt">expr =</span> <span class="kw">spot_rate_factory</span>(BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)</a>
 <a class="sourceLine" id="cb12-8" data-line-number="8">)</a>
 <a class="sourceLine" id="cb12-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co"># Calculate the series of 1 year, 3 year, and 5 year spot rates</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11">parameters_monthly <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co"># Calculate the series of 1/12 year, 11/12 year, and 1 year spot rates</span></a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">spot_rates &lt;-<span class="st"> </span>parameters_monthly <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-12" data-line-number="12"><span class="st">  </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb12-13" data-line-number="13"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb12-14" data-line-number="14">    <span class="dt">spot_1_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb12-15" data-line-number="15">    <span class="dt">spot_3_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">3</span>),</a>
-<a class="sourceLine" id="cb12-16" data-line-number="16">    <span class="dt">spot_5_yr =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb12-17" data-line-number="17">  )</a></code></pre></div>
+<a class="sourceLine" id="cb12-14" data-line-number="14">    <span class="dt">spot_1_month  =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb12-15" data-line-number="15">    <span class="dt">spot_11_month =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">11</span><span class="op">/</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb12-16" data-line-number="16">    <span class="dt">spot_12_month =</span> <span class="kw">generate_spot_rates</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb12-17" data-line-number="17">  )</a>
+<a class="sourceLine" id="cb12-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb12-19" data-line-number="19">spot_rates</a></code></pre></div>
 <pre><code>## # A time tibble: 459 x 4
 ## # Index: date
-##    date       spot_1_yr spot_3_yr spot_5_yr
-##    &lt;date&gt;         &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-##  1 1980-01-31     11.8      10.9      10.6 
-##  2 1980-02-29     14.5      13.2      12.4 
-##  3 1980-03-31     15.1      13.1      12.1 
-##  4 1980-04-30     10.7      10.1      10.2 
-##  5 1980-05-30      8.71      9.10      9.41
-##  6 1980-06-30      8.53      9.10      9.35
-##  7 1980-07-31      9.08      9.74      9.95
-##  8 1980-08-29     11.1      11.3      11.2 
-##  9 1980-09-30     11.8      11.6      11.4 
-## 10 1980-10-31     13.0      12.3      12.2 
-## # ... with 449 more rows</code></pre>
+##   date       spot_1_month spot_11_month spot_12_month
+##   &lt;date&gt;            &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;
+## 1 1980-01-31       0.126         0.118         0.118 
+## 2 1980-02-29       0.136         0.145         0.145 
+## 3 1980-03-31       0.161         0.152         0.151 
+## 4 1980-04-30       0.116         0.107         0.107 
+## 5 1980-05-30       0.0795        0.0867        0.0871
+## # ... with 454 more rows</code></pre>
 </div>
 <div id="zero-coupon-bond-prices" class="section level2">
 <h2><span class="header-section-number">3.2</span> Zero Coupon Bond Prices</h2>
@@ -245,6 +265,119 @@ usage of this concept.</p>
 <p>n-year zero coupon bond prices can be calculated easily from their corresponding
 spot rates. Below is the relationship between the two.</p>
 <p><img src="images/zero-prices.png" width="291" style="display: block; margin: auto;" /></p>
+<p>Like for the spot rates, a function factory was constructed that accepted the
+spot rate function, and returned a function that calculates a vector of bond
+prices parameterized by <code>n</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">zero_bond_price_factory</a></code></pre></div>
+<pre><code>## function(spot_rate_fn) {
+## 
+##   # Zero coupon bond for 1 dollar is just discounted spot rate
+##   zero_bond_price_fn &lt;- function(n) {
+##     exp( - spot_rate_fn(n) * n)
+##   }
+## 
+##   zero_bond_price_fn
+## }
+## &lt;environment: namespace:ratekit&gt;</code></pre>
+<p>Using this relationship, the zero coupon bond prices were computed as the following:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">generate_zero_prices &lt;-<span class="st"> </span><span class="kw">zero_bond_price_factory</span>(generate_spot_rates)</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">zero_prices &lt;-<span class="st"> </span>spot_rates <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="st">  </span><span class="kw">transmute</span>(</a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">    date, </a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">    <span class="dt">zero_prices_1_month =</span> <span class="kw">generate_zero_prices</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7">    <span class="dt">zero_prices_11_month =</span> <span class="kw">generate_zero_prices</span>(<span class="dv">11</span><span class="op">/</span><span class="dv">12</span>),</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">    <span class="dt">zero_prices_12_month =</span> <span class="kw">generate_zero_prices</span>(<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb16-9" data-line-number="9">  )</a>
+<a class="sourceLine" id="cb16-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">zero_prices</a></code></pre></div>
+<pre><code>## # A time tibble: 459 x 4
+## # Index: date
+##   date       zero_prices_1_month zero_prices_11_month zero_prices_12_month
+##   &lt;date&gt;                   &lt;dbl&gt;                &lt;dbl&gt;                &lt;dbl&gt;
+## 1 1980-01-31               0.990                0.897                0.889
+## 2 1980-02-29               0.989                0.875                0.865
+## 3 1980-03-31               0.987                0.870                0.860
+## 4 1980-04-30               0.990                0.906                0.899
+## 5 1980-05-30               0.993                0.924                0.917
+## # ... with 454 more rows</code></pre>
+</div>
+<div id="one-month-returns" class="section level2">
+<h2><span class="header-section-number">3.3</span> One Month Returns</h2>
+<p>Script) <a href="./R/05-returns.R">05-returns.R</a></p>
+<p>The time <span class="math inline">\(t+\Delta\)</span> return on a n-year bond is:</p>
+<p><img src="images/returns.png" width="438" style="display: block; margin: auto;" /></p>
+<p>Using the zero bond prices from before, it is easy to calculate returns. For
+example, 1 month returns for 1 year zero coupon bonds can be calculated as:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">returns &lt;-<span class="st"> </span>zero_prices <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb18-3" data-line-number="3">    <span class="dt">zero_prices_12_month_lag =</span> <span class="kw">lag</span>(zero_prices_<span class="dv">12</span>_month),</a>
+<a class="sourceLine" id="cb18-4" data-line-number="4">    <span class="dt">one_month_return =</span> zero_prices_<span class="dv">11</span>_month <span class="op">/</span><span class="st"> </span>zero_prices_<span class="dv">12</span>_month_lag <span class="op">-</span><span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb18-5" data-line-number="5">  ) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>zero_prices_<span class="dv">1</span>_month, <span class="op">-</span>zero_prices_<span class="dv">12</span>_month_lag)</a>
+<a class="sourceLine" id="cb18-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb18-8" data-line-number="8">returns</a></code></pre></div>
+<pre><code>## # A time tibble: 459 x 4
+## # Index: date
+##   date       zero_prices_11_month zero_prices_12_month one_month_return
+##   &lt;date&gt;                    &lt;dbl&gt;                &lt;dbl&gt;            &lt;dbl&gt;
+## 1 1980-01-31                0.897                0.889         NA      
+## 2 1980-02-29                0.875                0.865         -0.0153 
+## 3 1980-03-31                0.870                0.860          0.00574
+## 4 1980-04-30                0.906                0.899          0.0543 
+## 5 1980-05-30                0.924                0.917          0.0275 
+## # ... with 454 more rows</code></pre>
+</div>
+<div id="excess-returns" class="section level2">
+<h2><span class="header-section-number">3.4</span> Excess Returns</h2>
+<p>Script) <a href="./R/05-returns.R">05-returns.R</a></p>
+<p>Excess returns are calculated over the 1 month treasury, specifically:</p>
+<p><img src="images/excess-returns.png" width="536" style="display: block; margin: auto;" /></p>
+<p>For excess returns, the one month on the n-year bond must be calculated, and the
+return on the benchmark (1 month treasury) must be calculated. We already have
+1-year bond returns, but we need to calculate our benchmark returns. That can
+be done using the same formula as the 1-year returns, but where <span class="math inline">\(P_{t+\Delta}(n-\Delta) = 1\)</span>,
+the maturity value.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">returns_bench &lt;-<span class="st"> </span>zero_prices <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">return_benchmark =</span> <span class="dv">1</span> <span class="op">/</span><span class="st"> </span><span class="kw">lag</span>(zero_prices_<span class="dv">1</span>_month) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="st">  </span><span class="kw">select</span>(date, zero_prices_<span class="dv">1</span>_month, return_benchmark)</a>
+<a class="sourceLine" id="cb20-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb20-5" data-line-number="5">returns_bench</a></code></pre></div>
+<pre><code>## # A time tibble: 459 x 3
+## # Index: date
+##   date       zero_prices_1_month return_benchmark
+##   &lt;date&gt;                   &lt;dbl&gt;            &lt;dbl&gt;
+## 1 1980-01-31               0.990         NA      
+## 2 1980-02-29               0.989          0.0106 
+## 3 1980-03-31               0.987          0.0114 
+## 4 1980-04-30               0.990          0.0135 
+## 5 1980-05-30               0.993          0.00973
+## # ... with 454 more rows</code></pre>
+<p>With these two sets of returns in hand, we can calculate excess returns for the
+one year bond.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">excess_returns &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw">left_join</span>(returns_bench, <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">  </span><span class="kw">transmute</span>(date, <span class="dt">excess_returns =</span> one_month_return <span class="op">-</span><span class="st"> </span>return_benchmark)</a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb22-5" data-line-number="5">excess_returns</a></code></pre></div>
+<pre><code>## # A time tibble: 459 x 2
+## # Index: date
+##   date       excess_returns
+##   &lt;date&gt;              &lt;dbl&gt;
+## 1 1980-01-31       NA      
+## 2 1980-02-29       -0.0259 
+## 3 1980-03-31       -0.00568
+## 4 1980-04-30        0.0408 
+## 5 1980-05-30        0.0177 
+## # ... with 454 more rows</code></pre>
+</div>
+<div id="yield-curve-factors" class="section level2">
+<h2><span class="header-section-number">3.5</span> Yield Curve Factors</h2>
+<p>Script) <a href="./R/06-yield-curve-factors.R">06-yield-curve-factors.R</a></p>
+<p>Finally, the yield curve factors, level, slope, and curvature are calculated as:</p>
+<p><img src="images/level-slope-curvature.png" width="643" style="display: block; margin: auto;" /></p>
+<p>The implementation of these is straightforward from the set of spot rates,
+so no example is shown here.</p>
 
 </div>
 </div>
@@ -254,7 +387,7 @@ spot rates. Below is the relationship between the two.</p>
         </div>
       </div>
 <a href="data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="q1.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -295,6 +428,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

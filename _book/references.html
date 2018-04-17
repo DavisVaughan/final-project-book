@@ -25,14 +25,14 @@
 <meta name="author" content="Davis Vaughan">
 
 
-<meta name="date" content="2018-04-12">
+<meta name="date" content="2018-04-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   
   
-<link rel="prev" href="rates.html">
+<link rel="prev" href="q2.html">
 
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -140,6 +140,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
 <li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
+<li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
+<li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="q1.html"><a href="q1.html"><i class="fa fa-check"></i><b>4</b> Question 1</a><ul>
+<li class="chapter" data-level="4.1" data-path="q1.html"><a href="q1.html#summary-statistics"><i class="fa fa-check"></i><b>4.1</b> Summary Statistics</a></li>
+<li class="chapter" data-level="4.2" data-path="q1.html"><a href="q1.html#autocorrelations"><i class="fa fa-check"></i><b>4.2</b> Autocorrelations</a></li>
+<li class="chapter" data-level="4.3" data-path="q1.html"><a href="q1.html#correlations"><i class="fa fa-check"></i><b>4.3</b> Correlations</a></li>
+<li class="chapter" data-level="4.4" data-path="q1.html"><a href="q1.html#time-series-visualizations"><i class="fa fa-check"></i><b>4.4</b> Time Series Visualizations</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="q2.html"><a href="q2.html"><i class="fa fa-check"></i><b>5</b> Question 2</a><ul>
+<li class="chapter" data-level="5.1" data-path="q2.html"><a href="q2.html#regression"><i class="fa fa-check"></i><b>5.1</b> Regression</a></li>
+<li class="chapter" data-level="5.2" data-path="q2.html"><a href="q2.html#one-year-spot-rate"><i class="fa fa-check"></i><b>5.2</b> One Year Spot Rate</a></li>
+<li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
+<li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
+<li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
+<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -171,7 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           </div>
         </div>
       </div>
-<a href="rates.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="q2.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -213,6 +231,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

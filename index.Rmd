@@ -18,7 +18,7 @@ The instructions for the report can be found [here](./instructions/Hedging_Proje
 
 An R package has been created to accompany the report. It contains a number of 
 helper functions for cleaning data, manipulating the time series, and creating
-the hedging strategies. The package is named, `ratekit` and can be found on
+the hedging strategies. The package is named `ratekit` and can be found on
 Github [here](https://github.com/DavisVaughan/ratekit).
 
 The book is intended to provide a summary of the methods used in the project.

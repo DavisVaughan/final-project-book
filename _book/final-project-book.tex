@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018-04-12}
+  \date{2018-04-17}
 
 \usepackage{booktabs}
 
@@ -161,7 +161,7 @@ The instructions for the report can be found
 
 An R package has been created to accompany the report. It contains a
 number of helper functions for cleaning data, manipulating the time
-series, and creating the hedging strategies. The package is named,
+series, and creating the hedging strategies. The package is named
 \texttt{ratekit} and can be found on Github
 \href{https://github.com/DavisVaughan/ratekit}{here}.
 
@@ -229,19 +229,14 @@ chapter, so let's load those now as well.
 
 \begin{verbatim}
 ## # A tibble: 14,163 x 100
-##    date       SVENY01 SVENY02 SVENY03 SVENY04 SVENY05 SVENY06 SVENY07
-##    <date>       <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
-##  1 2018-03-29    2.10    2.27    2.40    2.49    2.56    2.62    2.66
-##  2 2018-03-28    2.10    2.28    2.41    2.51    2.59    2.65    2.69
-##  3 2018-03-27    2.09    2.26    2.40    2.50    2.58    2.64    2.69
-##  4 2018-03-26    2.10    2.30    2.45    2.57    2.65    2.71    2.76
-##  5 2018-03-23    2.09    2.27    2.42    2.53    2.61    2.68    2.73
-##  6 2018-03-22    2.09    2.29    2.44    2.55    2.63    2.70    2.74
-##  7 2018-03-21    2.11    2.32    2.47    2.59    2.68    2.75    2.81
-##  8 2018-03-20    2.12    2.34    2.49    2.61    2.69    2.75    2.80
-##  9 2018-03-19    2.11    2.31    2.45    2.57    2.65    2.72    2.77
-## 10 2018-03-16    2.10    2.30    2.45    2.56    2.65    2.71    2.76
-## # ... with 14,153 more rows, and 92 more variables: SVENY08 <dbl>,
+##   date       SVENY01 SVENY02 SVENY03 SVENY04 SVENY05 SVENY06 SVENY07
+##   <date>       <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>   <dbl>
+## 1 2018-03-29    2.10    2.27    2.40    2.49    2.56    2.62    2.66
+## 2 2018-03-28    2.10    2.28    2.41    2.51    2.59    2.65    2.69
+## 3 2018-03-27    2.09    2.26    2.40    2.50    2.58    2.64    2.69
+## 4 2018-03-26    2.10    2.30    2.45    2.57    2.65    2.71    2.76
+## 5 2018-03-23    2.09    2.27    2.42    2.53    2.61    2.68    2.73
+## # ... with 1.416e+04 more rows, and 92 more variables: SVENY08 <dbl>,
 ## #   SVENY09 <dbl>, SVENY10 <dbl>, SVENY11 <dbl>, SVENY12 <dbl>,
 ## #   SVENY13 <dbl>, SVENY14 <dbl>, SVENY15 <dbl>, SVENY16 <dbl>,
 ## #   SVENY17 <dbl>, SVENY18 <dbl>, SVENY19 <dbl>, SVENY20 <dbl>,
@@ -346,19 +341,14 @@ At this point, our dataset looks like this:
 
 \begin{verbatim}
 ## # A tibble: 9,543 x 7
-##    date       BETA0 BETA1      BETA2 BETA3  TAU1  TAU2
-##    <date>     <dbl> <dbl>      <dbl> <dbl> <dbl> <dbl>
-##  1 2018-03-29  4.13 -2.25  0.000228  -3.07  2.84  11.4
-##  2 2018-03-28  4.35 -2.48 -0.0000890 -3.53  2.99  12.2
-##  3 2018-03-27  4.44 -2.59  0.000314  -3.67  3.18  12.5
-##  4 2018-03-26  4.27 -2.44 -0.0000588 -3.12  2.73  11.8
-##  5 2018-03-23  4.53 -2.69  0.000245  -3.78  3.17  12.9
-##  6 2018-03-22  4.31 -2.48 -0.000162  -3.31  2.78  11.9
-##  7 2018-03-21  4.80 -2.95 -0.550     -4.41  2.55  13.1
-##  8 2018-03-20  4.04 -2.21 -0.0000964 -2.43  2.43  10.8
-##  9 2018-03-19  4.66 -2.80  0.00297   -4.10  3.12  13.0
-## 10 2018-03-16  4.61 -2.78  0.000246  -4.02  3.03  12.9
-## # ... with 9,533 more rows
+##   date       BETA0 BETA1      BETA2 BETA3  TAU1  TAU2
+##   <date>     <dbl> <dbl>      <dbl> <dbl> <dbl> <dbl>
+## 1 2018-03-29  4.13 -2.25  0.000228  -3.07  2.84  11.4
+## 2 2018-03-28  4.35 -2.48 -0.000089  -3.53  2.99  12.2
+## 3 2018-03-27  4.44 -2.59  0.000314  -3.67  3.18  12.5
+## 4 2018-03-26  4.27 -2.44 -0.0000588 -3.12  2.73  11.8
+## 5 2018-03-23  4.53 -2.69  0.000245  -3.78  3.17  12.9
+## # ... with 9,538 more rows
 \end{verbatim}
 
 We want monthly data, and we will need to put it in ascending order. We
@@ -380,19 +370,14 @@ can convert to monthly with \texttt{as\_period()} from
 \begin{verbatim}
 ## # A time tibble: 459 x 7
 ## # Index: date
-##    date       BETA0   BETA1 BETA2 BETA3  TAU1  TAU2
-##    <date>     <dbl>   <dbl> <dbl> <dbl> <dbl> <dbl>
-##  1 1980-01-31  11.8   0.979 -622.  617. 2.50  2.50 
-##  2 1980-02-29  11.8   1.53  -617.  621. 1.15  1.15 
-##  3 1980-03-31  13.2   2.95  -622.  617. 1.78  1.76 
-##  4 1980-04-30  11.1   0.607 -621.  617. 1.59  1.59 
-##  5 1980-05-30  11.3  -3.44  -620.  618. 1.36  1.35 
-##  6 1980-06-30  25.0 -17.0   -631.  607. 6.20  6.06 
-##  7 1980-07-31  16.6  -8.33  -624.  615. 3.81  3.76 
-##  8 1980-08-29  19.6  -8.94  -627.  612. 5.04  4.94 
-##  9 1980-09-30  13.0  -1.34  -621.  618. 2.21  2.20 
-## 10 1980-10-31  11.9   1.06  -618.  620. 0.379 0.379
-## # ... with 449 more rows
+##   date       BETA0  BETA1 BETA2 BETA3  TAU1  TAU2
+##   <date>     <dbl>  <dbl> <dbl> <dbl> <dbl> <dbl>
+## 1 1980-01-31  11.8  0.979 -622.  617.  2.50  2.50
+## 2 1980-02-29  11.8  1.53  -617.  621.  1.15  1.15
+## 3 1980-03-31  13.2  2.95  -622.  617.  1.78  1.76
+## 4 1980-04-30  11.1  0.607 -621.  617.  1.59  1.59
+## 5 1980-05-30  11.3 -3.44  -620.  618.  1.36  1.35
+## # ... with 454 more rows
 \end{verbatim}
 
 This leaves us with 459 rows of data for our project, spanning
@@ -451,11 +436,16 @@ looks like this.
 ##   # Spot rate function based on Equation 22 of
 ##   # Gurkaynak, Sack and Wright (2006)
 ##   spot_rate_n <- function(n) {
+## 
+##     spot_rate_percentage <-
 ##     beta_0 +
 ##     beta_1 *  (1 - exp( -n / tau_1)) / (n / tau_1) +
 ##     beta_2 * ((1 - exp( -n / tau_1)) / (n / tau_1) - exp( -n / tau_1)) +
 ##     beta_3 * ((1 - exp( -n / tau_2)) / (n / tau_2) - exp( -n / tau_2))
+## 
+##     spot_rate_percentage / 100
 ##   }
+## 
 ## 
 ##   spot_rate_n
 ## }
@@ -478,33 +468,30 @@ very useful. Below is an example usage of this concept.
   \DataTypeTok{expr =} \KeywordTok{spot_rate_factory}\NormalTok{(BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)}
 \NormalTok{)}
 
-\CommentTok{# Calculate the series of 1 year, 3 year, and 5 year spot rates}
-\NormalTok{parameters_monthly }\OperatorTok{%>%}
+\CommentTok{# Calculate the series of 1/12 year, 11/12 year, and 1 year spot rates}
+\NormalTok{spot_rates <-}\StringTok{ }\NormalTok{parameters_monthly }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{select}\NormalTok{(date) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{mutate}\NormalTok{(}
-    \DataTypeTok{spot_1_yr =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{1}\NormalTok{),}
-    \DataTypeTok{spot_3_yr =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{3}\NormalTok{),}
-    \DataTypeTok{spot_5_yr =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{5}\NormalTok{)}
+    \DataTypeTok{spot_1_month  =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\DecValTok{12}\NormalTok{),}
+    \DataTypeTok{spot_11_month =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{11}\OperatorTok{/}\DecValTok{12}\NormalTok{),}
+    \DataTypeTok{spot_12_month =} \KeywordTok{generate_spot_rates}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 \NormalTok{  )}
+
+\NormalTok{spot_rates}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## # A time tibble: 459 x 4
 ## # Index: date
-##    date       spot_1_yr spot_3_yr spot_5_yr
-##    <date>         <dbl>     <dbl>     <dbl>
-##  1 1980-01-31     11.8      10.9      10.6 
-##  2 1980-02-29     14.5      13.2      12.4 
-##  3 1980-03-31     15.1      13.1      12.1 
-##  4 1980-04-30     10.7      10.1      10.2 
-##  5 1980-05-30      8.71      9.10      9.41
-##  6 1980-06-30      8.53      9.10      9.35
-##  7 1980-07-31      9.08      9.74      9.95
-##  8 1980-08-29     11.1      11.3      11.2 
-##  9 1980-09-30     11.8      11.6      11.4 
-## 10 1980-10-31     13.0      12.3      12.2 
-## # ... with 449 more rows
+##   date       spot_1_month spot_11_month spot_12_month
+##   <date>            <dbl>         <dbl>         <dbl>
+## 1 1980-01-31       0.126         0.118         0.118 
+## 2 1980-02-29       0.136         0.145         0.145 
+## 3 1980-03-31       0.161         0.152         0.151 
+## 4 1980-04-30       0.116         0.107         0.107 
+## 5 1980-05-30       0.0795        0.0867        0.0871
+## # ... with 454 more rows
 \end{verbatim}
 
 \hypertarget{zero-coupon-bond-prices}{%
@@ -517,6 +504,728 @@ n-year zero coupon bond prices can be calculated easily from their
 corresponding spot rates. Below is the relationship between the two.
 
 \begin{center}\includegraphics[width=8.08in]{images/zero-prices} \end{center}
+
+Like for the spot rates, a function factory was constructed that
+accepted the spot rate function, and returned a function that calculates
+a vector of bond prices parameterized by \texttt{n}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{zero_bond_price_factory}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## function(spot_rate_fn) {
+## 
+##   # Zero coupon bond for 1 dollar is just discounted spot rate
+##   zero_bond_price_fn <- function(n) {
+##     exp( - spot_rate_fn(n) * n)
+##   }
+## 
+##   zero_bond_price_fn
+## }
+## <environment: namespace:ratekit>
+\end{verbatim}
+
+Using this relationship, the zero coupon bond prices were computed as
+the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{generate_zero_prices <-}\StringTok{ }\KeywordTok{zero_bond_price_factory}\NormalTok{(generate_spot_rates)}
+
+\NormalTok{zero_prices <-}\StringTok{ }\NormalTok{spot_rates }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{transmute}\NormalTok{(}
+\NormalTok{    date, }
+    \DataTypeTok{zero_prices_1_month =} \KeywordTok{generate_zero_prices}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\DecValTok{12}\NormalTok{),}
+    \DataTypeTok{zero_prices_11_month =} \KeywordTok{generate_zero_prices}\NormalTok{(}\DecValTok{11}\OperatorTok{/}\DecValTok{12}\NormalTok{),}
+    \DataTypeTok{zero_prices_12_month =} \KeywordTok{generate_zero_prices}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{  )}
+
+\NormalTok{zero_prices}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A time tibble: 459 x 4
+## # Index: date
+##   date       zero_prices_1_month zero_prices_11_month zero_prices_12_month
+##   <date>                   <dbl>                <dbl>                <dbl>
+## 1 1980-01-31               0.990                0.897                0.889
+## 2 1980-02-29               0.989                0.875                0.865
+## 3 1980-03-31               0.987                0.870                0.860
+## 4 1980-04-30               0.990                0.906                0.899
+## 5 1980-05-30               0.993                0.924                0.917
+## # ... with 454 more rows
+\end{verbatim}
+
+\hypertarget{one-month-returns}{%
+\section{One Month Returns}\label{one-month-returns}}
+
+Script) \href{./R/05-returns.R}{05-returns.R}
+
+The time \(t+\Delta\) return on a n-year bond is:
+
+\begin{center}\includegraphics[width=12.17in]{images/returns} \end{center}
+
+Using the zero bond prices from before, it is easy to calculate returns.
+For example, 1 month returns for 1 year zero coupon bonds can be
+calculated as:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns <-}\StringTok{ }\NormalTok{zero_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{zero_prices_12_month_lag =} \KeywordTok{lag}\NormalTok{(zero_prices_}\DecValTok{12}\NormalTok{_month),}
+    \DataTypeTok{one_month_return =}\NormalTok{ zero_prices_}\DecValTok{11}\NormalTok{_month }\OperatorTok{/}\StringTok{ }\NormalTok{zero_prices_}\DecValTok{12}\NormalTok{_month_lag }\OperatorTok{-}\StringTok{ }\DecValTok{1}
+\NormalTok{  ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_prices_}\DecValTok{1}\NormalTok{_month, }\OperatorTok{-}\NormalTok{zero_prices_}\DecValTok{12}\NormalTok{_month_lag)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A time tibble: 459 x 4
+## # Index: date
+##   date       zero_prices_11_month zero_prices_12_month one_month_return
+##   <date>                    <dbl>                <dbl>            <dbl>
+## 1 1980-01-31                0.897                0.889         NA      
+## 2 1980-02-29                0.875                0.865         -0.0153 
+## 3 1980-03-31                0.870                0.860          0.00574
+## 4 1980-04-30                0.906                0.899          0.0543 
+## 5 1980-05-30                0.924                0.917          0.0275 
+## # ... with 454 more rows
+\end{verbatim}
+
+\hypertarget{excess-returns}{%
+\section{Excess Returns}\label{excess-returns}}
+
+Script) \href{./R/05-returns.R}{05-returns.R}
+
+Excess returns are calculated over the 1 month treasury, specifically:
+
+\begin{center}\includegraphics[width=14.89in]{images/excess-returns} \end{center}
+
+For excess returns, the one month on the n-year bond must be calculated,
+and the return on the benchmark (1 month treasury) must be calculated.
+We already have 1-year bond returns, but we need to calculate our
+benchmark returns. That can be done using the same formula as the 1-year
+returns, but where \(P_{t+\Delta}(n-\Delta) = 1\), the maturity value.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns_bench <-}\StringTok{ }\NormalTok{zero_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{return_benchmark =} \DecValTok{1} \OperatorTok{/}\StringTok{ }\KeywordTok{lag}\NormalTok{(zero_prices_}\DecValTok{1}\NormalTok{_month) }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(date, zero_prices_}\DecValTok{1}\NormalTok{_month, return_benchmark)}
+
+\NormalTok{returns_bench}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A time tibble: 459 x 3
+## # Index: date
+##   date       zero_prices_1_month return_benchmark
+##   <date>                   <dbl>            <dbl>
+## 1 1980-01-31               0.990         NA      
+## 2 1980-02-29               0.989          0.0106 
+## 3 1980-03-31               0.987          0.0114 
+## 4 1980-04-30               0.990          0.0135 
+## 5 1980-05-30               0.993          0.00973
+## # ... with 454 more rows
+\end{verbatim}
+
+With these two sets of returns in hand, we can calculate excess returns
+for the one year bond.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{excess_returns <-}\StringTok{ }\NormalTok{returns }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(returns_bench, }\StringTok{"date"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{transmute}\NormalTok{(date, }\DataTypeTok{excess_returns =}\NormalTok{ one_month_return }\OperatorTok{-}\StringTok{ }\NormalTok{return_benchmark)}
+
+\NormalTok{excess_returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A time tibble: 459 x 2
+## # Index: date
+##   date       excess_returns
+##   <date>              <dbl>
+## 1 1980-01-31       NA      
+## 2 1980-02-29       -0.0259 
+## 3 1980-03-31       -0.00568
+## 4 1980-04-30        0.0408 
+## 5 1980-05-30        0.0177 
+## # ... with 454 more rows
+\end{verbatim}
+
+\hypertarget{yield-curve-factors}{%
+\section{Yield Curve Factors}\label{yield-curve-factors}}
+
+Script) \href{./R/06-yield-curve-factors.R}{06-yield-curve-factors.R}
+
+Finally, the yield curve factors, level, slope, and curvature are
+calculated as:
+
+\begin{center}\includegraphics[width=17.86in]{images/level-slope-curvature} \end{center}
+
+The implementation of these is straightforward from the set of spot
+rates, so no example is shown here.
+
+\hypertarget{q1}{%
+\chapter{Question 1}\label{q1}}
+
+\textbf{Question:}
+
+\emph{What are the time-series properties of the spot rates \(y_t(1)\),
+\(y_t(5)\), and \(y_t(10)\)? Report their summary statistics, including
+mean, standard deviation, skewness, kurtosis, and the first four
+autocorrelation coefficients, and the correlation matrix of the spot
+rates. Comment on your results. Also plot them and comment on the time
+series patterns.}
+
+In this section, the following packages are used:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(readr)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(tidyr)}
+\KeywordTok{library}\NormalTok{(ratekit)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(broom)}
+\KeywordTok{library}\NormalTok{(purrr)}
+\end{Highlighting}
+\end{Shaded}
+
+We will need the data for the \(y_t(1)\), \(y_t(5)\), and \(y_t(10)\)
+spot rates. These have already been calculated in the script referenced
+in \ref{spot-rates}, so we can just load them in.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rates_and_prices <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/rates_and_prices.rds"}\NormalTok{)}
+\NormalTok{n <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"5"}\NormalTok{, }\StringTok{"10"}\NormalTok{)}
+
+\NormalTok{spot_rates_q1 <-}\StringTok{ }\NormalTok{rates_and_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(maturity_nm }\OperatorTok{%in%}\StringTok{ }\NormalTok{n) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_price)}
+
+\NormalTok{spot_rates_q1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1,377 x 4
+##   maturity maturity_nm date       spot_rate
+##      <dbl> <chr>       <date>         <dbl>
+## 1        1 1           1980-01-31    0.118 
+## 2        1 1           1980-02-29    0.145 
+## 3        1 1           1980-03-31    0.151 
+## 4        1 1           1980-04-30    0.107 
+## 5        1 1           1980-05-30    0.0871
+## # ... with 1,372 more rows
+\end{verbatim}
+
+\hypertarget{summary-statistics}{%
+\section{Summary Statistics}\label{summary-statistics}}
+
+Reported below are summary statistics on the three spot rate series.
+
+\begin{tabular}{rrrrr}
+\toprule
+Maturity & Mean & Standard Deviation & Kurtosis & Skewness\\
+\midrule
+1 & 0.0480538 & 0.0375029 & 2.913858 & 0.6505396\\
+5 & 0.0566592 & 0.0345430 & 2.567191 & 0.5659543\\
+10 & 0.0627654 & 0.0314939 & 2.586681 & 0.5793584\\
+\bottomrule
+\end{tabular}
+
+Unsurprisingly, the average spot rate increases with the maturity, but
+interestingly, the shorter maturity spot rates have higher volatility.
+The kurtosis of all three are less than that of a normal distribution,
+but the 1 year maturity is very close. All three are right-skewed, with
+longer right tails, which makes sense considering extremely high
+interest rate periods do happen, but are rare.
+
+\hypertarget{autocorrelations}{%
+\section{Autocorrelations}\label{autocorrelations}}
+
+The first four autocorrelation correlation coefficients of the 3 series
+are reported below, along with a plot of the ACF for the series. Each of
+the series are highly autocorrelated.
+
+\begin{tabular}{r|r|r|r|r}
+\hline
+Maturity & Lag 1 & Lag 2 & Lag 3 & Lag 4\\
+\hline
+1 & 0.9878979 & 0.9697433 & 0.9527499 & 0.9411647\\
+\hline
+5 & 0.9911143 & 0.9791933 & 0.9686252 & 0.9599084\\
+\hline
+10 & 0.9906205 & 0.9793246 & 0.9691974 & 0.9606667\\
+\hline
+\end{tabular}
+
+By looking at the entire ACF, we can see that the amount of
+autocorrelation increases in maturity. At farther out lags, 1 is less
+autocorrelated than 5 and 5 less than 10.
+
+\begin{figure}
+
+{\centering \includegraphics{final-project-book_files/figure-latex/unnamed-chunk-25-1} 
+
+}
+
+\caption{ACF for the 1, 5, and 10 year spot rates}\label{fig:unnamed-chunk-25}
+\end{figure}
+
+\hypertarget{correlations}{%
+\section{Correlations}\label{correlations}}
+
+Moving on to correlations, it is clear that the the series are
+\emph{highly} correlated. This should not be surprising whatsoever.
+Intuitively, the 1 year is more correlated with the 5 year than with the
+10 year.
+
+\begin{tabular}{l|r|r|r}
+\hline
+  & 1 & 5 & 10\\
+\hline
+1 & 1.0000000 & 0.9783620 & 0.9539364\\
+\hline
+5 & 0.9783620 & 1.0000000 & 0.9932312\\
+\hline
+10 & 0.9539364 & 0.9932312 & 1.0000000\\
+\hline
+\end{tabular}
+
+\hypertarget{time-series-visualizations}{%
+\section{Time Series Visualizations}\label{time-series-visualizations}}
+
+A look at the time series of the three series confirms the highly
+autocorrelated and correlated nature of the three series. 1 year spot
+rates are almost always below the longer maturity rates, as one would
+expect. Since 2010, 1 year spot rates have been incredibly low, but have
+started to pick back up in the last few years.
+
+\begin{figure}
+
+{\centering \includegraphics{final-project-book_files/figure-latex/unnamed-chunk-27-1} 
+
+}
+
+\caption{A look at the 1, 5, and 10 year spot rates over time}\label{fig:unnamed-chunk-27}
+\end{figure}
+
+\hypertarget{q2}{%
+\chapter{Question 2}\label{q2}}
+
+\textbf{Question:}
+
+\emph{Can the three yield curve factors explain the time-series
+variation in spot rates? Regress \(y_t(1)\) on a constant and \(X_t\)
+and comment on the regression statistics. Perform the same analysis for
+\(y_t(5)\) and \(y_t(10)\).}
+
+In this section, the following packages are used:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(readr)}
+\KeywordTok{library}\NormalTok{(dplyr)}
+\KeywordTok{library}\NormalTok{(tidyr)}
+\KeywordTok{library}\NormalTok{(ratekit)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(broom)}
+\KeywordTok{library}\NormalTok{(purrr)}
+\end{Highlighting}
+\end{Shaded}
+
+We will need the data for the \(y_t(1)\), \(y_t(5)\), and \(y_t(10)\)
+spot rates along with the yield curve factors. These have already been
+calculated in the scripts referenced in \ref{spot-rates} and
+\ref{yield-curve-factors} so we can just load them in.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rates_and_prices    <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/rates_and_prices.rds"}\NormalTok{)}
+\NormalTok{yield_curve_factors <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/yield_curve_factors.rds"}\NormalTok{)}
+\NormalTok{n <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"5"}\NormalTok{, }\StringTok{"10"}\NormalTok{)}
+
+\NormalTok{spot_rates_q2 <-}\StringTok{ }\NormalTok{rates_and_prices }\OperatorTok{%>%}
+\StringTok{  }\CommentTok{#filter(maturity_nm %in% n) %>%}
+\StringTok{  }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_price)}
+
+\NormalTok{spot_rates_q2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6,426 x 4
+##   maturity maturity_nm date       spot_rate
+##      <dbl> <chr>       <date>         <dbl>
+## 1   0.0833 1/12        1980-01-31    0.126 
+## 2   0.0833 1/12        1980-02-29    0.136 
+## 3   0.0833 1/12        1980-03-31    0.161 
+## 4   0.0833 1/12        1980-04-30    0.116 
+## 5   0.0833 1/12        1980-05-30    0.0795
+## # ... with 6,421 more rows
+\end{verbatim}
+
+\hypertarget{regression}{%
+\section{Regression}\label{regression}}
+
+Using the concept of multiple models from the book,
+\href{http://r4ds.had.co.nz/many-models.html}{\texttt{R\ 4\ Data\ Science}},
+implementing these regressions in R is incredibly straightforward.
+First, we shard the series into separate data frames.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nested_spot <-}\StringTok{ }\NormalTok{spot_rates_q2 }\OperatorTok{%>%}
+\StringTok{  }\CommentTok{# Add on the curve factors}
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(yield_curve_factors, }\DataTypeTok{by =} \StringTok{"date"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }
+\StringTok{  }\CommentTok{# Group by maturity and nest}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(maturity) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity_nm, }\OperatorTok{-}\NormalTok{date) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{nest}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+Then we apply the linear model to each shard. The far right column,
+\texttt{model} contains the results of the linear models. I went ahead
+and calculated models for every maturity because I am going to use them
+in some exploration later.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{nested_models <-}\StringTok{ }\NormalTok{nested_spot }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{model =} \KeywordTok{map}\NormalTok{(data, }\OperatorTok{~}\StringTok{ }\KeywordTok{lm}\NormalTok{(spot_rate }\OperatorTok{~}\StringTok{ }\NormalTok{level }\OperatorTok{+}\StringTok{ }\NormalTok{slope }\OperatorTok{+}\StringTok{ }\NormalTok{curvature, }\DataTypeTok{data =}\NormalTok{ .x)))}
+
+\NormalTok{nested_models}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 14 x 3
+##    maturity data               model   
+##       <dbl> <list>             <list>  
+##  1   0.0833 <tibble [459 x 4]> <S3: lm>
+##  2   0.25   <tibble [459 x 4]> <S3: lm>
+##  3   0.917  <tibble [459 x 4]> <S3: lm>
+##  4   1      <tibble [459 x 4]> <S3: lm>
+##  5   2      <tibble [459 x 4]> <S3: lm>
+##  6   2.92   <tibble [459 x 4]> <S3: lm>
+##  7   3      <tibble [459 x 4]> <S3: lm>
+##  8   4.92   <tibble [459 x 4]> <S3: lm>
+##  9   5      <tibble [459 x 4]> <S3: lm>
+## 10   6.92   <tibble [459 x 4]> <S3: lm>
+## 11   7      <tibble [459 x 4]> <S3: lm>
+## 12   8      <tibble [459 x 4]> <S3: lm>
+## 13   9.92   <tibble [459 x 4]> <S3: lm>
+## 14  10      <tibble [459 x 4]> <S3: lm>
+\end{verbatim}
+
+\hypertarget{one-year-spot-rate}{%
+\section{One Year Spot Rate}\label{one-year-spot-rate}}
+
+As you can see below, all estimates for the 1 year spot rate model are
+highly significant, and the Adjusted \(R^2\) is nearing 100\%,
+suggesting that the model can explain essentially all of the variation
+in the spot rate.
+
+\begin{tabular}{l|r|r|r|r}
+\hline
+Term & Estimate & Standard Error & Statistic & P-Value\\
+\hline
+(Intercept) & 0.001014021 & 0.0001280165 & 7.921022 & 1.8e-14\\
+\hline
+level & 0.989941953 & 0.0015226534 & 650.142657 & 0.0e+00\\
+\hline
+slope & 0.264774017 & 0.0034323179 & 77.141460 & 0.0e+00\\
+\hline
+curvature & -0.428350107 & 0.0057618892 & -74.341954 & 0.0e+00\\
+\hline
+\end{tabular}
+
+\begin{tabular}{r|r|r}
+\hline
+R Squared & R Squared Adj & Residual Std Error\\
+\hline
+0.9995224 & 0.9995193 & 0.0008223\\
+\hline
+\end{tabular}
+
+A chart of the realized VS predicted time series confirms how well the
+variation is explained. It is important to remember that this model is
+not predicting future rates, and is simply used to gather intuition
+about past rates.
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-35-1.pdf}
+\caption{\label{fig:unnamed-chunk-35}One year spot rate: In sample
+predictions VS realized}
+\end{figure}
+
+\hypertarget{five-year-spot-rate}{%
+\section{Five Year Spot Rate}\label{five-year-spot-rate}}
+
+The model for the 5 year rate is similar to the 1 year rate in terms of
+explanatory power.
+
+\begin{tabular}{l|r|r|r|r}
+\hline
+Term & Estimate & Standard Error & Statistic & P-Value\\
+\hline
+(Intercept) & -0.001326488 & 0.0001178948 & -11.25146 & 0\\
+\hline
+level & 1.010756975 & 0.0014022642 & 720.80351 & 0\\
+\hline
+slope & 0.862622600 & 0.0031609403 & 272.90063 & 0\\
+\hline
+curvature & -0.237885069 & 0.0053063231 & -44.83049 & 0\\
+\hline
+\end{tabular}
+
+\begin{tabular}{r|r|r}
+\hline
+R Squared & R Squared Adj & Residual Std Error\\
+\hline
+0.9995226 & 0.9995194 & 0.0007572\\
+\hline
+\end{tabular}
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-38-1.pdf}
+\caption{\label{fig:unnamed-chunk-38}Five year spot rate: In sample
+predictions VS realized}
+\end{figure}
+
+\hypertarget{ten-year-spot-rate}{%
+\section{Ten Year Spot Rate}\label{ten-year-spot-rate}}
+
+And again, the 10 year model performs well too.
+
+\begin{tabular}{l|r|r|r|r}
+\hline
+Term & Estimate & Standard Error & Statistic & P-Value\\
+\hline
+(Intercept) & 0.001285415 & 9.632731e-05 & 13.34424 & 0\\
+\hline
+level & 0.990119282 & 1.145736e-03 & 864.17722 & 0\\
+\hline
+slope & 1.041806029 & 2.582683e-03 & 403.38126 & 0\\
+\hline
+curvature & 0.101703126 & 4.335593e-03 & 23.45772 & 0\\
+\hline
+\end{tabular}
+
+\begin{tabular}{r|r|r}
+\hline
+R Squared & R Squared Adj & Residual Std Error\\
+\hline
+0.9996166 & 0.9996141 & 0.0006187\\
+\hline
+\end{tabular}
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-41-1.pdf}
+\caption{\label{fig:unnamed-chunk-41}Ten year spot rate: In sample
+predictions VS realized}
+\end{figure}
+
+\hypertarget{decomposing-the-spot-curve}{%
+\section{Decomposing the Spot Curve}\label{decomposing-the-spot-curve}}
+
+Although not specifically asked for, I thought it might be interesting
+to decompose and plot the spot curve at a few particular points in time.
+We will need a few functions to do so. The functions essentially allow
+us to abstract away all the work so that we can just check out the spot
+rate graph at any date.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{extract_rates <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates_and_prices, .date) \{}
+\NormalTok{  .rates_and_prices }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{as_tbl_time}\NormalTok{(date) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{group_by}\NormalTok{(maturity) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter_time}\NormalTok{(}\OperatorTok{~}\NormalTok{.date) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_price)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_models <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.nested_models, .date) \{}
+\NormalTok{  coefs <-}\StringTok{ }\NormalTok{.nested_models }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{coef =} \KeywordTok{map}\NormalTok{(model, tidy)) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{unnest}\NormalTok{(coef) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{select}\NormalTok{(maturity, term, estimate) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{spread}\NormalTok{(term, estimate) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\StringTok{`}\DataTypeTok{(Intercept)}\StringTok{`}\NormalTok{)}
+  
+\NormalTok{  yield_fct <-}\StringTok{ }\NormalTok{yield_curve_factors }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{as_tbl_time}\NormalTok{(date) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter_time}\NormalTok{(}\OperatorTok{~}\NormalTok{.date)}
+  
+  \CommentTok{# Multiply the date's yield curve factors by the coefficients to get the}
+  \CommentTok{# decomp of the term}
+\NormalTok{  decomp <-}\StringTok{ }\NormalTok{coefs }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{level =}\NormalTok{ level }\OperatorTok{*}\StringTok{ }\NormalTok{yield_fct}\OperatorTok{$}\NormalTok{level,}
+           \DataTypeTok{slope =}\NormalTok{ slope }\OperatorTok{*}\StringTok{ }\NormalTok{yield_fct}\OperatorTok{$}\NormalTok{slope,}
+           \DataTypeTok{curvature =}\NormalTok{ curvature }\OperatorTok{*}\StringTok{ }\NormalTok{yield_fct}\OperatorTok{$}\NormalTok{curvature)}
+  
+\NormalTok{  decomp}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tidy_decomposed_spot_rate <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates_and_prices, .nested_models, .date) \{}
+\NormalTok{  .rates_and_prices }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{extract_rates}\NormalTok{(.date) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{left_join}\NormalTok{(}\KeywordTok{tidy_models}\NormalTok{(.nested_models, .date), }\StringTok{"maturity"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{gather}\NormalTok{(}\StringTok{"line"}\NormalTok{, }\StringTok{"value"}\NormalTok{, }\OperatorTok{-}\NormalTok{(maturity}\OperatorTok{:}\NormalTok{date)) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{select}\NormalTok{(maturity, line, value)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+What would these three functions work together to give? Well, for
+example, we can try looking at January of 2012. For that date, we get
+the spot curve values along with the level, slope and curvature
+components from each maturity's model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rates_and_prices }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{tidy_decomposed_spot_rate}\NormalTok{(nested_models, }\StringTok{"2012-01"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{spread}\NormalTok{(line, value)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 14 x 5
+##    maturity curvature   level     slope spot_rate
+##       <dbl>     <dbl>   <dbl>     <dbl>     <dbl>
+##  1   0.0833  2.89e- 3 0.00225 -1.04e- 3   0.00254
+##  2   0.25    2.51e-18 0.00225  1.25e-18   0.00225
+##  3   0.917  -5.37e- 3 0.00222  3.00e- 3   0.00158
+##  4   1      -5.65e- 3 0.00222  3.30e- 3   0.00155
+##  5   2      -6.59e- 3 0.00225  6.23e- 3   0.00188
+##  6   2.92   -5.83e- 3 0.00226  8.12e- 3   0.00307
+##  7   3      -5.73e- 3 0.00226  8.26e- 3   0.00320
+##  8   4.92   -3.24e- 3 0.00227  1.07e- 2   0.00723
+##  9   5      -3.14e- 3 0.00227  1.07e- 2   0.00743
+## 10   6.92   -9.69e- 4 0.00226  1.20e- 2   0.0121 
+## 11   7      -8.88e- 4 0.00226  1.21e- 2   0.0123 
+## 12   8       1.24e-17 0.00225  1.25e- 2   0.0147 
+## 13   9.92    1.30e- 3 0.00223  1.30e- 2   0.0188 
+## 14  10       1.34e- 3 0.00223  1.30e- 2   0.0190
+\end{verbatim}
+
+This extends naturally to charting the decomposed spot rate.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# A charting function with custom themes}
+\NormalTok{chart_decomposed_spot_rate <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.decomposed_spot) \{}
+\NormalTok{  .decomposed_spot }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{linetype =} \KeywordTok{case_when}\NormalTok{(}
+\NormalTok{      line }\OperatorTok{==}\StringTok{ "spot_rate"} \OperatorTok{~}\StringTok{ "a"}\NormalTok{, }\CommentTok{# this works by alphabetical. first is solid, then dashed}
+      \OtherTok{TRUE} \OperatorTok{~}\StringTok{ "b"}
+\NormalTok{    )) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ maturity, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{color =}\NormalTok{ line, }\DataTypeTok{linetype =}\NormalTok{ linetype)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"loess"}\NormalTok{, }\DataTypeTok{se =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_color_brewer}\NormalTok{(}\DataTypeTok{palette =} \StringTok{"Dark2"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Maturity"}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Component Value"}\NormalTok{, }\DataTypeTok{color =} \StringTok{"Component"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{guides}\NormalTok{(}\DataTypeTok{linetype =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-47-1.pdf}
+\caption{\label{fig:unnamed-chunk-47}Decomposed Spot Rate for January 2012}
+\end{figure}
+
+The spot rate in January of 1981 was definitely an interesting time
+period! It's essentially inverted, with lower maturity bonds having
+higher spot rates than longer maturity bonds.
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-48-1.pdf}
+\caption{\label{fig:unnamed-chunk-48}Decomposed Spot Rate for January 1981}
+\end{figure}
+
+\hypertarget{coefficient-stability}{%
+\section{Coefficient Stability}\label{coefficient-stability}}
+
+Another question worth asking is how stable the coefficients are
+throughout time.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rsample)}
+
+\NormalTok{splits <-}\StringTok{ }\NormalTok{spot_rates_q2 }\OperatorTok{%>%}
+\StringTok{  }\CommentTok{# Add on the curve factors}
+\StringTok{  }\KeywordTok{left_join}\NormalTok{(yield_curve_factors, }\DataTypeTok{by =} \StringTok{"date"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }
+\StringTok{  }\CommentTok{# Group by maturity and nest}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(maturity) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity_nm) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{nest}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(maturity }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{rolling_origin}\NormalTok{(}\DataTypeTok{initial =} \DecValTok{100}\NormalTok{, }\DataTypeTok{assess =} \DecValTok{1}\NormalTok{, }\DataTypeTok{cumulative =} \OtherTok{FALSE}\NormalTok{) }
+
+
+\NormalTok{splits}\OperatorTok{$}\NormalTok{rolling_models <-}\StringTok{ }\NormalTok{splits}\OperatorTok{$}\NormalTok{splits }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{map}\NormalTok{(}
+    \OperatorTok{~}\StringTok{ }\NormalTok{\{}
+      \KeywordTok{lm}\NormalTok{(spot_rate }\OperatorTok{~}\StringTok{ }\NormalTok{level }\OperatorTok{+}\StringTok{ }\NormalTok{slope }\OperatorTok{+}\StringTok{ }\NormalTok{curvature, }\DataTypeTok{data =} \KeywordTok{analysis}\NormalTok{(.x))}
+      
+\NormalTok{    \}}
+\NormalTok{  )}
+
+\NormalTok{splits}\OperatorTok{$}\NormalTok{tidied <-}\StringTok{ }\KeywordTok{map}\NormalTok{(splits}\OperatorTok{$}\NormalTok{rolling_models, tidy)}
+
+\NormalTok{splits}\OperatorTok{$}\NormalTok{enddate <-}\StringTok{ }\KeywordTok{map}\NormalTok{(splits}\OperatorTok{$}\NormalTok{splits, }\OperatorTok{~}\KeywordTok{assessment}\NormalTok{(.x) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(date))}
+\NormalTok{splits <-}\StringTok{ }\NormalTok{splits }\OperatorTok{%>%}\StringTok{ }\KeywordTok{unnest}\NormalTok{(enddate)}
+
+\KeywordTok{unnest}\NormalTok{(splits, tidied) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(term }\OperatorTok{==}\StringTok{ "level"}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ date, }\DataTypeTok{y =}\NormalTok{ estimate)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-49-1.pdf}
+
+\hypertarget{do-we-need-all-three-factors}{%
+\section{Do We Need All Three
+Factors?}\label{do-we-need-all-three-factors}}
 
 \bibliography{book.bib,packages.bib}
 

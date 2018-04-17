@@ -3,7 +3,13 @@ output: html_document
 editor_options: 
   chunk_output_type: console
 ---
+
+```{r, echo=FALSE}
+options(tibble.print_min = 5)
+```
+
 # Data {#data}
+
 
 ## Getting the data {#retrieve}
 

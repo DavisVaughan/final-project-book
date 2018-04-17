@@ -25,7 +25,7 @@
 <meta name="author" content="Davis Vaughan">
 
 
-<meta name="date" content="2018-04-12">
+<meta name="date" content="2018-04-17">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -140,6 +140,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
 <li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
+<li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
+<li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="q1.html"><a href="q1.html"><i class="fa fa-check"></i><b>4</b> Question 1</a><ul>
+<li class="chapter" data-level="4.1" data-path="q1.html"><a href="q1.html#summary-statistics"><i class="fa fa-check"></i><b>4.1</b> Summary Statistics</a></li>
+<li class="chapter" data-level="4.2" data-path="q1.html"><a href="q1.html#autocorrelations"><i class="fa fa-check"></i><b>4.2</b> Autocorrelations</a></li>
+<li class="chapter" data-level="4.3" data-path="q1.html"><a href="q1.html#correlations"><i class="fa fa-check"></i><b>4.3</b> Correlations</a></li>
+<li class="chapter" data-level="4.4" data-path="q1.html"><a href="q1.html#time-series-visualizations"><i class="fa fa-check"></i><b>4.4</b> Time Series Visualizations</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="q2.html"><a href="q2.html"><i class="fa fa-check"></i><b>5</b> Question 2</a><ul>
+<li class="chapter" data-level="5.1" data-path="q2.html"><a href="q2.html#regression"><i class="fa fa-check"></i><b>5.1</b> Regression</a></li>
+<li class="chapter" data-level="5.2" data-path="q2.html"><a href="q2.html#one-year-spot-rate"><i class="fa fa-check"></i><b>5.2</b> One Year Spot Rate</a></li>
+<li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
+<li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
+<li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
+<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 <li class="divider"></li>
@@ -196,19 +214,14 @@ need a few packages throughout the chapter, so let’s load those now as well.</
 <a class="sourceLine" id="cb1-7" data-line-number="7"></a>
 <a class="sourceLine" id="cb1-8" data-line-number="8">raw</a></code></pre></div>
 <pre><code>## # A tibble: 14,163 x 100
-##    date       SVENY01 SVENY02 SVENY03 SVENY04 SVENY05 SVENY06 SVENY07
-##    &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1 2018-03-29    2.10    2.27    2.40    2.49    2.56    2.62    2.66
-##  2 2018-03-28    2.10    2.28    2.41    2.51    2.59    2.65    2.69
-##  3 2018-03-27    2.09    2.26    2.40    2.50    2.58    2.64    2.69
-##  4 2018-03-26    2.10    2.30    2.45    2.57    2.65    2.71    2.76
-##  5 2018-03-23    2.09    2.27    2.42    2.53    2.61    2.68    2.73
-##  6 2018-03-22    2.09    2.29    2.44    2.55    2.63    2.70    2.74
-##  7 2018-03-21    2.11    2.32    2.47    2.59    2.68    2.75    2.81
-##  8 2018-03-20    2.12    2.34    2.49    2.61    2.69    2.75    2.80
-##  9 2018-03-19    2.11    2.31    2.45    2.57    2.65    2.72    2.77
-## 10 2018-03-16    2.10    2.30    2.45    2.56    2.65    2.71    2.76
-## # ... with 14,153 more rows, and 92 more variables: SVENY08 &lt;dbl&gt;,
+##   date       SVENY01 SVENY02 SVENY03 SVENY04 SVENY05 SVENY06 SVENY07
+##   &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+## 1 2018-03-29    2.10    2.27    2.40    2.49    2.56    2.62    2.66
+## 2 2018-03-28    2.10    2.28    2.41    2.51    2.59    2.65    2.69
+## 3 2018-03-27    2.09    2.26    2.40    2.50    2.58    2.64    2.69
+## 4 2018-03-26    2.10    2.30    2.45    2.57    2.65    2.71    2.76
+## 5 2018-03-23    2.09    2.27    2.42    2.53    2.61    2.68    2.73
+## # ... with 1.416e+04 more rows, and 92 more variables: SVENY08 &lt;dbl&gt;,
 ## #   SVENY09 &lt;dbl&gt;, SVENY10 &lt;dbl&gt;, SVENY11 &lt;dbl&gt;, SVENY12 &lt;dbl&gt;,
 ## #   SVENY13 &lt;dbl&gt;, SVENY14 &lt;dbl&gt;, SVENY15 &lt;dbl&gt;, SVENY16 &lt;dbl&gt;,
 ## #   SVENY17 &lt;dbl&gt;, SVENY18 &lt;dbl&gt;, SVENY19 &lt;dbl&gt;, SVENY20 &lt;dbl&gt;,
@@ -300,19 +313,14 @@ with <code>vis_miss()</code>.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">parameters &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/cleaned/parameters/parameters.rds&quot;</span>)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">parameters</a></code></pre></div>
 <pre><code>## # A tibble: 9,543 x 7
-##    date       BETA0 BETA1      BETA2 BETA3  TAU1  TAU2
-##    &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 2018-03-29  4.13 -2.25  0.000228  -3.07  2.84  11.4
-##  2 2018-03-28  4.35 -2.48 -0.0000890 -3.53  2.99  12.2
-##  3 2018-03-27  4.44 -2.59  0.000314  -3.67  3.18  12.5
-##  4 2018-03-26  4.27 -2.44 -0.0000588 -3.12  2.73  11.8
-##  5 2018-03-23  4.53 -2.69  0.000245  -3.78  3.17  12.9
-##  6 2018-03-22  4.31 -2.48 -0.000162  -3.31  2.78  11.9
-##  7 2018-03-21  4.80 -2.95 -0.550     -4.41  2.55  13.1
-##  8 2018-03-20  4.04 -2.21 -0.0000964 -2.43  2.43  10.8
-##  9 2018-03-19  4.66 -2.80  0.00297   -4.10  3.12  13.0
-## 10 2018-03-16  4.61 -2.78  0.000246  -4.02  3.03  12.9
-## # ... with 9,533 more rows</code></pre>
+##   date       BETA0 BETA1      BETA2 BETA3  TAU1  TAU2
+##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 2018-03-29  4.13 -2.25  0.000228  -3.07  2.84  11.4
+## 2 2018-03-28  4.35 -2.48 -0.000089  -3.53  2.99  12.2
+## 3 2018-03-27  4.44 -2.59  0.000314  -3.67  3.18  12.5
+## 4 2018-03-26  4.27 -2.44 -0.0000588 -3.12  2.73  11.8
+## 5 2018-03-23  4.53 -2.69  0.000245  -3.78  3.17  12.9
+## # ... with 9,538 more rows</code></pre>
 <p>We want monthly data, and we will need to put it in ascending order. We can
 convert to monthly with <code>as_period()</code> from <code>tibbletime</code>, and arrange it by
 ascending date with <code>arrange()</code> from <code>dplyr</code>.</p>
@@ -324,19 +332,14 @@ ascending date with <code>arrange()</code> from <code>dplyr</code>.</p>
 <a class="sourceLine" id="cb7-6" data-line-number="6">parameters_monthly</a></code></pre></div>
 <pre><code>## # A time tibble: 459 x 7
 ## # Index: date
-##    date       BETA0   BETA1 BETA2 BETA3  TAU1  TAU2
-##    &lt;date&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-##  1 1980-01-31  11.8   0.979 -622.  617. 2.50  2.50 
-##  2 1980-02-29  11.8   1.53  -617.  621. 1.15  1.15 
-##  3 1980-03-31  13.2   2.95  -622.  617. 1.78  1.76 
-##  4 1980-04-30  11.1   0.607 -621.  617. 1.59  1.59 
-##  5 1980-05-30  11.3  -3.44  -620.  618. 1.36  1.35 
-##  6 1980-06-30  25.0 -17.0   -631.  607. 6.20  6.06 
-##  7 1980-07-31  16.6  -8.33  -624.  615. 3.81  3.76 
-##  8 1980-08-29  19.6  -8.94  -627.  612. 5.04  4.94 
-##  9 1980-09-30  13.0  -1.34  -621.  618. 2.21  2.20 
-## 10 1980-10-31  11.9   1.06  -618.  620. 0.379 0.379
-## # ... with 449 more rows</code></pre>
+##   date       BETA0  BETA1 BETA2 BETA3  TAU1  TAU2
+##   &lt;date&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 1980-01-31  11.8  0.979 -622.  617.  2.50  2.50
+## 2 1980-02-29  11.8  1.53  -617.  621.  1.15  1.15
+## 3 1980-03-31  13.2  2.95  -622.  617.  1.78  1.76
+## 4 1980-04-30  11.1  0.607 -621.  617.  1.59  1.59
+## 5 1980-05-30  11.3 -3.44  -620.  618.  1.36  1.35
+## # ... with 454 more rows</code></pre>
 <p>This leaves us with 459 rows of data for our project,
 spanning 1980-01-31 to 2018-03-29.</p>
 
@@ -389,6 +392,19 @@ gitbook.start({
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

@@ -1,0 +1,142 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE}
+options(tibble.print_min = 5)
+```
+
+
+# Question 1 {#q1}
+
+**Question:**
+
+_What are the time-series properties of the spot rates $y_t(1)$, $y_t(5)$, and $y_t(10)$? Report their summary statistics, including mean, standard deviation, skewness, kurtosis, and the first four autocorrelation coefficients, and the correlation matrix of the spot rates. Comment on your results. Also plot them and comment on the time series patterns._
+
+In this section, the following packages are used:
+
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ratekit)
+library(ggplot2)
+library(broom)
+library(purrr)
+```
+
+We will need the data for the $y_t(1)$, $y_t(5)$, and $y_t(10)$ spot rates. These
+have already been calculated in the script referenced in \@ref(spot-rates), so
+we can just load them in.
+
+```{r}
+rates_and_prices <- read_rds("data/computed/rates_and_prices.rds")
+n <- c("1", "5", "10")
+
+spot_rates_q1 <- rates_and_prices %>%
+  filter(maturity_nm %in% n) %>%
+  unnest() %>%
+  select(-zero_price)
+
+spot_rates_q1
+```
+
+
+## Summary Statistics
+
+Reported below are summary statistics on the three spot rate series.
+
+```{r, echo=FALSE}
+spot_rates_q1 %>%
+  rename(Maturity = maturity) %>%
+  group_by(Maturity) %>%
+  summarise(
+    `Mean` = mean(spot_rate),
+    `Standard Deviation` = sd(spot_rate),
+    `Kurtosis` = kurtosis(spot_rate),
+    `Skewness` = skewness(spot_rate)
+  ) %>% knitr::kable(booktabs = TRUE)
+```
+
+Unsurprisingly, the average spot rate increases with the maturity, but interestingly,
+the shorter maturity spot rates have higher volatility. The kurtosis of all three
+are less than that of a normal distribution, but the 1 year maturity is very close.
+All three are right-skewed, with longer right tails, which makes sense considering 
+extremely high interest rate periods do happen, but are rare.
+
+## Autocorrelations
+
+The first four autocorrelation correlation coefficients of the 3 series are 
+reported below, along with a plot of the ACF for the series. Each of the 
+series are highly autocorrelated.
+
+```{r, echo=FALSE}
+acf_coef <- spot_rates_q1 %>%
+  nest(-maturity) %>%
+  mutate(acf = map(data, ~acf(.x$spot_rate, plot = FALSE))) %>%
+  mutate(acf_coef = map(acf, ~tidy(.x))) %>%
+  unnest(acf_coef)
+
+acf_coef_1_to_4 <- acf_coef %>%
+  filter(lag <= 4, lag >= 1)
+
+acf_coef_1_to_4 %>%
+  spread(lag, acf) %>%
+  rename(Maturity = maturity,
+         `Lag 1` = `1`,
+         `Lag 2` = `2`,
+         `Lag 3` = `3`,
+         `Lag 4` = `4`) %>%
+  knitr::kable()
+```
+
+By looking at the entire ACF, we can see that the amount of autocorrelation increases
+in maturity. At farther out lags, 1 is less autocorrelated than 5 and 5 less than 10.
+
+```{r, fig.width=10, echo=FALSE, cache=TRUE, fig.cap="ACF for the 1, 5, and 10 year spot rates", fig.align='center'}
+acf_coef %>%
+  mutate(maturity = as.factor(maturity)) %>%
+  ggplot(aes(x = lag, y = acf, group = maturity, fill = maturity)) +
+  geom_col(width = .8, position = "dodge") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Dark2") +
+  labs(x = "Lag #", y = "ACF Value", fill = "Maturity")
+```
+
+## Correlations
+
+Moving on to correlations, it is clear that the the series are _highly_ 
+correlated. This should not be surprising whatsoever. Intuitively, the 1 year
+is more correlated with the 5 year than with the 10 year.
+
+```{r, echo=FALSE}
+spot_rates_q1 %>%
+  mutate(maturity = as.factor(maturity)) %>%
+  select(-maturity_nm) %>% 
+  spread(maturity, spot_rate) %>%
+  select(-date) %>%
+  cor() %>%
+  knitr::kable()
+```
+
+## Time Series Visualizations
+
+A look at the time series of the three series confirms the highly autocorrelated
+and correlated nature of the three series. 1 year spot rates are almost always
+below the longer maturity rates, as one would expect. Since 2010, 1 year spot
+rates have been incredibly low, but have started to pick back up in the last 
+few years.
+
+```{r, fig.width=10, fig.align='center', echo=FALSE, cache=TRUE, fig.cap="A look at the 1, 5, and 10 year spot rates over time"}
+spot_rates_q1 %>%
+  mutate(maturity = as.factor(maturity)) %>%
+  ggplot(aes(x = date, y = spot_rate, color = maturity)) +
+  geom_line() +
+  scale_x_date(expand = c(.01,0)) +
+  theme_minimal() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "", y = "Spot Rate", color = "Maturity")
+```
+

@@ -1,0 +1,329 @@
+---
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, echo=FALSE}
+options(tibble.print_min = 5)
+```
+
+
+# Question 2 {#q2}
+
+**Question:**
+
+_Can the three yield curve factors explain the time-series variation in spot rates? Regress $y_t(1)$ on a constant and $X_t$ and comment on the regression statistics. Perform the same analysis for $y_t(5)$ and $y_t(10)$._
+
+In this section, the following packages are used:
+
+```{r, message=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ratekit)
+library(ggplot2)
+library(broom)
+library(purrr)
+```
+
+We will need the data for the $y_t(1)$, $y_t(5)$, and $y_t(10)$ spot rates along
+with the yield curve factors. These have already been calculated in the scripts referenced in \@ref(spot-rates) and \@ref(yield-curve-factors) so we can just load them in.
+
+```{r}
+rates_and_prices    <- read_rds("data/computed/rates_and_prices.rds")
+yield_curve_factors <- read_rds("data/computed/yield_curve_factors.rds")
+n <- c("1", "5", "10")
+
+spot_rates_q2 <- rates_and_prices %>%
+  #filter(maturity_nm %in% n) %>%
+  unnest() %>%
+  select(-zero_price)
+
+spot_rates_q2
+```
+
+## Regression
+
+Using the concept of multiple models from the book, [`R 4 Data Science`](http://r4ds.had.co.nz/many-models.html), implementing
+these regressions in R is incredibly straightforward. First, we shard the series into separate data frames. 
+
+```{r}
+nested_spot <- spot_rates_q2 %>%
+  # Add on the curve factors
+  left_join(yield_curve_factors, by = "date") %>%
+  
+  # Group by maturity and nest
+  group_by(maturity) %>%
+  select(-maturity_nm, -date) %>%
+  nest()
+```
+
+Then we apply the linear model to each shard. The far right column, `model` contains
+the results of the linear models. I went ahead and calculated models for every
+maturity because I am going to use them in some exploration later.
+
+```{r}
+nested_models <- nested_spot %>%
+  mutate(model = map(data, ~ lm(spot_rate ~ level + slope + curvature, data = .x)))
+
+nested_models
+```
+
+## One Year Spot Rate 
+
+As you can see below, all estimates for the 1 year spot rate model are highly significant, 
+and the Adjusted $R^2$ is nearing 100%, suggesting that the model can explain
+essentially all of the variation in the spot rate.
+
+```{r, echo=FALSE}
+model_1_yr <- nested_models %>%
+  filter(maturity == 1) %>%
+  pluck(list("model", 1))
+
+model_1_yr %>%
+  tidy() %>%
+  rename(Term = term, Estimate = estimate, `Standard Error` = std.error, `Statistic` = statistic, `P-Value` = p.value) %>%
+  knitr::kable(digits = 15)
+```
+
+```{r, echo=FALSE}
+model_1_yr %>%
+  glance() %>%
+  select(`R Squared` = r.squared, `R Squared Adj` = adj.r.squared, `Residual Std Error` = sigma) %>%
+  knitr::kable()
+```
+
+A chart of the realized VS predicted time series confirms how well the variation
+is explained. It is important to remember that this model is not predicting 
+future rates, and is simply used to gather intuition about past rates.
+
+```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="One year spot rate: In sample predictions VS realized", echo=FALSE}
+spot_rates_q2 %>%
+  filter(maturity == 1) %>%
+  rename(Realized = spot_rate) %>%
+  mutate(Predicted = predict(model_1_yr)) %>%
+  gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
+  ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
+  geom_line() +
+  theme_minimal() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "")
+```
+
+
+## Five Year Spot Rate 
+
+The model for the 5 year rate is similar to the 1 year rate in terms of explanatory power.
+
+```{r, echo=FALSE}
+model_5_yr <- nested_models %>%
+  filter(maturity == 5) %>%
+  pluck(list("model", 1))
+
+model_5_yr %>%
+  tidy() %>%
+  rename(Term = term, Estimate = estimate, `Standard Error` = std.error, `Statistic` = statistic, `P-Value` = p.value) %>%
+  knitr::kable(digits = 15)
+```
+
+```{r, echo=FALSE}
+model_5_yr %>%
+  glance() %>%
+  select(`R Squared` = r.squared, `R Squared Adj` = adj.r.squared, `Residual Std Error` = sigma) %>%
+  knitr::kable()
+```
+
+<br> </br>
+
+```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Five year spot rate: In sample predictions VS realized", echo=FALSE}
+spot_rates_q2 %>%
+  filter(maturity == 5) %>%
+  rename(Realized = spot_rate) %>%
+  mutate(Predicted = predict(model_5_yr)) %>%
+  gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
+  ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
+  geom_line() +
+  theme_minimal() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "")
+```
+
+## Ten Year Spot Rate 
+
+And again, the 10 year model performs well too.
+
+```{r, echo=FALSE}
+model_10_yr <- nested_models %>%
+  filter(maturity == 10) %>%
+  pluck(list("model", 1))
+
+model_10_yr %>%
+  tidy() %>%
+  rename(Term = term, Estimate = estimate, `Standard Error` = std.error, `Statistic` = statistic, `P-Value` = p.value) %>%
+  knitr::kable(digits = 15)
+```
+
+```{r, echo=FALSE}
+model_10_yr %>%
+  glance() %>%
+  select(`R Squared` = r.squared, `R Squared Adj` = adj.r.squared, `Residual Std Error` = sigma) %>%
+  knitr::kable()
+```
+
+<br> </br>
+
+```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Ten year spot rate: In sample predictions VS realized", echo=FALSE}
+spot_rates_q2 %>%
+  filter(maturity == 10) %>%
+  rename(Realized = spot_rate) %>%
+  mutate(Predicted = predict(model_10_yr)) %>%
+  gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
+  ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
+  geom_line() +
+  theme_minimal() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "") 
+```
+
+## Decomposing the Spot Curve
+
+Although not specifically asked for, I thought it might be interesting to 
+decompose and plot the spot curve at a few particular points in time. We will
+need a few functions to do so. The functions essentially allow us to abstract 
+away all the work so that we can just check out the spot rate graph at any date.
+
+```{r}
+extract_rates <- function(.rates_and_prices, .date) {
+  .rates_and_prices %>%
+    unnest() %>%
+    as_tbl_time(date) %>%
+    group_by(maturity) %>%
+    filter_time(~.date) %>%
+    select(-zero_price)
+}
+```
+
+```{r}
+tidy_models <- function(.nested_models, .date) {
+  coefs <- .nested_models %>%
+    mutate(coef = map(model, tidy)) %>%
+    unnest(coef) %>%
+    select(maturity, term, estimate) %>%
+    spread(term, estimate) %>%
+    select(-`(Intercept)`)
+  
+  yield_fct <- yield_curve_factors %>%
+    as_tbl_time(date) %>%
+    filter_time(~.date)
+  
+  # Multiply the date's yield curve factors by the coefficients to get the
+  # decomp of the term
+  decomp <- coefs %>%
+    mutate(level = level * yield_fct$level,
+           slope = slope * yield_fct$slope,
+           curvature = curvature * yield_fct$curvature)
+  
+  decomp
+}
+```
+
+```{r}
+tidy_decomposed_spot_rate <- function(.rates_and_prices, .nested_models, .date) {
+  .rates_and_prices %>% 
+    extract_rates(.date) %>% 
+    left_join(tidy_models(.nested_models, .date), "maturity") %>%
+    gather("line", "value", -(maturity:date)) %>%
+    select(maturity, line, value)
+}
+```
+
+What would these three functions work together to give? Well, for example, we can
+try looking at January of 2012. For that date, we get the spot curve values along
+with the level, slope and curvature components from each maturity's model.
+
+```{r, warning=FALSE}
+rates_and_prices %>%
+  tidy_decomposed_spot_rate(nested_models, "2012-01") %>%
+  spread(line, value)
+```
+
+This extends naturally to charting the decomposed spot rate.
+
+```{r}
+# A charting function with custom themes
+chart_decomposed_spot_rate <- function(.decomposed_spot) {
+  .decomposed_spot %>%
+    mutate(linetype = case_when(
+      line == "spot_rate" ~ "a", # this works by alphabetical. first is solid, then dashed
+      TRUE ~ "b"
+    )) %>%
+    ggplot(aes(x = maturity, y = value, color = line, linetype = linetype)) +
+    geom_point() +
+    geom_smooth(method = "loess", se = FALSE) +
+    theme_minimal() +
+    scale_color_brewer(palette = "Dark2") +
+    labs(x = "Maturity", y = "Component Value", color = "Component") +
+    guides(linetype = FALSE)
+}
+```
+
+
+```{r, warning=FALSE, echo=FALSE, fig.width=10, fig.cap="Decomposed Spot Rate for January 2012"}
+rates_and_prices %>%
+  tidy_decomposed_spot_rate(nested_models, "2012-01") %>%
+  chart_decomposed_spot_rate()
+```
+
+The spot rate in January of 1981 was definitely an interesting time period! It's
+essentially inverted, with lower maturity bonds having higher spot rates than
+longer maturity bonds.
+
+```{r, warning=FALSE, echo=FALSE, fig.width=10, fig.cap="Decomposed Spot Rate for January 1981"}
+rates_and_prices %>%
+  tidy_decomposed_spot_rate(nested_models, "1981-01") %>%
+  chart_decomposed_spot_rate()
+```
+
+## Coefficient Stability
+
+Another question worth asking is how stable the coefficients are throughout time.
+
+```{r}
+library(rsample)
+
+splits <- spot_rates_q2 %>%
+  # Add on the curve factors
+  left_join(yield_curve_factors, by = "date") %>%
+  
+  # Group by maturity and nest
+  group_by(maturity) %>%
+  select(-maturity_nm) %>%
+  nest() %>%
+  filter(maturity == 1) %>%
+  unnest() %>%
+  select(-maturity) %>%
+  rolling_origin(initial = 100, assess = 1, cumulative = FALSE) 
+
+
+splits$rolling_models <- splits$splits %>%
+  map(
+    ~ {
+      lm(spot_rate ~ level + slope + curvature, data = analysis(.x))
+      
+    }
+  )
+
+splits$tidied <- map(splits$rolling_models, tidy)
+
+splits$enddate <- map(splits$splits, ~assessment(.x) %>% select(date))
+splits <- splits %>% unnest(enddate)
+
+unnest(splits, tidied) %>%
+  filter(term == "level") %>%
+  ggplot(aes(x = date, y = estimate)) +
+  geom_line()
+```
+
+
+## Do We Need All Three Factors?

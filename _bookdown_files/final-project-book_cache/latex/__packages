@@ -7,3 +7,7 @@ bindrcpp
 readr
 purrr
 ggplot2
+tidyr
+broom
+patchwork
+rsample

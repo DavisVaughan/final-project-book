@@ -7,3 +7,6 @@ visdat
 purrr
 ggplot2
 tibbletime
+patchwork
+tidyr
+broom
