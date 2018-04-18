@@ -25,28 +25,28 @@ library(ratekit)
 library(ggplot2)
 library(broom)
 library(purrr)
+library(furrr)
+library(rsample)
+library(tibbletime)
+library(forcats)
 ```
 
 We will need the data for the $y_t(1)$, $y_t(5)$, and $y_t(10)$ spot rates along
 with the yield curve factors. These have already been calculated in the scripts referenced in \@ref(spot-rates) and \@ref(yield-curve-factors) so we can just load them in.
 
 ```{r}
-rates_and_prices    <- read_rds("data/computed/rates_and_prices.rds")
+rates    <- read_rds("data/computed/rates.rds")
 yield_curve_factors <- read_rds("data/computed/yield_curve_factors.rds")
 n <- c("1", "5", "10")
 
-spot_rates_q2 <- rates_and_prices %>%
-  #filter(maturity_nm %in% n) %>%
-  unnest() %>%
-  select(-zero_price)
+spot_rates_q2 <- rates
 
 spot_rates_q2
 ```
 
 ## Regression
 
-Using the concept of multiple models from the book, [`R 4 Data Science`](http://r4ds.had.co.nz/many-models.html), implementing
-these regressions in R is incredibly straightforward. First, we shard the series into separate data frames. 
+Using the concept of multiple models from the book, [`R 4 Data Science`](http://r4ds.had.co.nz/many-models.html), implementing these regressions in R is incredibly straightforward. First, we shard the series into separate data frames. 
 
 ```{r}
 nested_spot <- spot_rates_q2 %>%
@@ -55,7 +55,7 @@ nested_spot <- spot_rates_q2 %>%
   
   # Group by maturity and nest
   group_by(maturity) %>%
-  select(-maturity_nm, -date) %>%
+  select(-maturity_nm) %>%
   nest()
 ```
 
@@ -98,17 +98,24 @@ A chart of the realized VS predicted time series confirms how well the variation
 is explained. It is important to remember that this model is not predicting 
 future rates, and is simply used to gather intuition about past rates.
 
+```{r}
+plot_rates_vs_predictions <- function(.rates, .model, .maturity) {
+  .rates %>%
+    filter(maturity == .maturity) %>%
+    rename(Realized = spot_rate) %>%
+    mutate(Predicted = predict(.model)) %>%
+    gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
+    ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
+    geom_line() +
+    theme_minimal() +
+    scale_color_brewer(palette = "Dark2") +
+    labs(x = "")
+}
+```
+
+
 ```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="One year spot rate: In sample predictions VS realized", echo=FALSE}
-spot_rates_q2 %>%
-  filter(maturity == 1) %>%
-  rename(Realized = spot_rate) %>%
-  mutate(Predicted = predict(model_1_yr)) %>%
-  gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
-  ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
-  geom_line() +
-  theme_minimal() +
-  scale_color_brewer(palette = "Dark2") +
-  labs(x = "")
+plot_rates_vs_predictions(spot_rates_q2, model_1_yr, 1)
 ```
 
 
@@ -137,16 +144,7 @@ model_5_yr %>%
 <br> </br>
 
 ```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Five year spot rate: In sample predictions VS realized", echo=FALSE}
-spot_rates_q2 %>%
-  filter(maturity == 5) %>%
-  rename(Realized = spot_rate) %>%
-  mutate(Predicted = predict(model_5_yr)) %>%
-  gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
-  ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
-  geom_line() +
-  theme_minimal() +
-  scale_color_brewer(palette = "Dark2") +
-  labs(x = "")
+plot_rates_vs_predictions(spot_rates_q2, model_5_yr, 5)
 ```
 
 ## Ten Year Spot Rate 
@@ -174,16 +172,7 @@ model_10_yr %>%
 <br> </br>
 
 ```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Ten year spot rate: In sample predictions VS realized", echo=FALSE}
-spot_rates_q2 %>%
-  filter(maturity == 10) %>%
-  rename(Realized = spot_rate) %>%
-  mutate(Predicted = predict(model_10_yr)) %>%
-  gather("Realized/Predicted", "Spot Rate", Realized, Predicted) %>%
-  ggplot(aes(x = date, y = `Spot Rate`, color = `Realized/Predicted`)) +
-  geom_line() +
-  theme_minimal() +
-  scale_color_brewer(palette = "Dark2") +
-  labs(x = "") 
+plot_rates_vs_predictions(spot_rates_q2, model_10_yr, 10)
 ```
 
 ## Decomposing the Spot Curve
@@ -194,13 +183,11 @@ need a few functions to do so. The functions essentially allow us to abstract
 away all the work so that we can just check out the spot rate graph at any date.
 
 ```{r}
-extract_rates <- function(.rates_and_prices, .date) {
-  .rates_and_prices %>%
-    unnest() %>%
+extract_rates <- function(.rates, .date) {
+  .rates %>%
     as_tbl_time(date) %>%
     group_by(maturity) %>%
-    filter_time(~.date) %>%
-    select(-zero_price)
+    filter_time(~.date)
 }
 ```
 
@@ -229,8 +216,8 @@ tidy_models <- function(.nested_models, .date) {
 ```
 
 ```{r}
-tidy_decomposed_spot_rate <- function(.rates_and_prices, .nested_models, .date) {
-  .rates_and_prices %>% 
+tidy_decomposed_spot_rate <- function(.rates, .nested_models, .date) {
+  .rates %>% 
     extract_rates(.date) %>% 
     left_join(tidy_models(.nested_models, .date), "maturity") %>%
     gather("line", "value", -(maturity:date)) %>%
@@ -243,7 +230,7 @@ try looking at January of 2012. For that date, we get the spot curve values alon
 with the level, slope and curvature components from each maturity's model.
 
 ```{r, warning=FALSE}
-rates_and_prices %>%
+rates %>%
   tidy_decomposed_spot_rate(nested_models, "2012-01") %>%
   spread(line, value)
 ```
@@ -269,8 +256,8 @@ chart_decomposed_spot_rate <- function(.decomposed_spot) {
 ```
 
 
-```{r, warning=FALSE, echo=FALSE, fig.width=10, fig.cap="Decomposed Spot Rate for January 2012"}
-rates_and_prices %>%
+```{r, cache=TRUE, warning=FALSE, echo=FALSE, fig.width=10, fig.cap="Decomposed Spot Rate for January 2012"}
+rates %>%
   tidy_decomposed_spot_rate(nested_models, "2012-01") %>%
   chart_decomposed_spot_rate()
 ```
@@ -279,51 +266,131 @@ The spot rate in January of 1981 was definitely an interesting time period! It's
 essentially inverted, with lower maturity bonds having higher spot rates than
 longer maturity bonds.
 
-```{r, warning=FALSE, echo=FALSE, fig.width=10, fig.cap="Decomposed Spot Rate for January 1981"}
-rates_and_prices %>%
+```{r, cache=TRUE, warning=FALSE, echo=FALSE, fig.width=10, fig.cap="Decomposed Spot Rate for January 1981"}
+rates %>%
   tidy_decomposed_spot_rate(nested_models, "1981-01") %>%
   chart_decomposed_spot_rate()
 ```
 
 ## Coefficient Stability
 
-Another question worth asking is how stable the coefficients are throughout time.
+Another question worth asking is how stable the coefficients are throughout time. We can test this by running the same regression as before, but with a _rolling window_. This works
+by calculating the regression `spot_rate ~ level + slope + curvature` for the
+first 100 days, then shift forward 1 day and drop the last day, calculate the
+regression again, and repeat this for the length of the series. The `rsample`
+package provides a number of helpers for doing analysis exactly like this.
+
+First, let's split up our data into the rolling subsets. This results in an
+extremely useful and compact format for our modeling purposes.
 
 ```{r}
-library(rsample)
-
-splits <- spot_rates_q2 %>%
+all_splits <- spot_rates_q2 %>%
   # Add on the curve factors
   left_join(yield_curve_factors, by = "date") %>%
-  
-  # Group by maturity and nest
   group_by(maturity) %>%
   select(-maturity_nm) %>%
   nest() %>%
-  filter(maturity == 1) %>%
-  unnest() %>%
-  select(-maturity) %>%
-  rolling_origin(initial = 100, assess = 1, cumulative = FALSE) 
+  # For each maturity, split the data into subsets of 100 data points
+  mutate(data_splits = map(data, ~rolling_origin(.x, initial = 100, assess = 1, cumulative = FALSE)))
 
-
-splits$rolling_models <- splits$splits %>%
-  map(
-    ~ {
-      lm(spot_rate ~ level + slope + curvature, data = analysis(.x))
-      
-    }
-  )
-
-splits$tidied <- map(splits$rolling_models, tidy)
-
-splits$enddate <- map(splits$splits, ~assessment(.x) %>% select(date))
-splits <- splits %>% unnest(enddate)
-
-unnest(splits, tidied) %>%
-  filter(term == "level") %>%
-  ggplot(aes(x = date, y = estimate)) +
-  geom_line()
+all_splits
 ```
 
+If we were to dig into just 1 of the `data_splits` we would find another tibble
+containing the slices. 
+
+```{r}
+all_splits$data_splits[[1]]
+```
+
+Each of the `rsplit` objects here contain all of the info needed to run the linear model
+on that subset. We access that split's 100 data points with `analysis()`.
+
+```{r}
+analysis(all_splits$data_splits[[1]]$splits[[1]])
+```
+
+This notation might all look complicated, but it turns out to be incredibly useful
+and scalable. To prove that, let's run the model on every split, for every maturity.
+
+```{r, cache=TRUE}
+plan(multiprocess)
+
+all_splits <- all_splits %>%
+  mutate(
+    model_coef = future_map(data_splits, ~{ # For each maturity...
+      
+      maturity_splits <- .x
+      
+      map_dfr(maturity_splits$splits, ~ { # For each split...
+        
+        split.x <- .x
+        date <- assessment(split.x)$date
+
+        # Run the model
+        mod <- lm(spot_rate ~ level + slope + curvature, data = analysis(split.x))
+
+        # Tidy up
+        tidy_mod <- mod %>% tidy()
+        mutate(tidy_mod, date = date) %>%
+          select(date, term, estimate)
+      })
+    })
+  )
+
+all_splits
+```
+
+We've just run `359 * 14 = 5026`  linear models. For me, it runs in parallel on
+4 cores in ~8 seconds.
+
+At this point, we can pick a maturity, and look at it's coefficients over time.
+For example, the 1 year spot rate has fairly consistent model terms, but the
+curvature has begun to rise up from `-0.5` to around `-0.25`. This change over time
+isn't refected in the `-0.428` curvature estimate we get from running the model
+over the full time period, and might offer other interesting insights.
+
+```{r, echo=FALSE}
+plot_coef_stability <- function(.x, .maturity) {
+  coefs <- .x %>%
+    filter(maturity == .maturity) %>%
+    pull(model_coef) %>%
+    pluck(1)
+  
+  coefs %>%
+    mutate(term = as_factor(term)) %>%
+    mutate(term = recode(term, `(Intercept)` = "Intercept", curvature = "Curvature", 
+                         level = "Level", slope = "Slope")) %>%
+    ggplot(aes(x = date, y = estimate)) +
+    geom_line() +
+    facet_wrap(~term) +
+    labs(x = "", y = "Estimate") +
+    theme_minimal()
+}
+```
+
+```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Coefficient stability for the 1 year spot rate using a 100 day rolling window", echo=FALSE}
+plot_coef_stability(all_splits, 1) 
+```
+
+<br> </br>
+
+The 5 year rate, on the other hand, shows the opposite result, with the curvature
+term decreasing over time.
+
+```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Coefficient stability for the 5 year spot rate using a 100 day rolling window", echo=FALSE}
+plot_coef_stability(all_splits, 5) 
+```
+
+<br> </br>
+
+Finally, the 10 year shows a similar trend as the 1 year, but starts higher
+initially.
+
+```{r, fig.width=10, cache=TRUE, warning=FALSE, fig.cap="Coefficient stability for the 10 year spot rate using a 100 day rolling window", echo=FALSE}
+plot_coef_stability(all_splits, 10) 
+```
+
+<br> </br>
 
 ## Do We Need All Three Factors?

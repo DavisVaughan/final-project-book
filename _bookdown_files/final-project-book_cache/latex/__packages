@@ -11,3 +11,7 @@ tidyr
 broom
 patchwork
 rsample
+future
+furrr
+forcats
+tictoc

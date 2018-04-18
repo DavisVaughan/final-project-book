@@ -4,7 +4,7 @@ library(purrr)
 library(tidyr)
 library(dplyr)
 
-rates_and_prices <- read_rds("data/computed/rates_and_prices.rds")
+prices <- read_rds("data/computed/prices.rds")
 
 # Returns are only for a specific number of n-year's
 n <- c("1", "3", "5", "7", "10")
@@ -12,26 +12,25 @@ n_delta <- paste0(n, "-1/12")
 
 # ------------------------------------------------------------------------------
 # P_t(n)
-prices_n <- rates_and_prices %>% 
-  filter(maturity_nm %in% n) %>% 
-  unnest() %>%
-  select(-spot_rate)
+prices_n <- prices %>% 
+  filter(maturity_nm %in% n)
 
 # P_{t+delta}(n - delta)
-prices_n_delta <- rates_and_prices %>% 
+prices_n_delta <- prices %>% 
   filter(maturity_nm %in% n_delta) %>% 
+  nest(-maturity) %>%
   mutate(maturity_nm_base = n) %>% 
   unnest() %>%
-  select(-spot_rate, -maturity) %>%
+  select(-maturity) %>%
   rename(maturity_nm_delta = maturity_nm, zero_price_delta = zero_price)
 
 # Join the prices for n-years with the prices for (n-delta)-years
-prices <- left_join(prices_n, prices_n_delta, by = c("maturity_nm" = "maturity_nm_base", "date" = "date"))
+all_prices <- left_join(prices_n, prices_n_delta, by = c("maturity_nm" = "maturity_nm_base", "date" = "date"))
 
 # ------------------------------------------------------------------------------
 # RET_{t+delta}(n) for each n-year
 # RET_n is the 1 month return on the n year bond
-returns <- prices %>%
+returns <- all_prices %>%
   group_by(maturity_nm) %>%
   mutate(
     zero_price_lag = lag(zero_price),
@@ -42,12 +41,11 @@ returns <- prices %>%
 
 # ------------------------------------------------------------------------------
 # Repeat the calculation for benchmark returns
-prices_bench <- filter(rates_and_prices, maturity_nm %in% "1/12")
+prices_bench <- filter(prices, maturity_nm %in% "1/12")
 
 # RET_{t+delta}(delta)
 # Here, P_{t+delta}(0) = 1
 returns_bench <- prices_bench %>%
-  unnest() %>%
   mutate(
     zero_price_lag = lag(zero_price),
     RET_n_bench = 1 / zero_price_lag - 1

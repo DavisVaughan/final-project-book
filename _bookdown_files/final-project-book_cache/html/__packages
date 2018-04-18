@@ -10,3 +10,8 @@ tibbletime
 patchwork
 tidyr
 broom
+rsample
+future
+furrr
+tictoc
+forcats

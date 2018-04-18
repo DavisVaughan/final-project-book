@@ -6,14 +6,13 @@ library(purrr)
 library(tidyr)
 library(dplyr)
 
-rates_and_prices <- read_rds("data/computed/rates_and_prices.rds")
+rates <- read_rds("data/computed/rates.rds")
 
 n <- c("1/4", "2", "8")
 
-factor_rates <- rates_and_prices %>% 
+factor_rates <- rates %>% 
   filter(maturity_nm %in% n) %>%
-  unnest() %>%
-  select(-zero_price, -maturity) %>%
+  select(-maturity) %>%
   spread(maturity_nm, spot_rate)
 
 yield_curve_factors <- factor_rates %>%

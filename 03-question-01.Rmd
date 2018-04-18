@@ -32,13 +32,11 @@ have already been calculated in the script referenced in \@ref(spot-rates), so
 we can just load them in.
 
 ```{r}
-rates_and_prices <- read_rds("data/computed/rates_and_prices.rds")
+rates <- read_rds("data/computed/rates.rds")
 n <- c("1", "5", "10")
 
-spot_rates_q1 <- rates_and_prices %>%
-  filter(maturity_nm %in% n) %>%
-  unnest() %>%
-  select(-zero_price)
+spot_rates_q1 <- rates %>%
+  filter(maturity_nm %in% n)
 
 spot_rates_q1
 ```

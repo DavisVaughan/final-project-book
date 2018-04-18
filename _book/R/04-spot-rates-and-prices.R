@@ -35,4 +35,10 @@ nested_rates_and_prices <- mat_tbl %>%
 #   ggplot(aes(x = date, y = spot_rate)) +
 #   geom_line()
 
-write_rds(nested_rates_and_prices, "data/computed/rates_and_prices.rds")
+unnested_rates_and_prices <- unnest(nested_rates_and_prices)
+
+rates <- select(unnested_rates_and_prices, -zero_price)
+prices <- select(unnested_rates_and_prices, -spot_rate)
+
+write_rds(rates, "data/computed/rates.rds")
+write_rds(prices, "data/computed/prices.rds")

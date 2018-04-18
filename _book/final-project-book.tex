@@ -124,7 +124,7 @@
   \postauthor{\par}
   \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018-04-17}
+  \date{2018-04-18}
 
 \usepackage{booktabs}
 
@@ -708,13 +708,11 @@ in \ref{spot-rates}, so we can just load them in.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rates_and_prices <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/rates_and_prices.rds"}\NormalTok{)}
+\NormalTok{rates <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/rates.rds"}\NormalTok{)}
 \NormalTok{n <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"5"}\NormalTok{, }\StringTok{"10"}\NormalTok{)}
 
-\NormalTok{spot_rates_q1 <-}\StringTok{ }\NormalTok{rates_and_prices }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{filter}\NormalTok{(maturity_nm }\OperatorTok{%in%}\StringTok{ }\NormalTok{n) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_price)}
+\NormalTok{spot_rates_q1 <-}\StringTok{ }\NormalTok{rates }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{filter}\NormalTok{(maturity_nm }\OperatorTok{%in%}\StringTok{ }\NormalTok{n)}
 
 \NormalTok{spot_rates_q1}
 \end{Highlighting}
@@ -845,6 +843,10 @@ In this section, the following packages are used:
 \KeywordTok{library}\NormalTok{(ggplot2)}
 \KeywordTok{library}\NormalTok{(broom)}
 \KeywordTok{library}\NormalTok{(purrr)}
+\KeywordTok{library}\NormalTok{(furrr)}
+\KeywordTok{library}\NormalTok{(rsample)}
+\KeywordTok{library}\NormalTok{(tibbletime)}
+\KeywordTok{library}\NormalTok{(forcats)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -855,14 +857,11 @@ calculated in the scripts referenced in \ref{spot-rates} and
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rates_and_prices    <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/rates_and_prices.rds"}\NormalTok{)}
+\NormalTok{rates    <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/rates.rds"}\NormalTok{)}
 \NormalTok{yield_curve_factors <-}\StringTok{ }\KeywordTok{read_rds}\NormalTok{(}\StringTok{"data/computed/yield_curve_factors.rds"}\NormalTok{)}
 \NormalTok{n <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"5"}\NormalTok{, }\StringTok{"10"}\NormalTok{)}
 
-\NormalTok{spot_rates_q2 <-}\StringTok{ }\NormalTok{rates_and_prices }\OperatorTok{%>%}
-\StringTok{  }\CommentTok{#filter(maturity_nm %in% n) %>%}
-\StringTok{  }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_price)}
+\NormalTok{spot_rates_q2 <-}\StringTok{ }\NormalTok{rates}
 
 \NormalTok{spot_rates_q2}
 \end{Highlighting}
@@ -896,7 +895,7 @@ First, we shard the series into separate data frames.
 \StringTok{  }
 \StringTok{  }\CommentTok{# Group by maturity and nest}
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(maturity) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity_nm, }\OperatorTok{-}\NormalTok{date) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity_nm) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{nest}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
@@ -919,20 +918,20 @@ in some exploration later.
 ## # A tibble: 14 x 3
 ##    maturity data               model   
 ##       <dbl> <list>             <list>  
-##  1   0.0833 <tibble [459 x 4]> <S3: lm>
-##  2   0.25   <tibble [459 x 4]> <S3: lm>
-##  3   0.917  <tibble [459 x 4]> <S3: lm>
-##  4   1      <tibble [459 x 4]> <S3: lm>
-##  5   2      <tibble [459 x 4]> <S3: lm>
-##  6   2.92   <tibble [459 x 4]> <S3: lm>
-##  7   3      <tibble [459 x 4]> <S3: lm>
-##  8   4.92   <tibble [459 x 4]> <S3: lm>
-##  9   5      <tibble [459 x 4]> <S3: lm>
-## 10   6.92   <tibble [459 x 4]> <S3: lm>
-## 11   7      <tibble [459 x 4]> <S3: lm>
-## 12   8      <tibble [459 x 4]> <S3: lm>
-## 13   9.92   <tibble [459 x 4]> <S3: lm>
-## 14  10      <tibble [459 x 4]> <S3: lm>
+##  1   0.0833 <tibble [459 x 5]> <S3: lm>
+##  2   0.25   <tibble [459 x 5]> <S3: lm>
+##  3   0.917  <tibble [459 x 5]> <S3: lm>
+##  4   1      <tibble [459 x 5]> <S3: lm>
+##  5   2      <tibble [459 x 5]> <S3: lm>
+##  6   2.92   <tibble [459 x 5]> <S3: lm>
+##  7   3      <tibble [459 x 5]> <S3: lm>
+##  8   4.92   <tibble [459 x 5]> <S3: lm>
+##  9   5      <tibble [459 x 5]> <S3: lm>
+## 10   6.92   <tibble [459 x 5]> <S3: lm>
+## 11   7      <tibble [459 x 5]> <S3: lm>
+## 12   8      <tibble [459 x 5]> <S3: lm>
+## 13   9.92   <tibble [459 x 5]> <S3: lm>
+## 14  10      <tibble [459 x 5]> <S3: lm>
 \end{verbatim}
 
 \hypertarget{one-year-spot-rate}{%
@@ -970,10 +969,27 @@ variation is explained. It is important to remember that this model is
 not predicting future rates, and is simply used to gather intuition
 about past rates.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_rates_vs_predictions <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates, .model, .maturity) \{}
+\NormalTok{  .rates }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{filter}\NormalTok{(maturity }\OperatorTok{==}\StringTok{ }\NormalTok{.maturity) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{rename}\NormalTok{(}\DataTypeTok{Realized =}\NormalTok{ spot_rate) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Predicted =} \KeywordTok{predict}\NormalTok{(.model)) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{gather}\NormalTok{(}\StringTok{"Realized/Predicted"}\NormalTok{, }\StringTok{"Spot Rate"}\NormalTok{, Realized, Predicted) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ date, }\DataTypeTok{y =} \StringTok{`}\DataTypeTok{Spot Rate}\StringTok{`}\NormalTok{, }\DataTypeTok{color =} \StringTok{`}\DataTypeTok{Realized/Predicted}\StringTok{`}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{theme_minimal}\NormalTok{() }\OperatorTok{+}
+\StringTok{    }\KeywordTok{scale_color_brewer}\NormalTok{(}\DataTypeTok{palette =} \StringTok{"Dark2"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{""}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
 \begin{figure}
 \centering
-\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-35-1.pdf}
-\caption{\label{fig:unnamed-chunk-35}One year spot rate: In sample
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-36-1.pdf}
+\caption{\label{fig:unnamed-chunk-36}One year spot rate: In sample
 predictions VS realized}
 \end{figure}
 
@@ -1007,8 +1023,8 @@ R Squared & R Squared Adj & Residual Std Error\\
 
 \begin{figure}
 \centering
-\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-38-1.pdf}
-\caption{\label{fig:unnamed-chunk-38}Five year spot rate: In sample
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-39-1.pdf}
+\caption{\label{fig:unnamed-chunk-39}Five year spot rate: In sample
 predictions VS realized}
 \end{figure}
 
@@ -1041,8 +1057,8 @@ R Squared & R Squared Adj & Residual Std Error\\
 
 \begin{figure}
 \centering
-\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-41-1.pdf}
-\caption{\label{fig:unnamed-chunk-41}Ten year spot rate: In sample
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-42-1.pdf}
+\caption{\label{fig:unnamed-chunk-42}Ten year spot rate: In sample
 predictions VS realized}
 \end{figure}
 
@@ -1057,13 +1073,11 @@ rate graph at any date.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{extract_rates <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates_and_prices, .date) \{}
-\NormalTok{  .rates_and_prices }\OperatorTok{%>%}
-\StringTok{    }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
+\NormalTok{extract_rates <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates, .date) \{}
+\NormalTok{  .rates }\OperatorTok{%>%}
 \StringTok{    }\KeywordTok{as_tbl_time}\NormalTok{(date) }\OperatorTok{%>%}
 \StringTok{    }\KeywordTok{group_by}\NormalTok{(maturity) }\OperatorTok{%>%}
-\StringTok{    }\KeywordTok{filter_time}\NormalTok{(}\OperatorTok{~}\NormalTok{.date) }\OperatorTok{%>%}
-\StringTok{    }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{zero_price)}
+\StringTok{    }\KeywordTok{filter_time}\NormalTok{(}\OperatorTok{~}\NormalTok{.date)}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -1096,8 +1110,8 @@ rate graph at any date.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tidy_decomposed_spot_rate <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates_and_prices, .nested_models, .date) \{}
-\NormalTok{  .rates_and_prices }\OperatorTok{%>%}\StringTok{ }
+\NormalTok{tidy_decomposed_spot_rate <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(.rates, .nested_models, .date) \{}
+\NormalTok{  .rates }\OperatorTok{%>%}\StringTok{ }
 \StringTok{    }\KeywordTok{extract_rates}\NormalTok{(.date) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{    }\KeywordTok{left_join}\NormalTok{(}\KeywordTok{tidy_models}\NormalTok{(.nested_models, .date), }\StringTok{"maturity"}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{    }\KeywordTok{gather}\NormalTok{(}\StringTok{"line"}\NormalTok{, }\StringTok{"value"}\NormalTok{, }\OperatorTok{-}\NormalTok{(maturity}\OperatorTok{:}\NormalTok{date)) }\OperatorTok{%>%}
@@ -1113,7 +1127,7 @@ components from each maturity's model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rates_and_prices }\OperatorTok{%>%}
+\NormalTok{rates }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{tidy_decomposed_spot_rate}\NormalTok{(nested_models, }\StringTok{"2012-01"}\NormalTok{) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{spread}\NormalTok{(line, value)}
 \end{Highlighting}
@@ -1163,8 +1177,8 @@ This extends naturally to charting the decomposed spot rate.
 
 \begin{figure}
 \centering
-\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-47-1.pdf}
-\caption{\label{fig:unnamed-chunk-47}Decomposed Spot Rate for January 2012}
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-48-1.pdf}
+\caption{\label{fig:unnamed-chunk-48}Decomposed Spot Rate for January 2012}
 \end{figure}
 
 The spot rate in January of 1981 was definitely an interesting time
@@ -1173,55 +1187,195 @@ higher spot rates than longer maturity bonds.
 
 \begin{figure}
 \centering
-\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-48-1.pdf}
-\caption{\label{fig:unnamed-chunk-48}Decomposed Spot Rate for January 1981}
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-49-1.pdf}
+\caption{\label{fig:unnamed-chunk-49}Decomposed Spot Rate for January 1981}
 \end{figure}
 
 \hypertarget{coefficient-stability}{%
 \section{Coefficient Stability}\label{coefficient-stability}}
 
 Another question worth asking is how stable the coefficients are
-throughout time.
+throughout time. We can test this by running the same regression as
+before, but with a \emph{rolling window}. This works by calculating the
+regression
+\texttt{spot\_rate\ \textasciitilde{}\ level\ +\ slope\ +\ curvature}
+for the first 100 days, then shift forward 1 day and drop the last day,
+calculate the regression again, and repeat this for the length of the
+series. The \texttt{rsample} package provides a number of helpers for
+doing analysis exactly like this.
+
+First, let's split up our data into the rolling subsets. This results in
+an extremely useful and compact format for our modeling purposes.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(rsample)}
-
-\NormalTok{splits <-}\StringTok{ }\NormalTok{spot_rates_q2 }\OperatorTok{%>%}
+\NormalTok{all_splits <-}\StringTok{ }\NormalTok{spot_rates_q2 }\OperatorTok{%>%}
 \StringTok{  }\CommentTok{# Add on the curve factors}
 \StringTok{  }\KeywordTok{left_join}\NormalTok{(yield_curve_factors, }\DataTypeTok{by =} \StringTok{"date"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }
-\StringTok{  }\CommentTok{# Group by maturity and nest}
 \StringTok{  }\KeywordTok{group_by}\NormalTok{(maturity) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity_nm) }\OperatorTok{%>%}
 \StringTok{  }\KeywordTok{nest}\NormalTok{() }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{filter}\NormalTok{(maturity }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{unnest}\NormalTok{() }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\NormalTok{maturity) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{rolling_origin}\NormalTok{(}\DataTypeTok{initial =} \DecValTok{100}\NormalTok{, }\DataTypeTok{assess =} \DecValTok{1}\NormalTok{, }\DataTypeTok{cumulative =} \OtherTok{FALSE}\NormalTok{) }
+\StringTok{  }\CommentTok{# For each maturity, split the data into subsets of 100 data points}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{data_splits =} \KeywordTok{map}\NormalTok{(data, }\OperatorTok{~}\KeywordTok{rolling_origin}\NormalTok{(.x, }\DataTypeTok{initial =} \DecValTok{100}\NormalTok{, }\DataTypeTok{assess =} \DecValTok{1}\NormalTok{, }\DataTypeTok{cumulative =} \OtherTok{FALSE}\NormalTok{)))}
 
-
-\NormalTok{splits}\OperatorTok{$}\NormalTok{rolling_models <-}\StringTok{ }\NormalTok{splits}\OperatorTok{$}\NormalTok{splits }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{map}\NormalTok{(}
-    \OperatorTok{~}\StringTok{ }\NormalTok{\{}
-      \KeywordTok{lm}\NormalTok{(spot_rate }\OperatorTok{~}\StringTok{ }\NormalTok{level }\OperatorTok{+}\StringTok{ }\NormalTok{slope }\OperatorTok{+}\StringTok{ }\NormalTok{curvature, }\DataTypeTok{data =} \KeywordTok{analysis}\NormalTok{(.x))}
-      
-\NormalTok{    \}}
-\NormalTok{  )}
-
-\NormalTok{splits}\OperatorTok{$}\NormalTok{tidied <-}\StringTok{ }\KeywordTok{map}\NormalTok{(splits}\OperatorTok{$}\NormalTok{rolling_models, tidy)}
-
-\NormalTok{splits}\OperatorTok{$}\NormalTok{enddate <-}\StringTok{ }\KeywordTok{map}\NormalTok{(splits}\OperatorTok{$}\NormalTok{splits, }\OperatorTok{~}\KeywordTok{assessment}\NormalTok{(.x) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{select}\NormalTok{(date))}
-\NormalTok{splits <-}\StringTok{ }\NormalTok{splits }\OperatorTok{%>%}\StringTok{ }\KeywordTok{unnest}\NormalTok{(enddate)}
-
-\KeywordTok{unnest}\NormalTok{(splits, tidied) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{filter}\NormalTok{(term }\OperatorTok{==}\StringTok{ "level"}\NormalTok{) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ date, }\DataTypeTok{y =}\NormalTok{ estimate)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{all_splits}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-49-1.pdf}
+\begin{verbatim}
+## # A tibble: 14 x 3
+##    maturity data               data_splits       
+##       <dbl> <list>             <list>            
+##  1   0.0833 <tibble [459 x 5]> <tibble [359 x 2]>
+##  2   0.25   <tibble [459 x 5]> <tibble [359 x 2]>
+##  3   0.917  <tibble [459 x 5]> <tibble [359 x 2]>
+##  4   1      <tibble [459 x 5]> <tibble [359 x 2]>
+##  5   2      <tibble [459 x 5]> <tibble [359 x 2]>
+##  6   2.92   <tibble [459 x 5]> <tibble [359 x 2]>
+##  7   3      <tibble [459 x 5]> <tibble [359 x 2]>
+##  8   4.92   <tibble [459 x 5]> <tibble [359 x 2]>
+##  9   5      <tibble [459 x 5]> <tibble [359 x 2]>
+## 10   6.92   <tibble [459 x 5]> <tibble [359 x 2]>
+## 11   7      <tibble [459 x 5]> <tibble [359 x 2]>
+## 12   8      <tibble [459 x 5]> <tibble [359 x 2]>
+## 13   9.92   <tibble [459 x 5]> <tibble [359 x 2]>
+## 14  10      <tibble [459 x 5]> <tibble [359 x 2]>
+\end{verbatim}
+
+If we were to dig into just 1 of the \texttt{data\_splits} we would find
+another tibble containing the slices.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{all_splits}\OperatorTok{$}\NormalTok{data_splits[[}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # Rolling origin forecast resampling 
+## # A tibble: 359 x 2
+##   splits       id      
+##   <list>       <chr>   
+## 1 <S3: rsplit> Slice001
+## 2 <S3: rsplit> Slice002
+## 3 <S3: rsplit> Slice003
+## 4 <S3: rsplit> Slice004
+## 5 <S3: rsplit> Slice005
+## # ... with 354 more rows
+\end{verbatim}
+
+Each of the \texttt{rsplit} objects here contain all of the info needed
+to run the linear model on that subset. We access that split's 100 data
+points with \texttt{analysis()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{analysis}\NormalTok{(all_splits}\OperatorTok{$}\NormalTok{data_splits[[}\DecValTok{1}\NormalTok{]]}\OperatorTok{$}\NormalTok{splits[[}\DecValTok{1}\NormalTok{]])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 100 x 5
+##   date       spot_rate  level    slope curvature
+##   <date>         <dbl>  <dbl>    <dbl>     <dbl>
+## 1 1980-01-31    0.126  0.124  -0.0176    0.00755
+## 2 1980-02-29    0.136  0.140  -0.0193   -0.0179 
+## 3 1980-03-31    0.161  0.159  -0.0412   -0.00205
+## 4 1980-04-30    0.116  0.114  -0.00975   0.0137 
+## 5 1980-05-30    0.0795 0.0816  0.0173    0.00118
+## # ... with 95 more rows
+\end{verbatim}
+
+This notation might all look complicated, but it turns out to be
+incredibly useful and scalable. To prove that, let's run the model on
+every split, for every maturity.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plan}\NormalTok{(multiprocess)}
+
+\NormalTok{all_splits <-}\StringTok{ }\NormalTok{all_splits }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}
+    \DataTypeTok{model_coef =} \KeywordTok{future_map}\NormalTok{(data_splits, }\OperatorTok{~}\NormalTok{\{ }\CommentTok{# For each maturity...}
+      
+\NormalTok{      maturity_splits <-}\StringTok{ }\NormalTok{.x}
+      
+      \KeywordTok{map_dfr}\NormalTok{(maturity_splits}\OperatorTok{$}\NormalTok{splits, }\OperatorTok{~}\StringTok{ }\NormalTok{\{ }\CommentTok{# For each split...}
+        
+\NormalTok{        split.x <-}\StringTok{ }\NormalTok{.x}
+\NormalTok{        date <-}\StringTok{ }\KeywordTok{assessment}\NormalTok{(split.x)}\OperatorTok{$}\NormalTok{date}
+
+        \CommentTok{# Run the model}
+\NormalTok{        mod <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(spot_rate }\OperatorTok{~}\StringTok{ }\NormalTok{level }\OperatorTok{+}\StringTok{ }\NormalTok{slope }\OperatorTok{+}\StringTok{ }\NormalTok{curvature, }\DataTypeTok{data =} \KeywordTok{analysis}\NormalTok{(split.x))}
+
+        \CommentTok{# Tidy up}
+\NormalTok{        tidy_mod <-}\StringTok{ }\NormalTok{mod }\OperatorTok{%>%}\StringTok{ }\KeywordTok{tidy}\NormalTok{()}
+        \KeywordTok{mutate}\NormalTok{(tidy_mod, }\DataTypeTok{date =}\NormalTok{ date) }\OperatorTok{%>%}
+\StringTok{          }\KeywordTok{select}\NormalTok{(date, term, estimate)}
+\NormalTok{      \})}
+\NormalTok{    \})}
+\NormalTok{  )}
+
+\NormalTok{all_splits}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 14 x 4
+##    maturity data               data_splits        model_coef              
+##       <dbl> <list>             <list>             <list>                  
+##  1   0.0833 <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  2   0.25   <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  3   0.917  <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  4   1      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  5   2      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  6   2.92   <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  7   3      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  8   4.92   <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+##  9   5      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+## 10   6.92   <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+## 11   7      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+## 12   8      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+## 13   9.92   <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+## 14  10      <tibble [459 x 5]> <tibble [359 x 2]> <data.frame [1,436 x 3]>
+\end{verbatim}
+
+We've just run \texttt{359\ *\ 14\ =\ 5026} linear models. For me, it
+runs in parallel on 4 cores in \textasciitilde{}8 seconds.
+
+At this point, we can pick a maturity, and look at it's coefficients
+over time. For example, the 1 year spot rate has fairly consistent model
+terms, but the curvature has begun to rise up from \texttt{-0.5} to
+around \texttt{-0.25}. This change over time isn't refected in the
+\texttt{-0.428} curvature estimate we get from running the model over
+the full time period, and might offer other interesting insights.
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-55-1.pdf}
+\caption{\label{fig:unnamed-chunk-55}Coefficient stability for the 1 year
+spot rate using a 100 day rolling window}
+\end{figure}
+
+The 5 year rate, on the other hand, shows the opposite result, with the
+curvature term decreasing over time.
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-56-1.pdf}
+\caption{\label{fig:unnamed-chunk-56}Coefficient stability for the 5 year
+spot rate using a 100 day rolling window}
+\end{figure}
+
+Finally, the 10 year shows a similar trend as the 1 year, but starts
+higher initially.
+
+\begin{figure}
+\centering
+\includegraphics{final-project-book_files/figure-latex/unnamed-chunk-57-1.pdf}
+\caption{\label{fig:unnamed-chunk-57}Coefficient stability for the 10 year
+spot rate using a 100 day rolling window}
+\end{figure}
 
 \hypertarget{do-we-need-all-three-factors}{%
 \section{Do We Need All Three

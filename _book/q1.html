@@ -25,7 +25,7 @@
 <meta name="author" content="Davis Vaughan">
 
 
-<meta name="date" content="2018-04-17">
+<meta name="date" content="2018-04-18">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -195,15 +195,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>We will need the data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates. These
 have already been calculated in the script referenced in <a href="rates.html#spot-rates">3.1</a>, so
 we can just load them in.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">rates_and_prices &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/computed/rates_and_prices.rds&quot;</span>)</a>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">rates &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/computed/rates.rds&quot;</span>)</a>
 <a class="sourceLine" id="cb25-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;10&quot;</span>)</a>
 <a class="sourceLine" id="cb25-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">spot_rates_q1 &lt;-<span class="st"> </span>rates_and_prices <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(maturity_nm <span class="op">%in%</span><span class="st"> </span>n) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>zero_price)</a>
-<a class="sourceLine" id="cb25-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb25-9" data-line-number="9">spot_rates_q1</a></code></pre></div>
+<a class="sourceLine" id="cb25-4" data-line-number="4">spot_rates_q1 &lt;-<span class="st"> </span>rates <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(maturity_nm <span class="op">%in%</span><span class="st"> </span>n)</a>
+<a class="sourceLine" id="cb25-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">spot_rates_q1</a></code></pre></div>
 <pre><code>## # A tibble: 1,377 x 4
 ##   maturity maturity_nm date       spot_rate
 ##      &lt;dbl&gt; &lt;chr&gt;       &lt;date&gt;         &lt;dbl&gt;
