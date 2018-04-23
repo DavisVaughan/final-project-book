@@ -129,7 +129,7 @@ spot_rates_q1 %>%
   as.data.frame() %>%
   tibble::rownames_to_column(var = "Maturity") %>%
   mutate(Maturity = as.numeric(Maturity)) %>%
-  knitr::kable(caption = "Autocorrelation coefficients for 1, 5, and 10 year spot rates.", booktabs = TRUE) %>%
+  knitr::kable(caption = "Correlation coefficients for 1, 5, and 10 year spot rates.", booktabs = TRUE) %>%
   kableExtra::kable_styling(position = "center", latex_options = "HOLD_position")
 ```
 
