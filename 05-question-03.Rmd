@@ -346,7 +346,7 @@ summarise_total_hedging_error <- function(.data, error_col) {
 
 ## Model application
 
-```{r, cache=TRUE, echo=FALSE}
+```{r, echo=FALSE}
 invokable <- tibble::tibble(
   f = "apply_model",
   params = list(

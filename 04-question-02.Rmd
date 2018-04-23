@@ -313,7 +313,7 @@ all_splits$data_splits[[1]]
 ```
 
 
-```{r, cache=TRUE, echo=FALSE}
+```{r, echo=FALSE}
 # This notation might all look complicated, but it turns out to be incredibly useful
 # and scalable. To prove that, let's run the model on every split, for every maturity.
 
