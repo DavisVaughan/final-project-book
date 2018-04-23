@@ -1,30 +1,47 @@
 --- 
 title: "Finn 6211 - Final Project"
-author: "Davis Vaughan"
+subtitle: "Davis Vaughan"
+author: "mvaugh15@uncc.edu"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
+classoption: openany
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
+header-includes:
+   - \usepackage{float}
 link-citations: yes
 description: "This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies."
 ---
+
+```{r, echo=FALSE}
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+knitr::opts_chunk$set("size" = "small")
+```
 
 # Introduction {#titlepage}
 
 This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.
 
-The instructions for the report can be found [here](./instructions/Hedging_Project_S18.pdf).
-
 An R package has been created to accompany the report. It contains a number of 
 helper functions for cleaning data, manipulating the time series, and creating
 the hedging strategies. The package is named `ratekit` and can be found on
-Github [here](https://github.com/DavisVaughan/ratekit).
+Github at [https://github.com/DavisVaughan/ratekit](https://github.com/DavisVaughan/ratekit).
 
-The book is intended to provide a summary of the methods used in the project.
-In each section of the book is a link to the script that was actually run to 
-generate the results for the project. Those scripts are more in depth and cover
-every aspect of the project.
+The structure of the report is as follows. Chapter 2 is dedicated to retrieving
+and cleaning the data. Chapter 3 is focused on the calculation of features used
+in the questions. Chapters 4, 5, and 6 answer the three questions required in
+the report.
+
+The code used to create the analysis is split into two places. In the `R/` folder
+of the attached zip file are the files used for downloading the data, cleaning it, 
+and creating the fixed income features. The actual analysis and answering of the 
+questions is done inside the `.Rmd` files found in the top level of the zip file.
 
 This report was written with [bookdown](https://bookdown.org/yihui/bookdown/), a
 book authoring package for R.

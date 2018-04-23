@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
   <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
-<meta name="author" content="Davis Vaughan">
+<meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-18">
+<meta name="date" content="2018-04-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -156,10 +156,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
 <li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
 <li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
-<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
-<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coef-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
+<li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -184,77 +192,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 2</span> Data</h1>
 <div id="retrieve" class="section level2">
 <h2><span class="header-section-number">2.1</span> Getting the data</h2>
-<p>Script) <a href="./R/01-download.R">01-download.R</a></p>
 <p>The data is retrieved from the Federal Reserve website, under the discussion
 series: <em>The U.S. Treasury Yield Curve: 1961 to the Present</em>. The link for that
 site is <a href="https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html">here</a>.
-The specific data set that was downloaded was the XLS file included on that site.</p>
-<p>The data was immediately opened in Excel, and was resaved as an <code>xlsx</code> file.
-The format of the data is not a true <code>xls</code> file, instead it is some kind of <code>xml</code>
+The specific data set downloaded was the XLS file included on that site. <code>ratekit</code> provides the
+<code>download_rates_xls()</code> helper function for this.</p>
+<p>The data was immediately opened in Excel, and resaved as an <code>xlsx</code> file.
+The format of the raw data is not a true <code>xls</code> file, rather, it is some flavor of <code>xml</code>
 file. This does not play nicely with R’s packages for importing Excel data, so
 a resave was necessary and is done manually.</p>
-<p><code>ratekit</code> provides the <code>download_rates_xls()</code> helper function for this.</p>
 </div>
 <div id="cleaning" class="section level2">
 <h2><span class="header-section-number">2.2</span> Cleaning</h2>
-<p>Script) <a href="./R/02-cleaning.R">02-cleaning.R</a></p>
 <p>Data is brought in using the <code>readxl</code> package and the <code>ratekit</code> helper, <code>read_rates()</code>.
 This function reads the rectangle of rates data only, and sets any <code>-999.99</code> values
-to <code>NA</code>. These are often found through the dataset, and I assume they are meant
-to represent missing values. To visualize the <code>NA</code> values in the dataset, I use
-the <code>visdat</code> package.</p>
-<p>First, let’s look at what is immediately brought in by <code>read_rates()</code>. We will
-need a few packages throughout the chapter, so let’s load those now as well.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(visdat)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(ratekit)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(tibbletime)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">raw &lt;-<span class="st"> </span><span class="kw">read_rates</span>(<span class="st">&quot;data/raw/feds200628.xlsx&quot;</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">raw</a></code></pre></div>
-<pre><code>## # A tibble: 14,163 x 100
-##   date       SVENY01 SVENY02 SVENY03 SVENY04 SVENY05 SVENY06 SVENY07
-##   &lt;date&gt;       &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-## 1 2018-03-29    2.10    2.27    2.40    2.49    2.56    2.62    2.66
-## 2 2018-03-28    2.10    2.28    2.41    2.51    2.59    2.65    2.69
-## 3 2018-03-27    2.09    2.26    2.40    2.50    2.58    2.64    2.69
-## 4 2018-03-26    2.10    2.30    2.45    2.57    2.65    2.71    2.76
-## 5 2018-03-23    2.09    2.27    2.42    2.53    2.61    2.68    2.73
-## # ... with 1.416e+04 more rows, and 92 more variables: SVENY08 &lt;dbl&gt;,
-## #   SVENY09 &lt;dbl&gt;, SVENY10 &lt;dbl&gt;, SVENY11 &lt;dbl&gt;, SVENY12 &lt;dbl&gt;,
-## #   SVENY13 &lt;dbl&gt;, SVENY14 &lt;dbl&gt;, SVENY15 &lt;dbl&gt;, SVENY16 &lt;dbl&gt;,
-## #   SVENY17 &lt;dbl&gt;, SVENY18 &lt;dbl&gt;, SVENY19 &lt;dbl&gt;, SVENY20 &lt;dbl&gt;,
-## #   SVENY21 &lt;dbl&gt;, SVENY22 &lt;dbl&gt;, SVENY23 &lt;dbl&gt;, SVENY24 &lt;dbl&gt;,
-## #   SVENY25 &lt;dbl&gt;, SVENY26 &lt;dbl&gt;, SVENY27 &lt;dbl&gt;, SVENY28 &lt;dbl&gt;,
-## #   SVENY29 &lt;dbl&gt;, SVENY30 &lt;dbl&gt;, SVENPY01 &lt;dbl&gt;, SVENPY02 &lt;dbl&gt;,
-## #   SVENPY03 &lt;dbl&gt;, SVENPY04 &lt;dbl&gt;, SVENPY05 &lt;dbl&gt;, SVENPY06 &lt;dbl&gt;,
-## #   SVENPY07 &lt;dbl&gt;, SVENPY08 &lt;dbl&gt;, SVENPY09 &lt;dbl&gt;, SVENPY10 &lt;dbl&gt;,
-## #   SVENPY11 &lt;dbl&gt;, SVENPY12 &lt;dbl&gt;, SVENPY13 &lt;dbl&gt;, SVENPY14 &lt;dbl&gt;,
-## #   SVENPY15 &lt;dbl&gt;, SVENPY16 &lt;dbl&gt;, SVENPY17 &lt;dbl&gt;, SVENPY18 &lt;dbl&gt;,
-## #   SVENPY19 &lt;dbl&gt;, SVENPY20 &lt;dbl&gt;, SVENPY21 &lt;dbl&gt;, SVENPY22 &lt;dbl&gt;,
-## #   SVENPY23 &lt;dbl&gt;, SVENPY24 &lt;dbl&gt;, SVENPY25 &lt;dbl&gt;, SVENPY26 &lt;dbl&gt;,
-## #   SVENPY27 &lt;dbl&gt;, SVENPY28 &lt;dbl&gt;, SVENPY29 &lt;dbl&gt;, SVENPY30 &lt;dbl&gt;,
-## #   SVENF01 &lt;dbl&gt;, SVENF02 &lt;dbl&gt;, SVENF03 &lt;dbl&gt;, SVENF04 &lt;dbl&gt;,
-## #   SVENF05 &lt;dbl&gt;, SVENF06 &lt;dbl&gt;, SVENF07 &lt;dbl&gt;, SVENF08 &lt;dbl&gt;,
-## #   SVENF09 &lt;dbl&gt;, SVENF10 &lt;dbl&gt;, SVENF11 &lt;dbl&gt;, SVENF12 &lt;dbl&gt;,
-## #   SVENF13 &lt;dbl&gt;, SVENF14 &lt;dbl&gt;, SVENF15 &lt;dbl&gt;, SVENF16 &lt;dbl&gt;,
-## #   SVENF17 &lt;dbl&gt;, SVENF18 &lt;dbl&gt;, SVENF19 &lt;dbl&gt;, SVENF20 &lt;dbl&gt;,
-## #   SVENF21 &lt;dbl&gt;, SVENF22 &lt;dbl&gt;, SVENF23 &lt;dbl&gt;, SVENF24 &lt;dbl&gt;,
-## #   SVENF25 &lt;dbl&gt;, SVENF26 &lt;dbl&gt;, SVENF27 &lt;dbl&gt;, SVENF28 &lt;dbl&gt;,
-## #   SVENF29 &lt;dbl&gt;, SVENF30 &lt;dbl&gt;, SVEN1F01 &lt;dbl&gt;, SVEN1F04 &lt;dbl&gt;,
-## #   SVEN1F09 &lt;dbl&gt;, BETA0 &lt;dbl&gt;, BETA1 &lt;dbl&gt;, BETA2 &lt;dbl&gt;, BETA3 &lt;dbl&gt;,
-## #   TAU1 &lt;dbl&gt;, TAU2 &lt;dbl&gt;</code></pre>
-<p>Not a bad start, but I’m worried about missing values. Also, what are those
-column names?</p>
+to <code>NA</code>. These are often found through the dataset, and it is assumed that they represent missing values.</p>
+
+
 <p>The column names in the data correspond to different types and lengths of rates used in the
 paper. The key for understanding the column names is below:</p>
+
+<pre><code>## Warning in kableExtra::kable_styling(., position = &quot;center&quot;, latex_options
+## = &quot;HOLD_position&quot;): Please specify format in kable. kableExtra can
+## customize either HTML or LaTeX outputs. See https://haozhu233.github.io/
+## kableExtra/ for details.</code></pre>
 <table>
+<caption><span id="tab:meta">Table 2.1: </span>Rates data: Column key</caption>
 <thead>
 <tr class="header">
-<th align="left">series</th>
-<th align="left">compounding_convention</th>
-<th align="left">key</th>
+<th align="left">Series</th>
+<th align="left">Compounding Convention</th>
+<th align="left">Key</th>
 </tr>
 </thead>
 <tbody>
@@ -285,63 +253,151 @@ paper. The key for understanding the column names is below:</p>
 </tr>
 </tbody>
 </table>
-<p>Using <code>vis_dat()</code>, we can take a look at our dataset all at once to determine
-which data points to exclude.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">vis_dat</span>(raw, <span class="dt">warn_large_data =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
-<p><img src="final-project-book_files/figure-html/missing_vals-1.png" width="960" /></p>
-<p>A clear pattern is seen in the missing values, with the number of missing values
-increasing as you go further back in time and look at longer rates (10 year VS 30 year).
-This might be a bit difficult to see if you look at everything, but becomes clearer
-if you zoom in on just one set of series.</p>
-<p><img src="final-project-book_files/figure-html/par_yield_missing-1.png" width="960" /></p>
-<p>The parameters are affected by this as well, but not as much, with only <code>TAU2</code>
-being affected.</p>
-<p><img src="final-project-book_files/figure-html/parameters_missing-1.png" width="960" /></p>
-<p>Since the parameters are all we care about for this project, I decided to throw
-out any row with an <code>NA</code> value for <code>TAU2</code>. This threw out every data
-point before 1980. We can ensure that we don’t have any missing values now
-with <code>vis_miss()</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># This is the cleaned parameter set, cleaned using 02-cleaning.R</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">parameters &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/cleaned/parameters/parameters.rds&quot;</span>)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">vis_miss</span>(parameters)</a></code></pre></div>
-<p><img src="final-project-book_files/figure-html/parameters_clean-1.png" width="960" /></p>
+
+<p>Most of these columns are not important for this analysis. Only the parameter
+columns and the date column are kept. To further examine the missing values,
+the <code>skimr</code> package was used, producing the following report.</p>
+
+<p>Skim summary statistics<br />
+n obs: 14163<br />
+n variables: 7</p>
+<p>Variable type: Date</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="left">missing</th>
+<th align="left">complete</th>
+<th align="left">n</th>
+<th align="left">min</th>
+<th align="left">max</th>
+<th align="left">median</th>
+<th align="left">n_unique</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">date</td>
+<td align="left">0</td>
+<td align="left">14163</td>
+<td align="left">14163</td>
+<td align="left">1961-06-14</td>
+<td align="left">2018-03-29</td>
+<td align="left">1989-11-10</td>
+<td align="left">14163</td>
+</tr>
+</tbody>
+</table>
+<p>Variable type: numeric</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">variable</th>
+<th align="left">missing</th>
+<th align="left">complete</th>
+<th align="left">n</th>
+<th align="left">mean</th>
+<th align="left">sd</th>
+<th align="left">p0</th>
+<th align="left">p25</th>
+<th align="left">p50</th>
+<th align="left">p75</th>
+<th align="left">p100</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">BETA0</td>
+<td align="left">0</td>
+<td align="left">14163</td>
+<td align="left">14163</td>
+<td align="left">5.88</td>
+<td align="left">4.63</td>
+<td align="left">0</td>
+<td align="left">3.03</td>
+<td align="left">5.01</td>
+<td align="left">7.92</td>
+<td align="left">25</td>
+</tr>
+<tr class="even">
+<td align="left">BETA1</td>
+<td align="left">0</td>
+<td align="left">14163</td>
+<td align="left">14163</td>
+<td align="left">-0.82</td>
+<td align="left">5.05</td>
+<td align="left">-39.73</td>
+<td align="left">-3.07</td>
+<td align="left">-1.02</td>
+<td align="left">1.41</td>
+<td align="left">97.18</td>
+</tr>
+<tr class="odd">
+<td align="left">BETA2</td>
+<td align="left">0</td>
+<td align="left">14163</td>
+<td align="left">14163</td>
+<td align="left">-341.06</td>
+<td align="left">5684.56</td>
+<td align="left">-340683.77</td>
+<td align="left">-9.02</td>
+<td align="left">-0.99</td>
+<td align="left">1.93</td>
+<td align="left">94.87</td>
+</tr>
+<tr class="even">
+<td align="left">BETA3</td>
+<td align="left">0</td>
+<td align="left">14163</td>
+<td align="left">14163</td>
+<td align="left">343.72</td>
+<td align="left">5684.31</td>
+<td align="left">-104.03</td>
+<td align="left">0</td>
+<td align="left">3.72</td>
+<td align="left">18.81</td>
+<td align="left">340681.5</td>
+</tr>
+<tr class="odd">
+<td align="left">TAU1</td>
+<td align="left">0</td>
+<td align="left">14163</td>
+<td align="left">14163</td>
+<td align="left">2.39</td>
+<td align="left">3.37</td>
+<td align="left">0.1</td>
+<td align="left">0.63</td>
+<td align="left">1.47</td>
+<td align="left">2.65</td>
+<td align="left">30</td>
+</tr>
+<tr class="even">
+<td align="left">TAU2</td>
+<td align="left">4620</td>
+<td align="left">9543</td>
+<td align="left">14163</td>
+<td align="left">8.97</td>
+<td align="left">7.64</td>
+<td align="left">0.1</td>
+<td align="left">3.52</td>
+<td align="left">8.94</td>
+<td align="left">13.06</td>
+<td align="left">180.86</td>
+</tr>
+</tbody>
+</table>
+
+<p>The <code>TAU2</code> column has a number of missing values. All of them occur before 1980,
+and were removed from the data set. After that removal, no missing values remain.</p>
 </div>
 <div id="monthly" class="section level2">
 <h2><span class="header-section-number">2.3</span> Monthly and Ascending</h2>
-<p>Script) <a href="./R/03-to-monthly-and-ascending.R">03-to-monthly-and-ascending.R</a></p>
-<p>At this point, our dataset looks like this:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">parameters &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">&quot;data/cleaned/parameters/parameters.rds&quot;</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">parameters</a></code></pre></div>
-<pre><code>## # A tibble: 9,543 x 7
-##   date       BETA0 BETA1      BETA2 BETA3  TAU1  TAU2
-##   &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 2018-03-29  4.13 -2.25  0.000228  -3.07  2.84  11.4
-## 2 2018-03-28  4.35 -2.48 -0.000089  -3.53  2.99  12.2
-## 3 2018-03-27  4.44 -2.59  0.000314  -3.67  3.18  12.5
-## 4 2018-03-26  4.27 -2.44 -0.0000588 -3.12  2.73  11.8
-## 5 2018-03-23  4.53 -2.69  0.000245  -3.78  3.17  12.9
-## # ... with 9,538 more rows</code></pre>
-<p>We want monthly data, and we will need to put it in ascending order. We can
-convert to monthly with <code>as_period()</code> from <code>tibbletime</code>, and arrange it by
-ascending date with <code>arrange()</code> from <code>dplyr</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">parameters_monthly &lt;-<span class="st"> </span>parameters <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">  </span><span class="kw">as_tbl_time</span>(date) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">  </span><span class="kw">arrange</span>(date) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">  </span><span class="kw">as_period</span>(<span class="st">&quot;monthly&quot;</span>, <span class="dt">side =</span> <span class="st">&quot;end&quot;</span>)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">parameters_monthly</a></code></pre></div>
-<pre><code>## # A time tibble: 459 x 7
-## # Index: date
-##   date       BETA0  BETA1 BETA2 BETA3  TAU1  TAU2
-##   &lt;date&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 1980-01-31  11.8  0.979 -622.  617.  2.50  2.50
-## 2 1980-02-29  11.8  1.53  -617.  621.  1.15  1.15
-## 3 1980-03-31  13.2  2.95  -622.  617.  1.78  1.76
-## 4 1980-04-30  11.1  0.607 -621.  617.  1.59  1.59
-## 5 1980-05-30  11.3 -3.44  -620.  618.  1.36  1.35
-## # ... with 454 more rows</code></pre>
-<p>This leaves us with 459 rows of data for our project,
-spanning 1980-01-31 to 2018-03-29.</p>
+
+
+<p>Monthly data is required for the report, but daily data is provided from the Fed.
+The data is converted to monthly using the <code>tibbletime</code> package. This leaves 459 rows of data for the project, spanning 1980-01-31 to 2018-03-29.</p>
+
+
 
 </div>
 </div>

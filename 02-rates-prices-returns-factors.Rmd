@@ -10,174 +10,170 @@ options(tibble.print_min = 5)
 
 # Fixed Income Features Calculations {#rates}
 
-In this chapter, I will construct spot rates, zero coupon bond prices,
-excess returns, and yield factors. These features will be used later in
+In this chapter, the construction of spot rates, zero coupon bond prices,
+excess returns, and yield factors are discussed. These features are used in
 hedging strategies and for general exploration of the data.
 
-The following packages are required in this chapter.
-
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
 library(readr)
 library(ratekit)
 library(dplyr)
+library(ggplot2)
+library(tidyr)
 ```
 
 ## Spot Rates {#spot-rates}
 
-Script) [04-spot-rates-and-prices.R](./R/04-spot-rates-and-prices.R)
-
-Spot rates series can be constructed from the 6 parameters in the rates dataset.
+Spot rates series can be constructed from the 6 parameters in the cleaned dataset.
 The following formula is used to construct the spot rates. It is integrated
 form of the Svensson extension of the Nelson and Siegal approach to calculating
 instantaneous forward rates. Svensson added a second hump term to the model
 that Nelson and Siegal created. Integrating the instantaneous forward rates gives
 us the spot rates.
 
-```{r, echo=FALSE}
-knitr::include_graphics("images/spot-rates.png")
-```
+$$
+\begin{aligned}
+  y_t(n) &= \beta_{0,t} \\
+   &+ \beta_{1,t} \frac{1 - \exp(- \frac{n}{\tau_{1,t}})}{\frac{n}{\tau_{1,t}}} \\
+   &+ \beta_{2,t} [\frac{1 - \exp(- \frac{n}{\tau_{1,t}})}{\frac{n}{\tau_{1,t}}} - \exp(-\frac{n}{\tau_{1,t}})] \\
+   &+ \beta_{3,t} [\frac{1 - \exp(- \frac{n}{\tau_{2,t}})}{\frac{n}{\tau_{2,t}}} - \exp(-\frac{n}{\tau_{2,t}})]
+\end{aligned}
+$$
 
-To reconstruct this, I used a programming concept known as a _function factory_.
+To construct this, a programming concept known as a _function factory_ was used.
 This is a specialized function that returns a function. This extends naturally
 to this use case because the outer function can accept the time series of the
-6 parameters, and the inner function that get's returned is parameterized by
-`n`, corresponding to the n-year spot rate at time t. The `spot_rate_factory()`
-function lives in `ratekit`, and looks like this.
+6 parameters, and the inner function that is returned is parameterized by
+`n`, corresponding to the n-year spot rate at time t. This `spot_rate_factory()`
+function lives in `ratekit`.
 
-```{r}
-spot_rate_factory
-```
+Spot rates are examined in detail in Question 1, but the following graph provides
+a quick look at the major ones. As expected, longer maturity spot rates are consistently
+higher than short term spot rates. The 1980's were a time of incredibly high
+interest rates, and in recent years rates have been incredibly low.
 
-As you can see, it accepts the 6 parameters, and returns a function parameterized
-by `n`. Because we want to calculate the spot rate for a number of different
-years, this parameterized function will be very useful. Below is an example
-usage of this concept.
+```{r, fig.cap="Spot rates at various maturities from 1980 onward.", fig.align='center', echo=FALSE, fig.width=10, fig.pos = 'H', cache=TRUE}
+spot_rates <- read_rds("data/computed/rates.rds")
 
-```{r, warning=FALSE, message=FALSE}
-# The monthly parameters from the Data chapter
-parameters_monthly <- read_rds("data/cleaned/parameters/parameters_monthly.rds")
-
-# The generated function. The function signature is generate_spot_rates(n)
-generate_spot_rates <- with(
-  data = parameters_monthly, 
-  expr = spot_rate_factory(BETA0, BETA1, BETA2, BETA3, TAU1, TAU2)
-)
-
-# Calculate the series of 1/12 year, 11/12 year, and 1 year spot rates
-spot_rates <- parameters_monthly %>%
-  select(date) %>%
-  mutate(
-    spot_1_month  = generate_spot_rates(1/12),
-    spot_11_month = generate_spot_rates(11/12),
-    spot_12_month = generate_spot_rates(1)
-  )
-
-spot_rates
+spot_rates %>%
+  filter(maturity_nm %in% c("1", "3", "5", "7", "10")) %>%
+  ggplot(aes(x = date, y = spot_rate, color = factor(maturity, labels = unique(maturity_nm), ordered = TRUE))) +
+  geom_line() +
+  scale_color_viridis_d(end = .7) +
+  labs(x = "", y = "Spot Rate", color = "Maturity") +
+  theme_minimal()
 ```
 
 ## Zero Coupon Bond Prices
 
-Script) [04-spot-rates-and-prices.R](./R/04-spot-rates-and-prices.R)
+N-year zero coupon bond prices can be calculated easily from their corresponding
+spot rates. The following formula is used to represent the relationship between the two.
 
-n-year zero coupon bond prices can be calculated easily from their corresponding
-spot rates. Below is the relationship between the two.
+$$ P_t(n) = \exp(-y_t(n) \times n) $$
 
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics("images/zero-prices.png")
-```
-
-Like for the spot rates, a function factory was constructed that accepted the
-spot rate function, and returned a function that calculates a vector of bond
+Similar to spot rates, a function factory named `zero_bond_price_factory()` was constructed that accepted the spot rate function, and returned a function that calculates a vector of bond
 prices parameterized by `n`.
 
-```{r}
-zero_bond_price_factory
-```
+Zero prices naturally exhibit an inverse relationship to spot rates. The impact of the
+high interest rates in the 1980's can be seen clearly here, with a large price spread
+between the short and long term maturity zeroes.
 
-Using this relationship, the zero coupon bond prices were computed as the following:
+```{r, fig.cap="Zero prices at various maturities from 1980 onward.", fig.align='center', echo=FALSE, fig.width=10, fig.pos = 'H', cache=TRUE}
+zero_prices <- read_rds("data/computed/prices.rds")
 
-```{r}
-generate_zero_prices <- zero_bond_price_factory(generate_spot_rates)
-
-zero_prices <- spot_rates %>%
-  transmute(
-    date, 
-    zero_prices_1_month = generate_zero_prices(1/12),
-    zero_prices_11_month = generate_zero_prices(11/12),
-    zero_prices_12_month = generate_zero_prices(1)
-  )
-
-zero_prices
+zero_prices %>%
+  filter(maturity_nm %in% c("1", "3", "5", "7", "10")) %>%
+  ggplot(aes(x = date, y = zero_price, color = factor(maturity, labels = unique(maturity_nm), ordered = TRUE))) +
+  geom_line() +
+  scale_color_viridis_d(end = .7) +
+  labs(x = "", y = "Zero Price", color = "Maturity") +
+  theme_minimal()
 ```
 
 ## One Month Returns
 
-Script) [05-returns.R](./R/05-returns.R)
+The time $t+\Delta$ return on an n-year bond is:
 
-The time $t+\Delta$ return on a n-year bond is:
+$$ RET_{t+\Delta}(n) = \frac{P_{t+\Delta}(n - \Delta)}{P_t(n)} - 1 $$
 
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics("images/returns.png")
+Using the zero bond prices from the previous section, it is straightforward to calculate returns. Care must be taken to align the price from next month's $n-\Delta$ maturity bond with today's $n$ maturity bond, but otherwise the procedure is simple.
+
+The distribution of returns is shown in Figure \@ref(fig:returns-dist). As seen in both the figure
+and Table \@ref(tab:returns-summary), higher maturity zeros have both larger average returns and
+more variance.
+
+```{r returns-dist, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Return distributions for various maturities.", warning=FALSE, fig.align='center', cache=TRUE}
+returns <- read_rds("data/computed/returns.rds")
+
+returns %>%
+  mutate(maturity_nm = factor(as.numeric(maturity_nm))) %>%
+  ggplot(aes(RET_n)) +
+  geom_histogram(binwidth = .0025) +
+  facet_wrap(~maturity_nm) +
+  theme_minimal() +
+  labs(x = "Return", y = "Count")
 ```
 
-Using the zero bond prices from before, it is easy to calculate returns. For
-example, 1 month returns for 1 year zero coupon bonds can be calculated as:
-
-```{r}
-returns <- zero_prices %>%
-  mutate(
-    zero_prices_12_month_lag = lag(zero_prices_12_month),
-    one_month_return = zero_prices_11_month / zero_prices_12_month_lag - 1
-  ) %>% 
-  select(-zero_prices_1_month, -zero_prices_12_month_lag)
-
-returns
+```{r returns-summary, echo=FALSE, warning=FALSE, message=FALSE, cache=TRUE}
+returns %>%
+  mutate(maturity_nm = factor(as.numeric(maturity_nm))) %>%
+  rename(Maturity = maturity_nm, Return = RET_n) %>%
+  group_by(Maturity) %>%
+  summarise(
+    `Average Return` = mean(Return, na.rm = TRUE),
+    `Standard Deviation` = sd(Return, na.rm = TRUE)
+  ) %>%
+  knitr::kable(booktabs = TRUE, caption = "Summary statistics of zero coupon bond returns since the 1980's.") %>%
+  kableExtra::kable_styling(position = "center", latex_options = "HOLD_position")
 ```
 
 ## Excess Returns
 
-Script) [05-returns.R](./R/05-returns.R)
-
 Excess returns are calculated over the 1 month treasury, specifically:
 
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics("images/excess-returns.png")
-```
+$$ ER_{t+\Delta}(n) = RET_{t+\Delta}(n) - RET_{t+\Delta}(\Delta) $$
 
-For excess returns, the one month on the n-year bond must be calculated, and the
-return on the benchmark (1 month treasury) must be calculated. We already have
-1-year bond returns, but we need to calculate our benchmark returns. That can
-be done using the same formula as the 1-year returns, but where $P_{t+\Delta}(n-\Delta) = 1$, 
-the maturity value.
+with $\Delta = 1 / 12$. Excess returns are only calculated for $n = 1, 3, 5, 7, \text{and } 10$ year zeros.
 
-```{r}
-returns_bench <- zero_prices %>%
-  mutate(return_benchmark = 1 / lag(zero_prices_1_month) - 1) %>%
-  select(date, zero_prices_1_month, return_benchmark)
+The implementation of this is easy since returns for all maturities have already been calculated.
+The only potentially tricky thing to remember when calculating $RET_{t+\Delta}(\Delta)$ is that $P_{t+\Delta}(n-\Delta) = 1$.
 
-returns_bench
-```
-
-With these two sets of returns in hand, we can calculate excess returns for the
-one year bond.
-
-```{r}
-excess_returns <- returns %>%
-  left_join(returns_bench, "date") %>%
-  transmute(date, excess_returns = one_month_return - return_benchmark)
-
-excess_returns
-```
+Excess returns show a similar distribution as returns, just shifted downwards by the 1 month treasury return.
 
 ## Yield Curve Factors {#yield-curve-factors}
 
-Script) [06-yield-curve-factors.R](./R/06-yield-curve-factors.R)
+Finally, the yield curve factors: level, slope, and curvature are calculated as:
 
-Finally, the yield curve factors, level, slope, and curvature are calculated as:
+$$
+\begin{aligned}
+  \text{Level} &= y_t(1/4) \\
+   \text{Slope} &= y_t(8) - y_t(1/4) \\
+   \text{Curvature} &= [ y_t(8) - y_t(2) ]  - [ y_t(2) - y_t(1/4) ]
+\end{aligned}
+$$
+As seen in Figure \@ref(fig:yield-factors), the raw values of the yield curve factors
+do not offer much insight on their own, but they will be useful later in decomposing
+the spot rate and in multiplicative regression hedging.
 
-```{r, fig.align='center', echo=FALSE}
-knitr::include_graphics("images/level-slope-curvature.png")
+```{r yield-factors, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Yield Curve Factors over time", warning=FALSE, fig.align='center', cache=TRUE}
+# From ?toupper examples
+capwords <- function(s, strict = FALSE) {
+    cap <- function(s) paste(toupper(substring(s, 1, 1)),
+                  {s <- substring(s, 2); if(strict) tolower(s) else s},
+                             sep = "", collapse = " " )
+    sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
+}
+
+yield_factors <- read_rds("data/computed/yield_curve_factors.rds")
+
+yield_factors %>%
+  rename_if(is.numeric, capwords) %>%
+  gather(... = -date) %>%
+  ggplot(aes(x = date, y = value, color = key)) +
+  geom_line() +
+  theme_minimal() +
+  scale_color_brewer(palette = "Dark2") +
+  labs(x = "", y = "Value", color = "Factor")
 ```
 
-The implementation of these is straightforward from the set of spot rates,
-so no example is shown here.
+

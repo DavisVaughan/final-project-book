@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
   <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
-<meta name="author" content="Davis Vaughan">
+<meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-18">
+<meta name="date" content="2018-04-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -156,10 +156,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
 <li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
 <li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
-<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
-<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coef-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
+<li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -182,23 +190,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Finn 6211 - Final Project</h1>
-<h4 class="author"><em>Davis Vaughan</em></h4>
-<h4 class="date"><em>2018-04-18</em></h4>
+<h2 class="subtitle"><em>Davis Vaughan</em></h2>
+<p class="author"><em><a href="mailto:mvaugh15@uncc.edu">mvaugh15@uncc.edu</a></em></p>
+<p class="date"><em>2018-04-23</em></p>
 </div>
 <div id="titlepage" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
 <p>This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.</p>
-<p>The instructions for the report can be found <a href="./instructions/Hedging_Project_S18.pdf">here</a>.</p>
 <p>An R package has been created to accompany the report. It contains a number of
 helper functions for cleaning data, manipulating the time series, and creating
 the hedging strategies. The package is named <code>ratekit</code> and can be found on
-Github <a href="https://github.com/DavisVaughan/ratekit">here</a>.</p>
-<p>The book is intended to provide a summary of the methods used in the project.
-In each section of the book is a link to the script that was actually run to
-generate the results for the project. Those scripts are more in depth and cover
-every aspect of the project.</p>
+Github at <a href="https://github.com/DavisVaughan/ratekit" class="uri">https://github.com/DavisVaughan/ratekit</a>.</p>
+<p>The structure of the report is as follows. Chapter 2 is dedicated to retrieving
+and cleaning the data. Chapter 3 is focused on the calculation of features used
+in the questions. Chapters 4, 5, and 6 answer the three questions required in
+the report.</p>
+<p>The code used to create the analysis is split into two places. In the <code>R/</code> folder
+of the attached zip file are the files used for downloading the data, cleaning it,
+and creating the fixed income features. The actual analysis and answering of the
+questions is done inside the <code>.Rmd</code> files found in the top level of the zip file.</p>
 <p>This report was written with <a href="https://bookdown.org/yihui/bookdown/">bookdown</a>, a
 book authoring package for R.</p>
+
+
 
 </div>
             </section>

@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
   <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
@@ -22,10 +22,10 @@
   <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
-<meta name="author" content="Davis Vaughan">
+<meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-18">
+<meta name="date" content="2018-04-23">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -156,10 +156,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.3" data-path="q2.html"><a href="q2.html#five-year-spot-rate"><i class="fa fa-check"></i><b>5.3</b> Five Year Spot Rate</a></li>
 <li class="chapter" data-level="5.4" data-path="q2.html"><a href="q2.html#ten-year-spot-rate"><i class="fa fa-check"></i><b>5.4</b> Ten Year Spot Rate</a></li>
 <li class="chapter" data-level="5.5" data-path="q2.html"><a href="q2.html#decomposing-the-spot-curve"><i class="fa fa-check"></i><b>5.5</b> Decomposing the Spot Curve</a></li>
-<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coefficient-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
-<li class="chapter" data-level="5.7" data-path="q2.html"><a href="q2.html#do-we-need-all-three-factors"><i class="fa fa-check"></i><b>5.7</b> Do We Need All Three Factors?</a></li>
+<li class="chapter" data-level="5.6" data-path="q2.html"><a href="q2.html#coef-stability"><i class="fa fa-check"></i><b>5.6</b> Coefficient Stability</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
+<li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -184,37 +192,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 4</span> Question 1</h1>
 <p><strong>Question:</strong></p>
 <p><em>What are the time-series properties of the spot rates <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span>? Report their summary statistics, including mean, standard deviation, skewness, kurtosis, and the first four autocorrelation coefficients, and the correlation matrix of the spot rates. Comment on your results. Also plot them and comment on the time series patterns.</em></p>
-<p>In this section, the following packages are used:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">library</span>(readr)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="kw">library</span>(tidyr)</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw">library</span>(ratekit)</a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="kw">library</span>(ggplot2)</a>
-<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="kw">library</span>(broom)</a>
-<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="kw">library</span>(purrr)</a></code></pre></div>
-<p>We will need the data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates. These
-have already been calculated in the script referenced in <a href="rates.html#spot-rates">3.1</a>, so
-we can just load them in.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">rates &lt;-<span class="st"> </span><span class="kw">read_rds</span>(<span class="st">&quot;data/computed/rates.rds&quot;</span>)</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">n &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;1&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="st">&quot;10&quot;</span>)</a>
-<a class="sourceLine" id="cb25-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb25-4" data-line-number="4">spot_rates_q1 &lt;-<span class="st"> </span>rates <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="st">  </span><span class="kw">filter</span>(maturity_nm <span class="op">%in%</span><span class="st"> </span>n)</a>
-<a class="sourceLine" id="cb25-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb25-7" data-line-number="7">spot_rates_q1</a></code></pre></div>
-<pre><code>## # A tibble: 1,377 x 4
-##   maturity maturity_nm date       spot_rate
-##      &lt;dbl&gt; &lt;chr&gt;       &lt;date&gt;         &lt;dbl&gt;
-## 1        1 1           1980-01-31    0.118 
-## 2        1 1           1980-02-29    0.145 
-## 3        1 1           1980-03-31    0.151 
-## 4        1 1           1980-04-30    0.107 
-## 5        1 1           1980-05-30    0.0871
-## # ... with 1,372 more rows</code></pre>
+
+
+<p>In this question, data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates
+will be used. This has been calculated in Section <a href="rates.html#spot-rates">3.1</a>, and the
+results from there are used here.</p>
+
+
 <div id="summary-statistics" class="section level2">
 <h2><span class="header-section-number">4.1</span> Summary Statistics</h2>
-<p>Reported below are summary statistics on the three spot rate series.</p>
+<p>Reported in Table <a href="q1.html#tab:spot-rate-summary">4.1</a> are summary statistics on the three spot rate series.</p>
+
+<pre><code>## Warning in kableExtra::kable_styling(., position = &quot;center&quot;, latex_options
+## = &quot;HOLD_position&quot;): Please specify format in kable. kableExtra can
+## customize either HTML or LaTeX outputs. See https://haozhu233.github.io/
+## kableExtra/ for details.</code></pre>
 <table>
+<caption><span id="tab:spot-rate-summary">Table 4.1: </span>Summary statistics for 1, 5, and 10 year spot rates.</caption>
 <thead>
 <tr class="header">
 <th align="right">Maturity</th>
@@ -248,18 +242,32 @@ we can just load them in.</p>
 </tr>
 </tbody>
 </table>
+
+
+<div class="figure" style="text-align: center"><span id="fig:spot-rate-hist"></span>
+<img src="final-project-book_files/figure-html/spot-rate-hist-1.png" alt="Spot rate distributions" width="960" />
+<p class="caption">
+Figure 4.1: Spot rate distributions
+</p>
+</div>
+
 <p>Unsurprisingly, the average spot rate increases with the maturity, but interestingly,
 the shorter maturity spot rates have higher volatility. The kurtosis of all three
 are less than that of a normal distribution, but the 1 year maturity is very close.
 All three are right-skewed, with longer right tails, which makes sense considering
-extremely high interest rate periods do happen, but are rare.</p>
+extremely high interest rate periods do happen, but are rare. The histograms
+in Figure <a href="q1.html#fig:spot-rate-hist">4.1</a> are a nice visual confirmation of the
+results in the table. The skewness is clear, and the higher standard deviation
+for lower maturities might be attributed to the higher density at the extreme
+tails.</p>
 </div>
 <div id="autocorrelations" class="section level2">
 <h2><span class="header-section-number">4.2</span> Autocorrelations</h2>
 <p>The first four autocorrelation correlation coefficients of the 3 series are
-reported below, along with a plot of the ACF for the series. Each of the
-series are highly autocorrelated.</p>
+reported in Table <a href="q1.html#tab:acf-table">4.2</a>, along with a plot of the ACF for the series in Figure <a href="q1.html#fig:acf-chart">4.2</a>. Each of the series are highly autocorrelated.</p>
+
 <table>
+<caption><span id="tab:acf-table">Table 4.2: </span>Autocorrelation coefficients for 1, 5, and 10 year spot rates.</caption>
 <thead>
 <tr class="header">
 <th align="right">Maturity</th>
@@ -293,24 +301,29 @@ series are highly autocorrelated.</p>
 </tr>
 </tbody>
 </table>
+
 <p>By looking at the entire ACF, we can see that the amount of autocorrelation increases
 in maturity. At farther out lags, 1 is less autocorrelated than 5 and 5 less than 10.</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-25"></span>
-<img src="final-project-book_files/figure-html/unnamed-chunk-25-1.png" alt="ACF for the 1, 5, and 10 year spot rates" width="960" />
+
+<div class="figure" style="text-align: center"><span id="fig:acf-chart"></span>
+<img src="final-project-book_files/figure-html/acf-chart-1.png" alt="ACF for the 1, 5, and 10 year spot rates" width="960" />
 <p class="caption">
-Figure 4.1: ACF for the 1, 5, and 10 year spot rates
+Figure 4.2: ACF for the 1, 5, and 10 year spot rates
 </p>
 </div>
+
 </div>
 <div id="correlations" class="section level2">
 <h2><span class="header-section-number">4.3</span> Correlations</h2>
 <p>Moving on to correlations, it is clear that the the series are <em>highly</em>
 correlated. This should not be surprising whatsoever. Intuitively, the 1 year
 is more correlated with the 5 year than with the 10 year.</p>
+
 <table>
+<caption><span id="tab:correlations">Table 4.3: </span>Autocorrelation coefficients for 1, 5, and 10 year spot rates.</caption>
 <thead>
 <tr class="header">
-<th></th>
+<th align="right">Maturity</th>
 <th align="right">1</th>
 <th align="right">5</th>
 <th align="right">10</th>
@@ -318,25 +331,26 @@ is more correlated with the 5 year than with the 10 year.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td>1</td>
+<td align="right">1</td>
 <td align="right">1.0000000</td>
 <td align="right">0.9783620</td>
 <td align="right">0.9539364</td>
 </tr>
 <tr class="even">
-<td>5</td>
+<td align="right">5</td>
 <td align="right">0.9783620</td>
 <td align="right">1.0000000</td>
 <td align="right">0.9932312</td>
 </tr>
 <tr class="odd">
-<td>10</td>
+<td align="right">10</td>
 <td align="right">0.9539364</td>
 <td align="right">0.9932312</td>
 <td align="right">1.0000000</td>
 </tr>
 </tbody>
 </table>
+
 </div>
 <div id="time-series-visualizations" class="section level2">
 <h2><span class="header-section-number">4.4</span> Time Series Visualizations</h2>
@@ -345,12 +359,16 @@ and correlated nature of the three series. 1 year spot rates are almost always
 below the longer maturity rates, as one would expect. Since 2010, 1 year spot
 rates have been incredibly low, but have started to pick back up in the last
 few years.</p>
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-27"></span>
-<img src="final-project-book_files/figure-html/unnamed-chunk-27-1.png" alt="A look at the 1, 5, and 10 year spot rates over time" width="960" />
+
+<div class="figure" style="text-align: center"><span id="fig:spot-rates-over-time"></span>
+<img src="final-project-book_files/figure-html/spot-rates-over-time-1.png" alt="A look at the 1, 5, and 10 year spot rates over time" width="960" />
 <p class="caption">
-Figure 4.2: A look at the 1, 5, and 10 year spot rates over time
+Figure 4.3: A look at the 1, 5, and 10 year spot rates over time
 </p>
 </div>
+
+
+
 
 </div>
 </div>
