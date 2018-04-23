@@ -18,7 +18,7 @@ $$ RMSHE = [\frac{1}{T} \sum{\epsilon_{t+\Delta}(n_h)}]^{0.5} $$
 
 _Report your results and evaluate the performance of the hedging strategies._
 
-**Implementation details**
+**Implementation details:**
 
 This chapter is broken into:
 
@@ -40,7 +40,7 @@ library(rsample)
 library(tibble)
 ```
 
-The data for the $y_t(1)$, $y_t(3)$, $y_t(5)$, $y_t(7)$, and $y_t(10)$ spot rates is required to calculate the durations for the zero coupon bonds used in the hedging exercises. Also required are the yield curve factors and excess returns. These have all been calculated in \@ref(rates), and the results from there are used.
+The data for the $y_t(1)$, $y_t(3)$, $y_t(5)$, $y_t(7)$, and $y_t(10)$ spot rates is required to calculate the durations for the zero coupon bonds used in the hedging exercises. Also required are the yield curve factors and excess returns. These have all been calculated in Section \@ref(rates), and the results from there are used.
 
 ```{r, echo=FALSE}
 rates         <- read_rds("data/computed/rates.rds")

@@ -40,7 +40,7 @@ spot_rates_q1 <- rates %>%
 
 Reported in Table \@ref(tab:spot-rate-summary) are summary statistics on the three spot rate series.
 
-```{r spot-rate-summary, echo=FALSE}
+```{r spot-rate-summary, echo=FALSE, warning=FALSE}
 spot_rates_q1 %>%
   rename(Maturity = maturity) %>%
   group_by(Maturity) %>%

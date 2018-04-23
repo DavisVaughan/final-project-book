@@ -194,7 +194,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><em>Perform the “out-of-sample” hedging exercises where <span class="math inline">\(n_h = 3\)</span>. Split the sample into two halves, such that <span class="math inline">\(T_0 = 2T\)</span>. Begin with the <span class="math inline">\(T\)</span>-th month, calculate <span class="math inline">\(w_T(1)\)</span>, <span class="math inline">\(w_T(5)\)</span>, and <span class="math inline">\(w_T(10)\)</span> for each hedging strategy, and save <span class="math inline">\(\epsilon_{T+\Delta}(n_h)\)</span>. Move forward and repeat the process each month, and calculate the root mean squared hedging error (RMSHE) for each strategy:</em></p>
 <p><span class="math display">\[ RMSHE = [\frac{1}{T} \sum{\epsilon_{t+\Delta}(n_h)}]^{0.5} \]</span></p>
 <p><em>Report your results and evaluate the performance of the hedging strategies.</em></p>
-<p><strong>Implementation details</strong></p>
+<p><strong>Implementation details:</strong></p>
 <p>This chapter is broken into:</p>
 <ul>
 <li>3 sections devoted to creating the modeling functions</li>
@@ -205,7 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 
 
-<p>The data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(3)\)</span>, <span class="math inline">\(y_t(5)\)</span>, <span class="math inline">\(y_t(7)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates is required to calculate the durations for the zero coupon bonds used in the hedging exercises. Also required are the yield curve factors and excess returns. These have all been calculated in <a href="rates.html#rates">3</a>, and the results from there are used.</p>
+<p>The data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(3)\)</span>, <span class="math inline">\(y_t(5)\)</span>, <span class="math inline">\(y_t(7)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates is required to calculate the durations for the zero coupon bonds used in the hedging exercises. Also required are the yield curve factors and excess returns. These have all been calculated in Section <a href="rates.html#rates">3</a>, and the results from there are used.</p>
 
 
 <p>The models developed below will be structured in a way so that they can all be
