@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
-  <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
+  <meta name="description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
   <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta property="og:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Finn 6211 - Final Project" />
   
-  <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta name="twitter:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
 <meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-23">
+<meta name="date" content="2018-04-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,13 +133,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>2</b> Data</a><ul>
-<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Getting the data</a></li>
+<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Data Retrieval</a></li>
 <li class="chapter" data-level="2.2" data-path="data.html"><a href="data.html#cleaning"><i class="fa fa-check"></i><b>2.2</b> Cleaning</a></li>
 <li class="chapter" data-level="2.3" data-path="data.html"><a href="data.html#monthly"><i class="fa fa-check"></i><b>2.3</b> Monthly and Ascending</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
-<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
 <li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
 <li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
 <li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
@@ -160,12 +160,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
 <li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
-<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
-<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
-<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
-<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
-<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
-<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple Regression Based Hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative Regression Hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error Calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model Selection Interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model Application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model Results</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -224,20 +224,20 @@ which is the <code>T</code> value corresponding to half of the data.</p>
 <div id="modified-macaulay-duration" class="section level2">
 <h2><span class="header-section-number">6.1</span> Modified / Macaulay Duration</h2>
 <p>The first two strategies involve creating duration matched barbells using 1-year
-and 10-year zero coupon bonds to match the duration of a 3 year or 7 year bullet.
+and 10-year zero coupon bonds to match the duration of a 3-year or 7-year bullet.
 Since the strategies are essentially the same, one modeling function is used for both, <code>model_duration()</code>,
 with an argument to select whether to use modified or macaulay duration. The duration
-is calculated using the <code>duration()</code> function that was created in the <code>ratekit</code> package
+is calculated using the <code>duration()</code> function in the <code>ratekit</code> package
 and the barbell weights are calculated with the <code>barbell_weights()</code> function.</p>
 <p>The function is created in such a way that it accepts a single split from the
 total data frame, and calculates the weights for just that one split.
-The weight for a 5 year zero is included to be consistent with the other models,
+The weight for a 5-year zero is included to be consistent with the other models,
 but is set to <code>0</code>.</p>
 
 
 </div>
 <div id="simple-regression-based-hedging" class="section level2">
-<h2><span class="header-section-number">6.2</span> Simple regression based hedging</h2>
+<h2><span class="header-section-number">6.2</span> Simple Regression Based Hedging</h2>
 <p>The regression based hedging method involves the regression:</p>
 <p><span class="math display">\[ ER_t(n_h) = w_t(1) ER_t(1) + w_t(5) ER_t(5) + w_t(10) ER_t(10) + u_t(n_h) \]</span></p>
 <p>The R function <code>lm()</code> is used to run the regression, and the weights are
@@ -247,22 +247,26 @@ wrapped into a modeling function, <code>model_regression()</code>.</p>
 
 </div>
 <div id="multiplicative-regression-hedging" class="section level2">
-<h2><span class="header-section-number">6.3</span> Multiplicative regression hedging</h2>
+<h2><span class="header-section-number">6.3</span> Multiplicative Regression Hedging</h2>
 <p>The multiplicative regression follows the model:</p>
 <p><span class="math display">\[ ER_t(n_h) = \theta_t(1; X_{t-\Delta}) ER_t(1) + \theta_t(5; X_{t-\Delta}) ER_t(5) + \theta_t(10; X_{t-\Delta}) ER_t(10) + u_t(n_h) \]</span>
-Where <span class="math inline">\(\theta_t(n; X_{t-\Delta})\)</span> depends on the yield curve factors as:</p>
+where <span class="math inline">\(\theta_t(n; X_{t-\Delta})\)</span> depends on the yield curve factors as:</p>
 <p><span class="math display">\[ \theta_t(n; X_{t-\Delta}) = a_t(n) + b_t(n) \text{Level}_{t-\Delta} + c_t(n) \text{Slope}_{t-\Delta} + d_t(n) \text{Curvature}_{t-\Delta} \]</span></p>
-<p>Once the models are fit, the weights at time <code>t</code> can be calculated as <span class="math inline">\(\theta_t\)</span> values
-using the yield curve factors at <code>t</code>:</p>
-<p><span class="math display">\[ w_t(1) = \theta_t(1; X_t) \\ w_t(5) = \theta_t(5; X_t) \\ w_t(10) = \theta_t(10; X_t) \]</span></p>
+<p>Once the models are fit, the weights at time <span class="math inline">\(t\)</span> can be calculated as <span class="math inline">\(\theta_t\)</span> values
+using the yield curve factors at <span class="math inline">\(t\)</span>:</p>
+<p><span class="math display">\[ 
+w_t(1) = \theta_t(1; X_t) \\ 
+w_t(5) = \theta_t(5; X_t) \\ 
+w_t(10) = \theta_t(10; X_t)
+\]</span></p>
 <p>The entire procedure is wrapped into <code>model_multiplicative_regression()</code>, which,
 consistent with the other <code>model_*()</code> functions developed so far, accepts a single
-rolling split, along with the type of bullet (3 or 7 year), and returns the weights.</p>
+rolling split, along with the type of bullet (3 or 7-year), and returns the weights.</p>
 
 
 </div>
 <div id="error-calculation" class="section level2">
-<h2><span class="header-section-number">6.4</span> Error calculation</h2>
+<h2><span class="header-section-number">6.4</span> Error Calculation</h2>
 <p>Hedging error for the weights set at time <span class="math inline">\(t\)</span> are calculated at time <span class="math inline">\(t+\Delta\)</span> as:</p>
 <p><span class="math display">\[ \epsilon_{t+\Delta} = w_t(1) ER_{t+\Delta}(1) + w_t(5) ER_{t+\Delta}(5) + w_t(10) ER_{t+\Delta}(10) \]</span>
 These weights are then aggregated using RMSHE to determine overall model performance.</p>
@@ -270,7 +274,7 @@ These weights are then aggregated using RMSHE to determine overall model perform
 
 </div>
 <div id="model-selection-interface" class="section level2">
-<h2><span class="header-section-number">6.5</span> Model selection interface</h2>
+<h2><span class="header-section-number">6.5</span> Model Selection Interface</h2>
 <p>A practical way to call all of the above models would be through an interface
 function that take as parameters: the data, the model to run, and the bullet to hedge against.
 Such a function was developed, and returns a data frame of the model type, the
@@ -285,11 +289,11 @@ bullet used, the date of the error calculation, the weights, and the hedging err
 
 </div>
 <div id="model-application" class="section level2">
-<h2><span class="header-section-number">6.6</span> Model application</h2>
+<h2><span class="header-section-number">6.6</span> Model Application</h2>
 
 
-<p>Finally, a data frame is set up to easily iterate over all of the models, and
-the modeling function is run on each set of parameters. This data frame has a very compact form:</p>
+<p>Finally, a data frame of function calls and parameter sets is created to easily iterate over all of the models.
+This data frame has a very compact form:</p>
 
 <pre class="sourceCode r"><code class="sourceCode r">invokable</code></pre>
 <pre><code>## # A tibble: 8 x 2
@@ -304,7 +308,7 @@ the modeling function is run on each set of parameters. This data frame has a ve
 ## 7 apply_model &lt;list [3]&gt;
 ## 8 apply_model &lt;list [3]&gt;</code></pre>
 
-<p>Each element of the <code>params</code> column contains the data to be used in the model,
+<p>The first column contains the function interface, <code>apply_model()</code>. Each element of the <code>params</code> column contains the data to be used in the model,
 the model type, and the bullet to hedge against.</p>
 
 <pre class="sourceCode r"><code class="sourceCode r">invokable<span class="op">$</span>params[[<span class="dv">1</span>]]</code></pre>
@@ -328,15 +332,15 @@ the model type, and the bullet to hedge against.</p>
 
 </div>
 <div id="model-results" class="section level2">
-<h2><span class="header-section-number">6.7</span> Model results</h2>
+<h2><span class="header-section-number">6.7</span> Model Results</h2>
 <p>Table <a href="q3.html#tab:hedging-results">6.1</a> displays the RMSHE results from each model. The
 regression methods significantly outperformed the duration based models, with
 much lower RMSHE. Among the duration models, Macaulay duration did marginally better,
 but the statistical significance is likely negligible. Among the regression models,
 the multiplicative regression did slightly better than the simple regression
-with the 3 year bullet and slightly worse with the 7 year bullet. The results
+with the 3-year bullet and slightly worse with the 7-year bullet. The results
 are so close, however, that I am inclined to conclude that the simpler regression
-model is the best and most parsimonious model of the 4. There is little to indicate that longer maturity bullets are harder to hedge than shorter maturity bullets. In fact, with the regression models, the opposite seems
+model is the best and most parsimonious model of the four. There is little to indicate that longer maturity bullets are harder to hedge than shorter maturity bullets. In fact, with the regression models, the opposite seems
 to be true.</p>
 
 <table>
@@ -395,25 +399,25 @@ to be true.</p>
 
 
 <p>Because a rolling model was fit, a similar analysis can be performed as Section <a href="q2.html#coef-stability">5.6</a> where
-the stability of the coefficients over time was analyzed. In this case, the assignment of weights by the models over time can be analyzed rather than just the coefficients. Some interesting insights can be gathered Figure <a href="q3.html#fig:weight-stability">6.1</a>. Keeping in mind that duration models are <em>only</em> allowed to assign weight to a 1 year
+the stability of the coefficients over time was analyzed. In this case, the assignment of hedging weights by the models over time can be analyzed rather than just the coefficients. Some interesting insights can be gathered from Figure <a href="q3.html#fig:weight-stability">6.1</a>. Keeping in mind that duration models are <em>only</em> allowed to assign weight to a 1 year
 and 10 year zero, it is interesting to see how stagnant the weighting is between
 the 1 year and 10 year. The fact that the model essentially does not have the
 flexibility to vary the weights much over time likely contributes to its poor performance. The duration
 model also never shorts, which likely helps the regression models. The weightings
 in the duration models do make sense, with more than 50% being assigned to the
-1 year bond for the 3 year bullet, and more than 50% being assigned to the 10 year
-for the 7 year bullet. In the regression models, there is an implicit risk free instrument that weight
+1-year bond to hedge the 3-year bullet, and more than 50% being assigned to the 10-year
+the hedge the 7-year bullet. In the regression models, there is an implicit risk free instrument that weight
 can be assigned to, so a 4th row in the figure is included to incorporate that. The
 simple regression model only shifts weights around in periods of high stress, 2001
-and the tick around 2008 being two examples, but even so, the weightings are surprisingly
+and the jump around 2008 being two examples, but even so, the weightings are surprisingly
 stable over time. This is especially apparent when contrasted with the multiplicative
 regression. Weights are highly varied over time, but the performance gain for this
-is limited as seen in the RMSHE results.</p>
+is limited as seen in the RMSHE results, questioning the need for the complex model.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:weight-stability"></span>
-<img src="final-project-book_files/figure-html/weight-stability-1.png" alt="Weight assignment over time" width="960" />
+<img src="final-project-book_files/figure-html/weight-stability-1.png" alt="Hedging weight assignment over time" width="960" />
 <p class="caption">
-Figure 6.1: Weight assignment over time
+Figure 6.1: Hedging weight assignment over time
 </p>
 </div>
 
@@ -421,8 +425,8 @@ Figure 6.1: Weight assignment over time
 Figure <a href="q3.html#fig:stacked-weight-stability">6.2</a> and provides another unique view into the
 change in the total weight distribution over time. This view confirms the stagnant
 weights in the duration models, but also offers some other new insights. In the regression models, hedging
-the 3 year bullet requires shorting the 10 year and the risk free, while hedging
-the 7 year bullet only required hedging the 1 year bond. This view also further demonstrates
+the 3-year bullet requires shorting the 10-year and the risk free, while hedging
+the 7-year bullet only required hedging the 1-year bond. This view also further demonstrates
 the wild swings in the multiplicative regression, for questionable performance gains.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:stacked-weight-stability"></span>

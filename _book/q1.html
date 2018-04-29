@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
-  <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
+  <meta name="description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
   <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta property="og:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Finn 6211 - Final Project" />
   
-  <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta name="twitter:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
 <meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-23">
+<meta name="date" content="2018-04-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,13 +133,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>2</b> Data</a><ul>
-<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Getting the data</a></li>
+<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Data Retrieval</a></li>
 <li class="chapter" data-level="2.2" data-path="data.html"><a href="data.html#cleaning"><i class="fa fa-check"></i><b>2.2</b> Cleaning</a></li>
 <li class="chapter" data-level="2.3" data-path="data.html"><a href="data.html#monthly"><i class="fa fa-check"></i><b>2.3</b> Monthly and Ascending</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
-<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
 <li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
 <li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
 <li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
@@ -160,12 +160,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
 <li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
-<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
-<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
-<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
-<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
-<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
-<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple Regression Based Hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative Regression Hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error Calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model Selection Interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model Application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model Results</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -195,13 +195,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <p>In this question, data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates
-will be used. This has been calculated in Section <a href="rates.html#spot-rates">3.1</a>, and the
+is required. This has been calculated in Section <a href="rates.html#spot-rates">3.1</a>, and the
 results from there are used here.</p>
 
 
 <div id="summary-statistics" class="section level2">
 <h2><span class="header-section-number">4.1</span> Summary Statistics</h2>
-<p>Reported in Table <a href="q1.html#tab:spot-rate-summary">4.1</a> are summary statistics on the three spot rate series.</p>
+<p>Reported in Table <a href="q1.html#tab:spot-rate-summary">4.1</a> are summary statistics on the three spot rate series.
+Unsurprisingly, the average spot rate increases with the maturity, but interestingly,
+the shorter maturity spot rates have higher volatility. The kurtosis of all three
+are less than that of a normal distribution, but the 1-year maturity is very close.
+All three are right-skewed, with longer right tails, which makes sense considering
+extremely high interest rate periods do happen, but are rare. The histograms
+in Figure <a href="q1.html#fig:spot-rate-hist">4.1</a> are a nice visual confirmation of the
+results in the table. The skewness is clear, and the higher standard deviation
+for lower maturities might be attributed to the higher density at the extreme
+tails.</p>
 
 <table>
 <caption><span id="tab:spot-rate-summary">Table 4.1: </span>Summary statistics for 1, 5, and 10 year spot rates.</caption>
@@ -247,20 +256,14 @@ Figure 4.1: Spot rate distributions
 </p>
 </div>
 
-<p>Unsurprisingly, the average spot rate increases with the maturity, but interestingly,
-the shorter maturity spot rates have higher volatility. The kurtosis of all three
-are less than that of a normal distribution, but the 1 year maturity is very close.
-All three are right-skewed, with longer right tails, which makes sense considering
-extremely high interest rate periods do happen, but are rare. The histograms
-in Figure <a href="q1.html#fig:spot-rate-hist">4.1</a> are a nice visual confirmation of the
-results in the table. The skewness is clear, and the higher standard deviation
-for lower maturities might be attributed to the higher density at the extreme
-tails.</p>
 </div>
 <div id="autocorrelations" class="section level2">
 <h2><span class="header-section-number">4.2</span> Autocorrelations</h2>
-<p>The first four autocorrelation correlation coefficients of the 3 series are
-reported in Table <a href="q1.html#tab:acf-table">4.2</a>, along with a plot of the ACF for the series in Figure <a href="q1.html#fig:acf-chart">4.2</a>. Each of the series are highly autocorrelated.</p>
+<p>The first four autocorrelation coefficients of the 3 series are
+reported in Table <a href="q1.html#tab:acf-table">4.2</a>, along with a plot of the ACF for the entire series in Figure <a href="q1.html#fig:acf-chart">4.2</a>.
+Each of the series are highly autocorrelated, with autocorrelation above 0.6 out past
+the 25th lag. By looking at the entire ACF, one can note that the amount of and persistance of autocorrelation increases
+in maturity.</p>
 
 <table>
 <caption><span id="tab:acf-table">Table 4.2: </span>Autocorrelation coefficients for 1, 5, and 10 year spot rates.</caption>
@@ -298,8 +301,6 @@ reported in Table <a href="q1.html#tab:acf-table">4.2</a>, along with a plot of 
 </tbody>
 </table>
 
-<p>By looking at the entire ACF, we can see that the amount of autocorrelation increases
-in maturity. At farther out lags, 1 is less autocorrelated than 5 and 5 less than 10.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:acf-chart"></span>
 <img src="final-project-book_files/figure-html/acf-chart-1.png" alt="ACF for the 1, 5, and 10 year spot rates" width="960" />
@@ -311,9 +312,10 @@ Figure 4.2: ACF for the 1, 5, and 10 year spot rates
 </div>
 <div id="correlations" class="section level2">
 <h2><span class="header-section-number">4.3</span> Correlations</h2>
-<p>Moving on to correlations, it is clear that the the series are <em>highly</em>
-correlated. This should not be surprising whatsoever. Intuitively, the 1 year
-is more correlated with the 5 year than with the 10 year.</p>
+<p>Correlations between the 1, 5, and 10 year spot rates are reported in Table <a href="q1.html#tab:correlations">4.3</a>.
+It is clear that the the series are <em>highly</em> correlated. This should not be surprising whatsoever.
+Intuitively, the 1 year is more correlated with the 5 year than with the 10 year,
+but the overall correlations are so high that this likely has no significant meaning.</p>
 
 <table>
 <caption><span id="tab:correlations">Table 4.3: </span>Correlation coefficients for 1, 5, and 10 year spot rates.</caption>

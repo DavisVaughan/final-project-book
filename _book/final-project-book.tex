@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-04-23}
+    \date{2018-04-29}
 
 \usepackage{booktabs}
 \usepackage{float}
@@ -156,14 +156,14 @@
 \hypertarget{titlepage}{%
 \chapter{Introduction}\label{titlepage}}
 
-This is the final project of the Finn 6211 class, with the intention of
-getting comfortable with spot rate data, their relation to yield curve
-factors, and various hedging strategies.
+This is the final project of Finn 6211, with the intention of getting
+comfortable with spot rate data, their relation to yield curve factors,
+and various hedging strategies.
 
 An R package has been created to accompany the report. It contains a
 number of helper functions for cleaning data, manipulating the time
 series, and creating the hedging strategies. The package is named
-\texttt{ratekit} and can be found on Github at
+\texttt{ratekit} and can be found on GitHub at
 \url{https://github.com/DavisVaughan/ratekit}.
 
 The structure of the report is as follows. Chapter 2 is dedicated to
@@ -178,8 +178,8 @@ features. The actual analysis and answering of the questions is done
 inside the \texttt{.Rmd} files found in the top level of the zip file.
 
 This report was written with
-\href{https://bookdown.org/yihui/bookdown/}{bookdown}, a book authoring
-package for R.
+\texttt{{[}bookdown{]}(https://bookdown.org/yihui/bookdown/)}, a book
+authoring package for R.
 
 \small
 
@@ -189,38 +189,39 @@ package for R.
 \chapter{Data}\label{data}}
 
 \hypertarget{retrieve}{%
-\section{Getting the data}\label{retrieve}}
+\section{Data Retrieval}\label{retrieve}}
 
 The data is retrieved from the Federal Reserve website, under the
 discussion series: \emph{The U.S. Treasury Yield Curve: 1961 to the
-Present}. The link for that site is
-\href{https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html}{here}.
-The specific data set downloaded was the XLS file included on that site.
+Present}. The link for that site is:
+\url{https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html}.
+The specific data set downloaded was the XLS file included on the site.
 \texttt{ratekit} provides the \texttt{download\_rates\_xls()} helper
 function for this.
 
 The data was immediately opened in Excel, and resaved as an
 \texttt{xlsx} file. The format of the raw data is not a true
-\texttt{xls} file, rather, it is some flavor of \texttt{xml} file. This
-does not play nicely with R's packages for importing Excel data, so a
-resave was necessary and is done manually.
+\texttt{xls} file, rather, it is some flavor of an \texttt{xml} file.
+This does not play nicely with R's packages for importing Excel data, so
+a resave was necessary and is done manually.
 
 \hypertarget{cleaning}{%
 \section{Cleaning}\label{cleaning}}
 
-Data is brought in using the \texttt{readxl} package and the
-\texttt{ratekit} helper, \texttt{read\_rates()}. This function reads the
-rectangle of rates data only, and sets any \texttt{-999.99} values to
-\texttt{NA}. These are often found through the dataset, and it is
-assumed that they represent missing values.
+Data is brought into R using the \texttt{readxl} package and the
+\texttt{ratekit} helper, \texttt{read\_rates()}. This function sets any
+\texttt{-999.99} values to \texttt{NA}. These are often found through
+the dataset, especially in the parameters columns, and it is assumed
+that they represent missing values.
 
 \small
 
 \normalsize
 
 The column names in the data correspond to different types and lengths
-of rates used in the paper. The key for understanding the column names
-is below:
+of rates used in the paper, along with the names of the parameters in
+the model. The key for understanding the column names is shown in Table
+\ref{tab:meta}.
 
 \small
 
@@ -246,7 +247,12 @@ Parameters & NA & BETA0 to TAU2\\
 Most of these columns are not important for this analysis. Only the
 parameter columns and the date column are kept. To further examine the
 missing values, the \texttt{skimr} package was used, producing the
-following report.
+report shown below. The \texttt{TAU2} column has a number of missing
+values (resulting from either being missing or from being
+\texttt{-999.99} values assumed to be missing). All of them occur before
+1980, and were removed from the data set. After that removal, no missing
+values remain, and the values for the other parameters seemed to
+stabilize as well.
 
 \small
 
@@ -281,10 +287,6 @@ TAU2 & 4620 & 9543 & 14163 & 8.97 & 7.64 & 0.1 & 3.52 & 8.94 & 13.06 & 180.86\\
 
 \normalsize
 
-The \texttt{TAU2} column has a number of missing values. All of them
-occur before 1980, and were removed from the data set. After that
-removal, no missing values remain.
-
 \hypertarget{monthly}{%
 \section{Monthly and Ascending}\label{monthly}}
 
@@ -293,9 +295,9 @@ removal, no missing values remain.
 \normalsize
 
 Monthly data is required for the report, but daily data is provided from
-the Fed. The data is converted to monthly using the \texttt{tibbletime}
-package. This leaves 459 rows of data for the project, spanning
-1980-01-31 to 2018-03-29.
+the Federal Reserve data set. The data is converted to monthly
+(end-of-month) using the \texttt{tibbletime} package. This leaves 459
+rows of data for the project, spanning 1980-01-31 to 2018-03-29.
 
 \small
 
@@ -306,7 +308,8 @@ package. This leaves 459 rows of data for the project, spanning
 
 In this chapter, the construction of spot rates, zero coupon bond
 prices, excess returns, and yield factors are discussed. These features
-are used in hedging strategies and for general exploration of the data.
+are used in hedging strategies and for general exploration of the data
+in Chapters 4-5, so only the implementation is discussed here.
 
 \small
 
@@ -316,11 +319,12 @@ are used in hedging strategies and for general exploration of the data.
 \section{Spot Rates}\label{spot-rates}}
 
 Spot rates series can be constructed from the 6 parameters in the
-cleaned dataset. The following formula is used to construct the spot
-rates. It is integrated form of the Svensson extension of the Nelson and
-Siegal approach to calculating instantaneous forward rates. Svensson
-added a second hump term to the model that Nelson and Siegal created.
-Integrating the instantaneous forward rates gives us the spot rates.
+cleaned Federal Reserve data set. The following formula is used to
+construct the spot rates. It is integrated form of the Svensson
+extension of the Nelson and Siegal approach to calculating instantaneous
+forward rates. Svensson added a second hump term to the model that
+Nelson and Siegal created. Integrating the instantaneous forward rates
+gives us the spot rates.
 
 \[
 \begin{aligned}
@@ -331,61 +335,48 @@ Integrating the instantaneous forward rates gives us the spot rates.
 \end{aligned}
 \]
 
-To construct this, a programming concept known as a \emph{function
-factory} was used. This is a specialized function that returns a
-function. This extends naturally to this use case because the outer
-function can accept the time series of the 6 parameters, and the inner
-function that is returned is parameterized by \texttt{n}, corresponding
-to the n-year spot rate at time t. This \texttt{spot\_rate\_factory()}
-function lives in \texttt{ratekit}.
-
-Spot rates are examined in detail in Question 1, but the following graph
-provides a quick look at the major ones. As expected, longer maturity
-spot rates are consistently higher than short term spot rates. The
-1980's were a time of incredibly high interest rates, and in recent
-years rates have been incredibly low.
+Spot rates are examined in detail in Chapter \ref{q1}, but Figure
+\ref{fig:spot-rate-time-series} provides a quick look at the major ones.
+As expected, longer maturity spot rates are consistently higher than
+short term spot rates. The 1980's were a time of incredibly high
+interest rates, and in recent years rates have been incredibly low.
 
 \small
 
 \begin{figure}[H]
 
-{\centering \includegraphics{final-project-book_files/figure-latex/unnamed-chunk-8-1} 
+{\centering \includegraphics{final-project-book_files/figure-latex/spot-rate-time-series-1} 
 
 }
 
-\caption{Spot rates at various maturities from 1980 onward.}\label{fig:unnamed-chunk-8}
+\caption{Spot rates at various maturities from 1980 onward.}\label{fig:spot-rate-time-series}
 \end{figure}
 
 \normalsize
 
-\hypertarget{zero-coupon-bond-prices}{%
-\section{Zero Coupon Bond Prices}\label{zero-coupon-bond-prices}}
+\hypertarget{zero-prices}{%
+\section{Zero Coupon Bond Prices}\label{zero-prices}}
 
 N-year zero coupon bond prices can be calculated easily from their
 corresponding spot rates. The following formula is used to represent the
-relationship between the two.
+relationship between the two series.
 
 \[ P_t(n) = \exp(-y_t(n) \times n) \]
 
-Similar to spot rates, a function factory named
-\texttt{zero\_bond\_price\_factory()} was constructed that accepted the
-spot rate function, and returned a function that calculates a vector of
-bond prices parameterized by \texttt{n}.
-
-Zero prices naturally exhibit an inverse relationship to spot rates. The
-impact of the high interest rates in the 1980's can be seen clearly
-here, with a large price spread between the short and long term maturity
-zeroes.
+Zero prices, by design, exhibit an inverse relationship to spot rates.
+The impact of the high interest rates in the 1980's can be seen clearly
+in Figure \ref{fig:zero-prices-time-series}, with a large price spread
+between the short and long term maturity zeroes.
 
 \small
 
 \begin{figure}[H]
 
-{\centering \includegraphics{final-project-book_files/figure-latex/unnamed-chunk-9-1} 
+{\centering \includegraphics{final-project-book_files/figure-latex/zero-prices-time-series-1} 
 
 }
 
-\caption{Zero prices at various maturities from 1980 onward.}\label{fig:unnamed-chunk-9}
+\caption{Zero prices at various maturities from 1980 onward.}\label{fig:zero-prices-time-series}
 \end{figure}
 
 \normalsize
@@ -393,18 +384,21 @@ zeroes.
 \hypertarget{one-month-returns}{%
 \section{One Month Returns}\label{one-month-returns}}
 
-The time \(t+\Delta\) return on an n-year bond is:
+The time \(t+\Delta\) return on an n-year bond is defined as:
 
 \[ RET_{t+\Delta}(n) = \frac{P_{t+\Delta}(n - \Delta)}{P_t(n)} - 1 \]
 
-Using the zero bond prices from the previous section, it is
+Using the zero coupon bond prices from Section \ref{zero-prices}, it is
 straightforward to calculate returns. Care must be taken to align the
 price from next month's \(n-\Delta\) maturity bond with today's \(n\)
 maturity bond, but otherwise the procedure is simple.
 
-The distribution of returns is shown in Figure \ref{fig:returns-dist}.
-As seen in both the figure and Table \ref{tab:returns-summary}, higher
-maturity zeros have both larger average returns and more variance.
+The distribution of 1-month (\(\Delta = 1/12\)) returns is shown in
+Figure \ref{fig:returns-dist}. As seen in both the figure and Table
+\ref{tab:returns-summary}, higher maturity zeros have both larger
+average returns and more variance. In general, this is unsurprising, and
+the drop in standard deviation is roughly linear as the maturity
+decreases.
 
 \small
 
@@ -450,18 +444,15 @@ Excess returns are calculated over the 1 month treasury, specifically:
 with \(\Delta = 1 / 12\). Excess returns are only calculated for
 \(n = 1, 3, 5, 7, \text{and } 10\) year zeros.
 
-The implementation of this is easy since returns for all maturities have
-already been calculated. The only potentially tricky thing to remember
-when calculating \(RET_{t+\Delta}(\Delta)\) is that
-\(P_{t+\Delta}(n-\Delta) = 1\).
-
-Excess returns show a similar distribution as returns, just shifted
-downwards by the 1 month treasury return.
+The implementation of this is straightforward since returns for all
+maturities have already been calculated. Excess returns show a similar
+distribution as returns, just shifted downwards by the 1-month treasury
+return.
 
 \hypertarget{yield-curve-factors}{%
 \section{Yield Curve Factors}\label{yield-curve-factors}}
 
-Finally, the yield curve factors: level, slope, and curvature are
+Finally, the yield curve factors, level, slope, and curvature are
 calculated as:
 
 \[
@@ -483,7 +474,7 @@ regression hedging.
 
 }
 
-\caption{Yield Curve Factors over time}\label{fig:yield-factors}
+\caption{Yield curve factors over time.}\label{fig:yield-factors}
 \end{figure}
 
 \normalsize
@@ -509,7 +500,7 @@ series patterns.}
 \normalsize
 
 In this question, data for the \(y_t(1)\), \(y_t(5)\), and \(y_t(10)\)
-spot rates will be used. This has been calculated in Section
+spot rates is required. This has been calculated in Section
 \ref{spot-rates}, and the results from there are used here.
 
 \small
@@ -520,7 +511,16 @@ spot rates will be used. This has been calculated in Section
 \section{Summary Statistics}\label{summary-statistics}}
 
 Reported in Table \ref{tab:spot-rate-summary} are summary statistics on
-the three spot rate series.
+the three spot rate series. Unsurprisingly, the average spot rate
+increases with the maturity, but interestingly, the shorter maturity
+spot rates have higher volatility. The kurtosis of all three are less
+than that of a normal distribution, but the 1-year maturity is very
+close. All three are right-skewed, with longer right tails, which makes
+sense considering extremely high interest rate periods do happen, but
+are rare. The histograms in Figure \ref{fig:spot-rate-hist} are a nice
+visual confirmation of the results in the table. The skewness is clear,
+and the higher standard deviation for lower maturities might be
+attributed to the higher density at the extreme tails.
 
 \small
 
@@ -554,24 +554,15 @@ Maturity & Mean & Standard Deviation & Kurtosis & Skewness\\
 
 \normalsize
 
-Unsurprisingly, the average spot rate increases with the maturity, but
-interestingly, the shorter maturity spot rates have higher volatility.
-The kurtosis of all three are less than that of a normal distribution,
-but the 1 year maturity is very close. All three are right-skewed, with
-longer right tails, which makes sense considering extremely high
-interest rate periods do happen, but are rare. The histograms in Figure
-\ref{fig:spot-rate-hist} are a nice visual confirmation of the results
-in the table. The skewness is clear, and the higher standard deviation
-for lower maturities might be attributed to the higher density at the
-extreme tails.
-
 \hypertarget{autocorrelations}{%
 \section{Autocorrelations}\label{autocorrelations}}
 
-The first four autocorrelation correlation coefficients of the 3 series
-are reported in Table \ref{tab:acf-table}, along with a plot of the ACF
-for the series in Figure \ref{fig:acf-chart}. Each of the series are
-highly autocorrelated.
+The first four autocorrelation coefficients of the 3 series are reported
+in Table \ref{tab:acf-table}, along with a plot of the ACF for the
+entire series in Figure \ref{fig:acf-chart}. Each of the series are
+highly autocorrelated, with autocorrelation above 0.6 out past the 25th
+lag. By looking at the entire ACF, one can note that the amount of and
+persistance of autocorrelation increases in maturity.
 
 \small
 
@@ -592,10 +583,6 @@ Maturity & Lag 1 & Lag 2 & Lag 3 & Lag 4\\
 
 \normalsize
 
-By looking at the entire ACF, we can see that the amount of
-autocorrelation increases in maturity. At farther out lags, 1 is less
-autocorrelated than 5 and 5 less than 10.
-
 \small
 
 \begin{figure}[H]
@@ -612,10 +599,12 @@ autocorrelated than 5 and 5 less than 10.
 \hypertarget{correlations}{%
 \section{Correlations}\label{correlations}}
 
-Moving on to correlations, it is clear that the the series are
+Correlations between the 1, 5, and 10 year spot rates are reported in
+Table \ref{tab:correlations}. It is clear that the the series are
 \emph{highly} correlated. This should not be surprising whatsoever.
 Intuitively, the 1 year is more correlated with the 5 year than with the
-10 year.
+10 year, but the overall correlations are so high that this likely has
+no significant meaning.
 
 \small
 
@@ -677,7 +666,7 @@ and comment on the regression statistics. Perform the same analysis for
 \normalsize
 
 In this question, data for the \(y_t(1)\), \(y_t(5)\), and \(y_t(10)\)
-spot rates will be used along with the yield curve factors, \(X_t\).
+spot rates is required along with the yield curve factors, \(X_t\).
 These have been calculated in Section \ref{spot-rates} and Section
 \ref{yield-curve-factors}, and the results from there are used here.
 
@@ -749,7 +738,10 @@ As seen in Table \ref{tab:one-year-reg} and Table
 \ref{tab:one-year-reg-r2}, all estimates for the 1 year spot rate model
 are highly significant, and the Adjusted \(R^2\) is nearing 100\%,
 suggesting that the model can explain essentially all of the variation
-in the spot rate.
+in the spot rate. Considering that the constructed yield curve factors
+include \(y_t(2)\) as the level effect, this should not be surprising as
+all of the series are highly correlated. The very high statistic on the
+level coefficient supports the claim of its importance.
 
 \small
 
@@ -789,8 +781,9 @@ R Squared & R Squared Adj & Residual Std Error\\
 \normalsize
 
 A chart of the realized VS predicted time series for each model confirms
-how well the variation is explained. It is important to remember that
-this model is not predicting future rates, and is simply used to gather
+how well the variation is explained, with essentailly perfect matching
+of the realized series. It is important to remember that this model is
+not predicting out-of-sample future rates, and is simply used to gather
 intuition about past rates. Nevertheless, it is interesting to see how
 well the yield curve factors explain the variation.
 
@@ -802,7 +795,7 @@ well the yield curve factors explain the variation.
 
 }
 
-\caption{Regression in-sample realized VS predicted.}\label{fig:spot-rate-reg-chart}
+\caption{In-sample realized VS predicted spot rate series}\label{fig:spot-rate-reg-chart}
 \end{figure}
 
 \normalsize
@@ -810,8 +803,13 @@ well the yield curve factors explain the variation.
 \hypertarget{five-year-spot-rate}{%
 \section{Five Year Spot Rate}\label{five-year-spot-rate}}
 
-The model for the 5 year rate is similar to the 1 year rate in terms of
-explanatory power.
+The model for the 5-year rate is similar to the 1-year rate in terms of
+explanatory power. The level coefficient is slightly higher than for the
+1-year, and is \textgreater{}1, which makes sense considering that the
+5-year is generally higher than the 2-year spot rate used to represent
+the level effect. The slope is more than triple that of the 1-year,
+suggesting that an increase in the slope has a larger impact on the
+value of the 5-year curve than it does on the 1-year.
 
 \small
 
@@ -853,7 +851,10 @@ R Squared & R Squared Adj & Residual Std Error\\
 \hypertarget{ten-year-spot-rate}{%
 \section{Ten Year Spot Rate}\label{ten-year-spot-rate}}
 
-And again, the 10 year model performs well too.
+Finally, the 10-year model performs similarly to the 1 and 5-year
+models. One interesting thing to note about the 10-year model is that
+the sign on the curvature coefficient is opposite that of the 1 and
+5-year models.
 
 \small
 
@@ -897,7 +898,7 @@ R Squared & R Squared Adj & Residual Std Error\\
 
 Although not specifically asked for, it might be interesting to
 decompose and plot the spot curve at a few particular points in time.
-The procedure for this involved the following manipulations:
+The procedure for this involves the following manipulations:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi})}
@@ -933,8 +934,8 @@ The procedure for this involved the following manipulations:
 
 This procedure was streamlined into a single function, parameterized by
 the month to allow for easy plotting and comparison of multiple months.
-For example, the decomposed spot rate for January 2012 and January 1981
-side by side is shown in Figure \ref{fig:decomposed-spot}. January of
+For example, the decomposed spot curve for January 2012 and January 1981
+are shown side-by-side in Figure \ref{fig:decomposed-spot}. January of
 1981 was definitely an interesting time period! The spot rate is
 essentially inverted, with lower maturity bonds having higher spot rates
 than longer maturity bonds.
@@ -947,7 +948,7 @@ than longer maturity bonds.
 
 }
 
-\caption{Decomposed Spot Rate for January of 2012 and 1981}\label{fig:decomposed-spot}
+\caption{Decomposed spot rate for January of 2012 and 1981}\label{fig:decomposed-spot}
 \end{figure}
 
 \normalsize
@@ -960,10 +961,10 @@ throughout time. We can test this by running the same regression as
 before, but with a \emph{rolling window}. This works by calculating the
 regression
 \texttt{spot\_rate\ \textasciitilde{}\ level\ +\ slope\ +\ curvature}
-for the first 100 days, then shift forward 1 day and drop the last day,
-calculate the regression again, and repeat this for the length of the
-series. The \texttt{rsample} package provides a number of helpers for
-doing analysis exactly like this. The procedure for this is:
+for the first 100 days, then shifting forward 1 day and dropping the
+last day, calculating the regression again, and repeating this for the
+length of the series. The \texttt{rsample} package provides a number of
+helpers for doing analysis exactly like this. The procedure for this is:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi})}
@@ -972,12 +973,12 @@ doing analysis exactly like this. The procedure for this is:
   Split the data into 14 nested groups by maturity, as done in Section
   \ref{regression}.
 \item
-  Further split each of the 14 groups into 359 rolling subsets using
-  \texttt{rolling\_origin()} from \texttt{rsample}.
+  Further split each of the 14 groups into 359 rolling subsets of 100
+  days each using \texttt{rolling\_origin()} from \texttt{rsample}.
 \item
   For each maturity, and for each rolling split, run the regression from
-  \ref{regression}. This results in 5026 regressions, which on this
-  computer can be run in parallel in \textasciitilde{}8 seconds.
+  \ref{regression}. This results in 5026 regressions, which, on this
+  4-core computer, can be run in parallel in \textasciitilde{}8 seconds.
 \end{enumerate}
 
 \small
@@ -995,15 +996,15 @@ doing analysis exactly like this. The procedure for this is:
 When the procedure has been run, a natural next step is to pick some of
 the 14 maturities and look at the stability of each coefficient over
 time. For example, the 1, 5, and 10 year coefficients over time are
-shown side by side in Figure \ref{fig:coef-stability}. Most of the
+shown side-by-side in Figure \ref{fig:coef-stability}. Most of the
 coefficients are fairly stable over time, with the exception of
-curvature. The curvature of the 1 year has begun to rise up from
-\texttt{-0.5} to around \texttt{-0.25} in recent years. This change over
-time is not refected in the \texttt{-0.428} curvature estimate we get
-from running the model over the full time period, and might offer other
-interesting insights. The 10 year curvature coefficient follows a
-similar pattern, but the 5 year curvature follows the opposite trend,
-decreasing in recent years.
+curvature. The curvature of the 1 year has begun to rise up from -0.5 to
+around -0.25 in recent years. This change over time is not refected in
+the static -0.428 curvature estimate we get from running the model over
+the full time period, and might offer other interesting insights or
+opportunities for trading strategies. The 10 year curvature coefficient
+follows a similar pattern, but the 5 year curvature follows the opposite
+trend, decreasing in recent years.
 
 \small
 
@@ -1104,17 +1105,17 @@ the \texttt{T} value corresponding to half of the data.
 Duration}\label{modified-macaulay-duration}}
 
 The first two strategies involve creating duration matched barbells
-using 1-year and 10-year zero coupon bonds to match the duration of a 3
-year or 7 year bullet. Since the strategies are essentially the same,
+using 1-year and 10-year zero coupon bonds to match the duration of a
+3-year or 7-year bullet. Since the strategies are essentially the same,
 one modeling function is used for both, \texttt{model\_duration()}, with
 an argument to select whether to use modified or macaulay duration. The
-duration is calculated using the \texttt{duration()} function that was
-created in the \texttt{ratekit} package and the barbell weights are
-calculated with the \texttt{barbell\_weights()} function.
+duration is calculated using the \texttt{duration()} function in the
+\texttt{ratekit} package and the barbell weights are calculated with the
+\texttt{barbell\_weights()} function.
 
 The function is created in such a way that it accepts a single split
 from the total data frame, and calculates the weights for just that one
-split. The weight for a 5 year zero is included to be consistent with
+split. The weight for a 5-year zero is included to be consistent with
 the other models, but is set to \texttt{0}.
 
 \small
@@ -1122,8 +1123,8 @@ the other models, but is set to \texttt{0}.
 \normalsize
 
 \hypertarget{simple-regression-based-hedging}{%
-\section{Simple regression based
-hedging}\label{simple-regression-based-hedging}}
+\section{Simple Regression Based
+Hedging}\label{simple-regression-based-hedging}}
 
 The regression based hedging method involves the regression:
 
@@ -1139,27 +1140,30 @@ models. This is all wrapped into a modeling function,
 \normalsize
 
 \hypertarget{multiplicative-regression-hedging}{%
-\section{Multiplicative regression
-hedging}\label{multiplicative-regression-hedging}}
+\section{Multiplicative Regression
+Hedging}\label{multiplicative-regression-hedging}}
 
 The multiplicative regression follows the model:
 
 \[ ER_t(n_h) = \theta_t(1; X_{t-\Delta}) ER_t(1) + \theta_t(5; X_{t-\Delta}) ER_t(5) + \theta_t(10; X_{t-\Delta}) ER_t(10) + u_t(n_h) \]
-Where \(\theta_t(n; X_{t-\Delta})\) depends on the yield curve factors
+where \(\theta_t(n; X_{t-\Delta})\) depends on the yield curve factors
 as:
 
 \[ \theta_t(n; X_{t-\Delta}) = a_t(n) + b_t(n) \text{Level}_{t-\Delta} + c_t(n) \text{Slope}_{t-\Delta} + d_t(n) \text{Curvature}_{t-\Delta} \]
 
-Once the models are fit, the weights at time \texttt{t} can be
-calculated as \(\theta_t\) values using the yield curve factors at
-\texttt{t}:
+Once the models are fit, the weights at time \(t\) can be calculated as
+\(\theta_t\) values using the yield curve factors at \(t\):
 
-\[ w_t(1) = \theta_t(1; X_t) \\ w_t(5) = \theta_t(5; X_t) \\ w_t(10) = \theta_t(10; X_t) \]
+\[ 
+w_t(1) = \theta_t(1; X_t) \\ 
+w_t(5) = \theta_t(5; X_t) \\ 
+w_t(10) = \theta_t(10; X_t)
+\]
 
 The entire procedure is wrapped into
 \texttt{model\_multiplicative\_regression()}, which, consistent with the
 other \texttt{model\_*()} functions developed so far, accepts a single
-rolling split, along with the type of bullet (3 or 7 year), and returns
+rolling split, along with the type of bullet (3 or 7-year), and returns
 the weights.
 
 \small
@@ -1167,7 +1171,7 @@ the weights.
 \normalsize
 
 \hypertarget{error-calculation}{%
-\section{Error calculation}\label{error-calculation}}
+\section{Error Calculation}\label{error-calculation}}
 
 Hedging error for the weights set at time \(t\) are calculated at time
 \(t+\Delta\) as:
@@ -1181,7 +1185,7 @@ performance.
 \normalsize
 
 \hypertarget{model-selection-interface}{%
-\section{Model selection interface}\label{model-selection-interface}}
+\section{Model Selection Interface}\label{model-selection-interface}}
 
 A practical way to call all of the above models would be through an
 interface function that take as parameters: the data, the model to run,
@@ -1206,15 +1210,15 @@ error calculation, the weights, and the hedging errors.
 \normalsize
 
 \hypertarget{model-application}{%
-\section{Model application}\label{model-application}}
+\section{Model Application}\label{model-application}}
 
 \small
 
 \normalsize
 
-Finally, a data frame is set up to easily iterate over all of the
-models, and the modeling function is run on each set of parameters. This
-data frame has a very compact form:
+Finally, a data frame of function calls and parameter sets is created to
+easily iterate over all of the models. This data frame has a very
+compact form:
 
 \small
 
@@ -1240,8 +1244,10 @@ data frame has a very compact form:
 
 \normalsize
 
-Each element of the \texttt{params} column contains the data to be used
-in the model, the model type, and the bullet to hedge against.
+The first column contains the function interface,
+\texttt{apply\_model()}. Each element of the \texttt{params} column
+contains the data to be used in the model, the model type, and the
+bullet to hedge against.
 
 \small
 
@@ -1274,20 +1280,20 @@ in the model, the model type, and the bullet to hedge against.
 \normalsize
 
 \hypertarget{model-results}{%
-\section{Model results}\label{model-results}}
+\section{Model Results}\label{model-results}}
 
 Table \ref{tab:hedging-results} displays the RMSHE results from each
 model. The regression methods significantly outperformed the duration
 based models, with much lower RMSHE. Among the duration models, Macaulay
 duration did marginally better, but the statistical significance is
 likely negligible. Among the regression models, the multiplicative
-regression did slightly better than the simple regression with the 3
-year bullet and slightly worse with the 7 year bullet. The results are
+regression did slightly better than the simple regression with the
+3-year bullet and slightly worse with the 7-year bullet. The results are
 so close, however, that I am inclined to conclude that the simpler
-regression model is the best and most parsimonious model of the 4. There
-is little to indicate that longer maturity bullets are harder to hedge
-than shorter maturity bullets. In fact, with the regression models, the
-opposite seems to be true.
+regression model is the best and most parsimonious model of the four.
+There is little to indicate that longer maturity bullets are harder to
+hedge than shorter maturity bullets. In fact, with the regression
+models, the opposite seems to be true.
 
 \small
 
@@ -1320,26 +1326,27 @@ Regression & 7 & 0.0007663\\
 
 Because a rolling model was fit, a similar analysis can be performed as
 Section \ref{coef-stability} where the stability of the coefficients
-over time was analyzed. In this case, the assignment of weights by the
-models over time can be analyzed rather than just the coefficients. Some
-interesting insights can be gathered Figure \ref{fig:weight-stability}.
-Keeping in mind that duration models are \emph{only} allowed to assign
-weight to a 1 year and 10 year zero, it is interesting to see how
-stagnant the weighting is between the 1 year and 10 year. The fact that
-the model essentially does not have the flexibility to vary the weights
-much over time likely contributes to its poor performance. The duration
-model also never shorts, which likely helps the regression models. The
-weightings in the duration models do make sense, with more than 50\%
-being assigned to the 1 year bond for the 3 year bullet, and more than
-50\% being assigned to the 10 year for the 7 year bullet. In the
-regression models, there is an implicit risk free instrument that weight
-can be assigned to, so a 4th row in the figure is included to
-incorporate that. The simple regression model only shifts weights around
-in periods of high stress, 2001 and the tick around 2008 being two
-examples, but even so, the weightings are surprisingly stable over time.
-This is especially apparent when contrasted with the multiplicative
-regression. Weights are highly varied over time, but the performance
-gain for this is limited as seen in the RMSHE results.
+over time was analyzed. In this case, the assignment of hedging weights
+by the models over time can be analyzed rather than just the
+coefficients. Some interesting insights can be gathered from Figure
+\ref{fig:weight-stability}. Keeping in mind that duration models are
+\emph{only} allowed to assign weight to a 1 year and 10 year zero, it is
+interesting to see how stagnant the weighting is between the 1 year and
+10 year. The fact that the model essentially does not have the
+flexibility to vary the weights much over time likely contributes to its
+poor performance. The duration model also never shorts, which likely
+helps the regression models. The weightings in the duration models do
+make sense, with more than 50\% being assigned to the 1-year bond to
+hedge the 3-year bullet, and more than 50\% being assigned to the
+10-year the hedge the 7-year bullet. In the regression models, there is
+an implicit risk free instrument that weight can be assigned to, so a
+4th row in the figure is included to incorporate that. The simple
+regression model only shifts weights around in periods of high stress,
+2001 and the jump around 2008 being two examples, but even so, the
+weightings are surprisingly stable over time. This is especially
+apparent when contrasted with the multiplicative regression. Weights are
+highly varied over time, but the performance gain for this is limited as
+seen in the RMSHE results, questioning the need for the complex model.
 
 \small
 
@@ -1349,7 +1356,7 @@ gain for this is limited as seen in the RMSHE results.
 
 }
 
-\caption{Weight assignment over time}\label{fig:weight-stability}
+\caption{Hedging weight assignment over time}\label{fig:weight-stability}
 \end{figure}
 
 \normalsize
@@ -1358,9 +1365,9 @@ Another way to view the weights over time is by stacking them. This is
 done in Figure \ref{fig:stacked-weight-stability} and provides another
 unique view into the change in the total weight distribution over time.
 This view confirms the stagnant weights in the duration models, but also
-offers some other new insights. In the regression models, hedging the 3
-year bullet requires shorting the 10 year and the risk free, while
-hedging the 7 year bullet only required hedging the 1 year bond. This
+offers some other new insights. In the regression models, hedging the
+3-year bullet requires shorting the 10-year and the risk free, while
+hedging the 7-year bullet only required hedging the 1-year bond. This
 view also further demonstrates the wild swings in the multiplicative
 regression, for questionable performance gains.
 
@@ -1384,15 +1391,17 @@ regression, for questionable performance gains.
 \hypertarget{conclusion}{%
 \chapter{Conclusion}\label{conclusion}}
 
-In this project, spot rates from the Fed were analyzed along with their
-corresponding zero prices and returns over time. In addition, multiple
-hedging models were implemented and analyzed. The simple regression
-hedging model outperformed the two duration models, and was on par with
-the much more complicated multiplicative regression model.
+In this project, spot rates from the Federal Reserve were analyzed along
+with their corresponding zero prices and returns over time. In addition,
+multiple hedging models were implemented and analyzed. The simple
+regression hedging model outperformed the two duration models, and was
+on par with the much more complicated multiplicative regression model.
+This leads me to conclude that the simple regression model is the most
+useful out of the four.
 
 I was particularly impressed with how well the yield curve factors
-explained the variation in the rates for other maturities. Apparently,
-using linear combinations of cetain maturity spot rates creates powerful
+explained the variation in the rates for other maturities. Using linear
+combinations of certain maturity spot rates seems to create powerful
 explanatory variables for other maturities.
 
 Further research could be done by including transactions costs in

@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
-  <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
+  <meta name="description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
   <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta property="og:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Finn 6211 - Final Project" />
   
-  <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta name="twitter:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
 <meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-23">
+<meta name="date" content="2018-04-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,13 +133,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>2</b> Data</a><ul>
-<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Getting the data</a></li>
+<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Data Retrieval</a></li>
 <li class="chapter" data-level="2.2" data-path="data.html"><a href="data.html#cleaning"><i class="fa fa-check"></i><b>2.2</b> Cleaning</a></li>
 <li class="chapter" data-level="2.3" data-path="data.html"><a href="data.html#monthly"><i class="fa fa-check"></i><b>2.3</b> Monthly and Ascending</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
-<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
 <li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
 <li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
 <li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
@@ -160,12 +160,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
 <li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
-<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
-<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
-<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
-<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
-<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
-<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple Regression Based Hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative Regression Hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error Calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model Selection Interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model Application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model Results</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -192,13 +192,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1><span class="header-section-number">Chapter 3</span> Fixed Income Features Calculations</h1>
 <p>In this chapter, the construction of spot rates, zero coupon bond prices,
 excess returns, and yield factors are discussed. These features are used in
-hedging strategies and for general exploration of the data.</p>
+hedging strategies and for general exploration of the data in Chapters 4-5,
+so only the implementation is discussed here.</p>
 
 
 <div id="spot-rates" class="section level2">
 <h2><span class="header-section-number">3.1</span> Spot Rates</h2>
-<p>Spot rates series can be constructed from the 6 parameters in the cleaned dataset.
-The following formula is used to construct the spot rates. It is integrated
+<p>Spot rates series can be constructed from the 6 parameters in the cleaned
+Federal Reserve data set. The following formula is used to construct the spot rates. It is integrated
 form of the Svensson extension of the Nelson and Siegal approach to calculating
 instantaneous forward rates. Svensson added a second hump term to the model
 that Nelson and Siegal created. Integrating the instantaneous forward rates gives
@@ -211,38 +212,30 @@ us the spot rates.</p>
    &amp;+ \beta_{3,t} [\frac{1 - \exp(- \frac{n}{\tau_{2,t}})}{\frac{n}{\tau_{2,t}}} - \exp(-\frac{n}{\tau_{2,t}})]
 \end{aligned}
 \]</span></p>
-<p>To construct this, a programming concept known as a <em>function factory</em> was used.
-This is a specialized function that returns a function. This extends naturally
-to this use case because the outer function can accept the time series of the
-6 parameters, and the inner function that is returned is parameterized by
-<code>n</code>, corresponding to the n-year spot rate at time t. This <code>spot_rate_factory()</code>
-function lives in <code>ratekit</code>.</p>
-<p>Spot rates are examined in detail in Question 1, but the following graph provides
+<p>Spot rates are examined in detail in Chapter <a href="q1.html#q1">4</a>, but Figure <a href="rates.html#fig:spot-rate-time-series">3.1</a> provides
 a quick look at the major ones. As expected, longer maturity spot rates are consistently
 higher than short term spot rates. The 1980’s were a time of incredibly high
 interest rates, and in recent years rates have been incredibly low.</p>
 
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-8"></span>
-<img src="final-project-book_files/figure-html/unnamed-chunk-8-1.png" alt="Spot rates at various maturities from 1980 onward." width="960" />
+<div class="figure" style="text-align: center"><span id="fig:spot-rate-time-series"></span>
+<img src="final-project-book_files/figure-html/spot-rate-time-series-1.png" alt="Spot rates at various maturities from 1980 onward." width="960" />
 <p class="caption">
 Figure 3.1: Spot rates at various maturities from 1980 onward.
 </p>
 </div>
 
 </div>
-<div id="zero-coupon-bond-prices" class="section level2">
+<div id="zero-prices" class="section level2">
 <h2><span class="header-section-number">3.2</span> Zero Coupon Bond Prices</h2>
 <p>N-year zero coupon bond prices can be calculated easily from their corresponding
-spot rates. The following formula is used to represent the relationship between the two.</p>
+spot rates. The following formula is used to represent the relationship between the two series.</p>
 <p><span class="math display">\[ P_t(n) = \exp(-y_t(n) \times n) \]</span></p>
-<p>Similar to spot rates, a function factory named <code>zero_bond_price_factory()</code> was constructed that accepted the spot rate function, and returned a function that calculates a vector of bond
-prices parameterized by <code>n</code>.</p>
-<p>Zero prices naturally exhibit an inverse relationship to spot rates. The impact of the
-high interest rates in the 1980’s can be seen clearly here, with a large price spread
+<p>Zero prices, by design, exhibit an inverse relationship to spot rates. The impact of the
+high interest rates in the 1980’s can be seen clearly in Figure <a href="rates.html#fig:zero-prices-time-series">3.2</a>, with a large price spread
 between the short and long term maturity zeroes.</p>
 
-<div class="figure" style="text-align: center"><span id="fig:unnamed-chunk-9"></span>
-<img src="final-project-book_files/figure-html/unnamed-chunk-9-1.png" alt="Zero prices at various maturities from 1980 onward." width="960" />
+<div class="figure" style="text-align: center"><span id="fig:zero-prices-time-series"></span>
+<img src="final-project-book_files/figure-html/zero-prices-time-series-1.png" alt="Zero prices at various maturities from 1980 onward." width="960" />
 <p class="caption">
 Figure 3.2: Zero prices at various maturities from 1980 onward.
 </p>
@@ -251,12 +244,13 @@ Figure 3.2: Zero prices at various maturities from 1980 onward.
 </div>
 <div id="one-month-returns" class="section level2">
 <h2><span class="header-section-number">3.3</span> One Month Returns</h2>
-<p>The time <span class="math inline">\(t+\Delta\)</span> return on an n-year bond is:</p>
+<p>The time <span class="math inline">\(t+\Delta\)</span> return on an n-year bond is defined as:</p>
 <p><span class="math display">\[ RET_{t+\Delta}(n) = \frac{P_{t+\Delta}(n - \Delta)}{P_t(n)} - 1 \]</span></p>
-<p>Using the zero bond prices from the previous section, it is straightforward to calculate returns. Care must be taken to align the price from next month’s <span class="math inline">\(n-\Delta\)</span> maturity bond with today’s <span class="math inline">\(n\)</span> maturity bond, but otherwise the procedure is simple.</p>
-<p>The distribution of returns is shown in Figure <a href="rates.html#fig:returns-dist">3.3</a>. As seen in both the figure
+<p>Using the zero coupon bond prices from Section <a href="rates.html#zero-prices">3.2</a>, it is straightforward to calculate returns. Care must be taken to align the price from next month’s <span class="math inline">\(n-\Delta\)</span> maturity bond with today’s <span class="math inline">\(n\)</span> maturity bond, but otherwise the procedure is simple.</p>
+<p>The distribution of 1-month (<span class="math inline">\(\Delta = 1/12\)</span>) returns is shown in Figure <a href="rates.html#fig:returns-dist">3.3</a>. As seen in both the figure
 and Table <a href="rates.html#tab:returns-summary">3.1</a>, higher maturity zeros have both larger average returns and
-more variance.</p>
+more variance. In general, this is unsurprising, and the drop in standard deviation
+is roughly linear as the maturity decreases.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:returns-dist"></span>
 <img src="final-project-book_files/figure-html/returns-dist-1.png" alt="Return distributions for various maturities." width="960" />
@@ -310,13 +304,12 @@ Figure 3.3: Return distributions for various maturities.
 <p>Excess returns are calculated over the 1 month treasury, specifically:</p>
 <p><span class="math display">\[ ER_{t+\Delta}(n) = RET_{t+\Delta}(n) - RET_{t+\Delta}(\Delta) \]</span></p>
 <p>with <span class="math inline">\(\Delta = 1 / 12\)</span>. Excess returns are only calculated for <span class="math inline">\(n = 1, 3, 5, 7, \text{and } 10\)</span> year zeros.</p>
-<p>The implementation of this is easy since returns for all maturities have already been calculated.
-The only potentially tricky thing to remember when calculating <span class="math inline">\(RET_{t+\Delta}(\Delta)\)</span> is that <span class="math inline">\(P_{t+\Delta}(n-\Delta) = 1\)</span>.</p>
-<p>Excess returns show a similar distribution as returns, just shifted downwards by the 1 month treasury return.</p>
+<p>The implementation of this is straightforward since returns for all maturities have already been calculated.
+Excess returns show a similar distribution as returns, just shifted downwards by the 1-month treasury return.</p>
 </div>
 <div id="yield-curve-factors" class="section level2">
 <h2><span class="header-section-number">3.5</span> Yield Curve Factors</h2>
-<p>Finally, the yield curve factors: level, slope, and curvature are calculated as:</p>
+<p>Finally, the yield curve factors, level, slope, and curvature are calculated as:</p>
 <p><span class="math display">\[
 \begin{aligned}
   \text{Level} &amp;= y_t(1/4) \\
@@ -329,9 +322,9 @@ do not offer much insight on their own, but they will be useful later in decompo
 the spot rate and in multiplicative regression hedging.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:yield-factors"></span>
-<img src="final-project-book_files/figure-html/yield-factors-1.png" alt="Yield Curve Factors over time" width="960" />
+<img src="final-project-book_files/figure-html/yield-factors-1.png" alt="Yield curve factors over time." width="960" />
 <p class="caption">
-Figure 3.4: Yield Curve Factors over time
+Figure 3.4: Yield curve factors over time.
 </p>
 </div>
 

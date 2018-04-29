@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
-  <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
+  <meta name="description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
   <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta property="og:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Finn 6211 - Final Project" />
   
-  <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta name="twitter:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
 <meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-23">
+<meta name="date" content="2018-04-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,13 +133,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>2</b> Data</a><ul>
-<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Getting the data</a></li>
+<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Data Retrieval</a></li>
 <li class="chapter" data-level="2.2" data-path="data.html"><a href="data.html#cleaning"><i class="fa fa-check"></i><b>2.2</b> Cleaning</a></li>
 <li class="chapter" data-level="2.3" data-path="data.html"><a href="data.html#monthly"><i class="fa fa-check"></i><b>2.3</b> Monthly and Ascending</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
-<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
 <li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
 <li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
 <li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
@@ -160,12 +160,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
 <li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
-<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
-<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
-<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
-<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
-<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
-<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple Regression Based Hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative Regression Hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error Calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model Selection Interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model Application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model Results</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -191,26 +191,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="data" class="section level1">
 <h1><span class="header-section-number">Chapter 2</span> Data</h1>
 <div id="retrieve" class="section level2">
-<h2><span class="header-section-number">2.1</span> Getting the data</h2>
+<h2><span class="header-section-number">2.1</span> Data Retrieval</h2>
 <p>The data is retrieved from the Federal Reserve website, under the discussion
 series: <em>The U.S. Treasury Yield Curve: 1961 to the Present</em>. The link for that
-site is <a href="https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html">here</a>.
-The specific data set downloaded was the XLS file included on that site. <code>ratekit</code> provides the
+site is: <a href="https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html" class="uri">https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html</a>.
+The specific data set downloaded was the XLS file included on the site. <code>ratekit</code> provides the
 <code>download_rates_xls()</code> helper function for this.</p>
 <p>The data was immediately opened in Excel, and resaved as an <code>xlsx</code> file.
-The format of the raw data is not a true <code>xls</code> file, rather, it is some flavor of <code>xml</code>
+The format of the raw data is not a true <code>xls</code> file, rather, it is some flavor of an <code>xml</code>
 file. This does not play nicely with R’s packages for importing Excel data, so
 a resave was necessary and is done manually.</p>
 </div>
 <div id="cleaning" class="section level2">
 <h2><span class="header-section-number">2.2</span> Cleaning</h2>
-<p>Data is brought in using the <code>readxl</code> package and the <code>ratekit</code> helper, <code>read_rates()</code>.
-This function reads the rectangle of rates data only, and sets any <code>-999.99</code> values
-to <code>NA</code>. These are often found through the dataset, and it is assumed that they represent missing values.</p>
+<p>Data is brought into R using the <code>readxl</code> package and the <code>ratekit</code> helper, <code>read_rates()</code>.
+This function sets any <code>-999.99</code> values to <code>NA</code>.
+These are often found through the dataset, especially in the parameters columns,
+and it is assumed that they represent missing values.</p>
 
 
 <p>The column names in the data correspond to different types and lengths of rates used in the
-paper. The key for understanding the column names is below:</p>
+paper, along with the names of the parameters in the model. The key for understanding the column names is
+shown in Table <a href="data.html#tab:meta">2.1</a>.</p>
 
 <pre><code>## Warning in kableExtra::kable_styling(., position = &quot;center&quot;, latex_options
 ## = &quot;HOLD_position&quot;): Please specify format in kable. kableExtra can
@@ -256,7 +258,11 @@ paper. The key for understanding the column names is below:</p>
 
 <p>Most of these columns are not important for this analysis. Only the parameter
 columns and the date column are kept. To further examine the missing values,
-the <code>skimr</code> package was used, producing the following report.</p>
+the <code>skimr</code> package was used, producing the report shown below. The <code>TAU2</code> column
+has a number of missing values (resulting from either being missing or from
+being <code>-999.99</code> values assumed to be missing). All of them occur before 1980,
+and were removed from the data set. After that removal, no missing values remain,
+and the values for the other parameters seemed to stabilize as well.</p>
 
 <p>Skim summary statistics<br />
 n obs: 14163<br />
@@ -387,15 +393,13 @@ n variables: 7</p>
 </tbody>
 </table>
 
-<p>The <code>TAU2</code> column has a number of missing values. All of them occur before 1980,
-and were removed from the data set. After that removal, no missing values remain.</p>
 </div>
 <div id="monthly" class="section level2">
 <h2><span class="header-section-number">2.3</span> Monthly and Ascending</h2>
 
 
-<p>Monthly data is required for the report, but daily data is provided from the Fed.
-The data is converted to monthly using the <code>tibbletime</code> package. This leaves 459 rows of data for the project, spanning 1980-01-31 to 2018-03-29.</p>
+<p>Monthly data is required for the report, but daily data is provided from the Federal
+Reserve data set. The data is converted to monthly (end-of-month) using the <code>tibbletime</code> package. This leaves 459 rows of data for the project, spanning 1980-01-31 to 2018-03-29.</p>
 
 
 

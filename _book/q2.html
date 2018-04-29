@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Finn 6211 - Final Project</title>
-  <meta name="description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
+  <meta name="description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.">
   <meta name="generator" content="bookdown 0.7.8 and GitBook 2.6.7">
 
   <meta property="og:title" content="Finn 6211 - Final Project" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta property="og:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Finn 6211 - Final Project" />
   
-  <meta name="twitter:description" content="This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
+  <meta name="twitter:description" content="This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies." />
   
 
 <meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-23">
+<meta name="date" content="2018-04-29">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -133,13 +133,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="divider"></li>
 <li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
 <li class="chapter" data-level="2" data-path="data.html"><a href="data.html"><i class="fa fa-check"></i><b>2</b> Data</a><ul>
-<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Getting the data</a></li>
+<li class="chapter" data-level="2.1" data-path="data.html"><a href="data.html#retrieve"><i class="fa fa-check"></i><b>2.1</b> Data Retrieval</a></li>
 <li class="chapter" data-level="2.2" data-path="data.html"><a href="data.html#cleaning"><i class="fa fa-check"></i><b>2.2</b> Cleaning</a></li>
 <li class="chapter" data-level="2.3" data-path="data.html"><a href="data.html#monthly"><i class="fa fa-check"></i><b>2.3</b> Monthly and Ascending</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="rates.html"><a href="rates.html"><i class="fa fa-check"></i><b>3</b> Fixed Income Features Calculations</a><ul>
 <li class="chapter" data-level="3.1" data-path="rates.html"><a href="rates.html#spot-rates"><i class="fa fa-check"></i><b>3.1</b> Spot Rates</a></li>
-<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-coupon-bond-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
+<li class="chapter" data-level="3.2" data-path="rates.html"><a href="rates.html#zero-prices"><i class="fa fa-check"></i><b>3.2</b> Zero Coupon Bond Prices</a></li>
 <li class="chapter" data-level="3.3" data-path="rates.html"><a href="rates.html#one-month-returns"><i class="fa fa-check"></i><b>3.3</b> One Month Returns</a></li>
 <li class="chapter" data-level="3.4" data-path="rates.html"><a href="rates.html#excess-returns"><i class="fa fa-check"></i><b>3.4</b> Excess Returns</a></li>
 <li class="chapter" data-level="3.5" data-path="rates.html"><a href="rates.html#yield-curve-factors"><i class="fa fa-check"></i><b>3.5</b> Yield Curve Factors</a></li>
@@ -160,12 +160,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="q3.html"><a href="q3.html"><i class="fa fa-check"></i><b>6</b> Question 3</a><ul>
 <li class="chapter" data-level="6.1" data-path="q3.html"><a href="q3.html#modified-macaulay-duration"><i class="fa fa-check"></i><b>6.1</b> Modified / Macaulay Duration</a></li>
-<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple regression based hedging</a></li>
-<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative regression hedging</a></li>
-<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error calculation</a></li>
-<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model selection interface</a></li>
-<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model application</a></li>
-<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model results</a></li>
+<li class="chapter" data-level="6.2" data-path="q3.html"><a href="q3.html#simple-regression-based-hedging"><i class="fa fa-check"></i><b>6.2</b> Simple Regression Based Hedging</a></li>
+<li class="chapter" data-level="6.3" data-path="q3.html"><a href="q3.html#multiplicative-regression-hedging"><i class="fa fa-check"></i><b>6.3</b> Multiplicative Regression Hedging</a></li>
+<li class="chapter" data-level="6.4" data-path="q3.html"><a href="q3.html#error-calculation"><i class="fa fa-check"></i><b>6.4</b> Error Calculation</a></li>
+<li class="chapter" data-level="6.5" data-path="q3.html"><a href="q3.html#model-selection-interface"><i class="fa fa-check"></i><b>6.5</b> Model Selection Interface</a></li>
+<li class="chapter" data-level="6.6" data-path="q3.html"><a href="q3.html#model-application"><i class="fa fa-check"></i><b>6.6</b> Model Application</a></li>
+<li class="chapter" data-level="6.7" data-path="q3.html"><a href="q3.html#model-results"><i class="fa fa-check"></i><b>6.7</b> Model Results</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>7</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -195,7 +195,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 <p>In this question, data for the <span class="math inline">\(y_t(1)\)</span>, <span class="math inline">\(y_t(5)\)</span>, and <span class="math inline">\(y_t(10)\)</span> spot rates
-will be used along with the yield curve factors, <span class="math inline">\(X_t\)</span>. These have been calculated in Section <a href="rates.html#spot-rates">3.1</a> and Section <a href="rates.html#yield-curve-factors">3.5</a>, and the results from there are used here.</p>
+is required along with the yield curve factors, <span class="math inline">\(X_t\)</span>. These have been calculated in Section <a href="rates.html#spot-rates">3.1</a> and Section <a href="rates.html#yield-curve-factors">3.5</a>, and the results from there are used here.</p>
 
 
 <div id="regression" class="section level2">
@@ -237,7 +237,10 @@ models along with the original data, indexed by the maturity.</p>
 <h2><span class="header-section-number">5.2</span> One Year Spot Rate</h2>
 <p>As seen in Table <a href="q2.html#tab:one-year-reg">5.1</a> and Table <a href="q2.html#tab:one-year-reg-r2">5.2</a>, all estimates for the 1 year spot rate model are highly significant,
 and the Adjusted <span class="math inline">\(R^2\)</span> is nearing 100%, suggesting that the model can explain
-essentially all of the variation in the spot rate.</p>
+essentially all of the variation in the spot rate. Considering that the
+constructed yield curve factors include <span class="math inline">\(y_t(2)\)</span> as the level effect, this
+should not be surprising as all of the series are highly correlated.
+The very high statistic on the level coefficient supports the claim of its importance.</p>
 
 <table>
 <caption><span id="tab:one-year-reg">Table 5.1: </span>Regression results: One year spot</caption>
@@ -302,21 +305,27 @@ essentially all of the variation in the spot rate.</p>
 </table>
 
 <p>A chart of the realized VS predicted time series for each model confirms how well the variation
-is explained. It is important to remember that this model is not predicting
-future rates, and is simply used to gather intuition about past rates. Nevertheless,
+is explained, with essentailly perfect matching of the realized series.
+It is important to remember that this model is not predicting
+out-of-sample future rates, and is simply used to gather intuition about past rates. Nevertheless,
 it is interesting to see how well the yield curve factors explain the variation.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:spot-rate-reg-chart"></span>
-<img src="final-project-book_files/figure-html/spot-rate-reg-chart-1.png" alt="Regression in-sample realized VS predicted." width="960" />
+<img src="final-project-book_files/figure-html/spot-rate-reg-chart-1.png" alt="In-sample realized VS predicted spot rate series" width="960" />
 <p class="caption">
-Figure 5.1: Regression in-sample realized VS predicted.
+Figure 5.1: In-sample realized VS predicted spot rate series
 </p>
 </div>
 
 </div>
 <div id="five-year-spot-rate" class="section level2">
 <h2><span class="header-section-number">5.3</span> Five Year Spot Rate</h2>
-<p>The model for the 5 year rate is similar to the 1 year rate in terms of explanatory power.</p>
+<p>The model for the 5-year rate is similar to the 1-year rate in terms of explanatory power.
+The level coefficient is slightly higher than for the 1-year, and is &gt;1, which
+makes sense considering that the 5-year is generally higher than the 2-year
+spot rate used to represent the level effect. The slope is more than triple
+that of the 1-year, suggesting that an increase in the slope has a larger impact on the value of the
+5-year curve than it does on the 1-year.</p>
 
 <table>
 <caption><span id="tab:five-year-reg">Table 5.3: </span>Regression results: Five year spot</caption>
@@ -383,7 +392,9 @@ Figure 5.1: Regression in-sample realized VS predicted.
 </div>
 <div id="ten-year-spot-rate" class="section level2">
 <h2><span class="header-section-number">5.4</span> Ten Year Spot Rate</h2>
-<p>And again, the 10 year model performs well too.</p>
+<p>Finally, the 10-year model performs similarly to the 1 and 5-year models. One
+interesting thing to note about the 10-year model is that the sign on the curvature
+coefficient is opposite that of the 1 and 5-year models.</p>
 
 <table>
 <caption><span id="tab:ten-year-reg">Table 5.5: </span>Regression results: Ten year spot</caption>
@@ -451,7 +462,7 @@ Figure 5.1: Regression in-sample realized VS predicted.
 <div id="decomposing-the-spot-curve" class="section level2">
 <h2><span class="header-section-number">5.5</span> Decomposing the Spot Curve</h2>
 <p>Although not specifically asked for, it might be interesting to
-decompose and plot the spot curve at a few particular points in time. The procedure for this involved
+decompose and plot the spot curve at a few particular points in time. The procedure for this involves
 the following manipulations:</p>
 <ol style="list-style-type: decimal">
 <li>For month <code>m</code>, extract the spot rate at every available maturity for that month.</li>
@@ -470,15 +481,15 @@ gives the contribution of each factor for that month and each maturity.</li>
 
 <p>This procedure was streamlined into a single function, parameterized by the month
 to allow for easy plotting and comparison of multiple months. For example, the
-decomposed spot rate for January 2012 and January 1981 side by side is shown
+decomposed spot curve for January 2012 and January 1981 are shown side-by-side
 in Figure <a href="q2.html#fig:decomposed-spot">5.2</a>. January of 1981 was definitely an interesting time period! The spot rate is
 essentially inverted, with lower maturity bonds having higher spot rates than
 longer maturity bonds.</p>
 
 <div class="figure" style="text-align: center"><span id="fig:decomposed-spot"></span>
-<img src="final-project-book_files/figure-html/decomposed-spot-1.png" alt="Decomposed Spot Rate for January of 2012 and 1981" width="960" />
+<img src="final-project-book_files/figure-html/decomposed-spot-1.png" alt="Decomposed spot rate for January of 2012 and 1981" width="960" />
 <p class="caption">
-Figure 5.2: Decomposed Spot Rate for January of 2012 and 1981
+Figure 5.2: Decomposed spot rate for January of 2012 and 1981
 </p>
 </div>
 
@@ -487,14 +498,14 @@ Figure 5.2: Decomposed Spot Rate for January of 2012 and 1981
 <h2><span class="header-section-number">5.6</span> Coefficient Stability</h2>
 <p>Another question worth asking is how stable the coefficients are throughout time. We can test this by running the same regression as before, but with a <em>rolling window</em>. This works
 by calculating the regression <code>spot_rate ~ level + slope + curvature</code> for the
-first 100 days, then shift forward 1 day and drop the last day, calculate the
-regression again, and repeat this for the length of the series. The <code>rsample</code>
+first 100 days, then shifting forward 1 day and dropping the last day, calculating the
+regression again, and repeating this for the length of the series. The <code>rsample</code>
 package provides a number of helpers for doing analysis exactly like this. The procedure for this is:</p>
 <ol style="list-style-type: decimal">
 <li>Split the data into 14 nested groups by maturity, as done in Section <a href="q2.html#regression">5.1</a>.</li>
-<li>Further split each of the 14 groups into 359 rolling subsets using <code>rolling_origin()</code> from <code>rsample</code>.</li>
+<li>Further split each of the 14 groups into 359 rolling subsets of 100 days each using <code>rolling_origin()</code> from <code>rsample</code>.</li>
 <li>For each maturity, and for each rolling split, run the regression from <a href="q2.html#regression">5.1</a>. This results in
-5026 regressions, which on this computer can be run in parallel in ~8 seconds.</li>
+5026 regressions, which, on this 4-core computer, can be run in parallel in ~8 seconds.</li>
 </ol>
 
 
@@ -504,9 +515,10 @@ package provides a number of helpers for doing analysis exactly like this. The p
 
 <p>When the procedure has been run, a natural next step is to pick some of the 14 maturities
 and look at the stability of each coefficient over time. For example, the 1, 5, and 10 year coefficients over time
-are shown side by side in Figure <a href="q2.html#fig:coef-stability">5.3</a>. Most of the coefficients are fairly stable
-over time, with the exception of curvature. The curvature of the 1 year has begun to rise up from <code>-0.5</code> to around <code>-0.25</code> in recent years. This change over time is not refected in the <code>-0.428</code> curvature estimate we get from running the model
-over the full time period, and might offer other interesting insights. The 10 year curvature coefficient follows a similar pattern,
+are shown side-by-side in Figure <a href="q2.html#fig:coef-stability">5.3</a>. Most of the coefficients are fairly stable
+over time, with the exception of curvature. The curvature of the 1 year has begun to rise up from -0.5 to around -0.25 in recent years. This change over time is not refected in the static -0.428 curvature estimate we get from running the model
+over the full time period, and might offer other interesting insights or opportunities for trading strategies.
+The 10 year curvature coefficient follows a similar pattern,
 but the 5 year curvature follows the opposite trend, decreasing in recent years.</p>
 
 
