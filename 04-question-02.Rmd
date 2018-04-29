@@ -30,7 +30,7 @@ library(patchwork)
 ```
 
 In this question, data for the $y_t(1)$, $y_t(5)$, and $y_t(10)$ spot rates
-will be used along with the yield curve factors, $X_t$. These have been calculated in Section \@ref(spot-rates) and Section \@ref(yield-curve-factors), and the results from there are used here.
+is required along with the yield curve factors, $X_t$. These have been calculated in Section \@ref(spot-rates) and Section \@ref(yield-curve-factors), and the results from there are used here.
 
 ```{r, echo=FALSE}
 rates    <- read_rds("data/computed/rates.rds")
@@ -79,7 +79,10 @@ nested_models
 
 As seen in Table \@ref(tab:one-year-reg) and Table \@ref(tab:one-year-reg-r2), all estimates for the 1 year spot rate model are highly significant, 
 and the Adjusted $R^2$ is nearing 100%, suggesting that the model can explain
-essentially all of the variation in the spot rate.
+essentially all of the variation in the spot rate. Considering that the 
+constructed yield curve factors include $y_t(2)$ as the level effect, this
+should not be surprising as all of the series are highly correlated. 
+The very high statistic on the level coefficient supports the claim of its importance.
 
 ```{r one-year-reg, echo=FALSE, warning=FALSE}
 model_1_yr <- nested_models %>%
@@ -105,11 +108,12 @@ model_1_yr %>%
 ```
 
 A chart of the realized VS predicted time series for each model confirms how well the variation
-is explained. It is important to remember that this model is not predicting 
-future rates, and is simply used to gather intuition about past rates. Nevertheless,
+is explained, with essentailly perfect matching of the realized series. 
+It is important to remember that this model is not predicting
+out-of-sample future rates, and is simply used to gather intuition about past rates. Nevertheless,
 it is interesting to see how well the yield curve factors explain the variation.
 
-```{r spot-rate-reg-chart, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Regression in-sample realized VS predicted.", fig.subcap="All maturities essentially fit perfectly.", warning=FALSE, fig.align='center', cache=TRUE}
+```{r spot-rate-reg-chart, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="In-sample realized VS predicted spot rate series", warning=FALSE, fig.align='center', cache=TRUE}
 nested_with_predictions <- nested_models %>%
   mutate(data = map2(data, model, ~mutate(.x, predictions = predict(.y))))
   
@@ -131,7 +135,12 @@ nested_with_predictions %>%
 
 ## Five Year Spot Rate 
 
-The model for the 5 year rate is similar to the 1 year rate in terms of explanatory power.
+The model for the 5-year rate is similar to the 1-year rate in terms of explanatory power.
+The level coefficient is slightly higher than for the 1-year, and is >1, which
+makes sense considering that the 5-year is generally higher than the 2-year
+spot rate used to represent the level effect. The slope is more than triple
+that of the 1-year, suggesting that an increase in the slope has a larger impact on the value of the
+5-year curve than it does on the 1-year.
 
 ```{r five-year-reg, echo=FALSE, warning=FALSE}
 model_5_yr <- nested_models %>%
@@ -158,7 +167,9 @@ model_5_yr %>%
 
 ## Ten Year Spot Rate 
 
-And again, the 10 year model performs well too.
+Finally, the 10-year model performs similarly to the 1 and 5-year models. One
+interesting thing to note about the 10-year model is that the sign on the curvature
+coefficient is opposite that of the 1 and 5-year models.
 
 ```{r ten-year-reg, echo=FALSE, warning=FALSE}
 model_10_yr <- nested_models %>%
@@ -186,7 +197,7 @@ model_10_yr %>%
 ## Decomposing the Spot Curve
 
 Although not specifically asked for, it might be interesting to 
-decompose and plot the spot curve at a few particular points in time. The procedure for this involved
+decompose and plot the spot curve at a few particular points in time. The procedure for this involves
 the following manipulations:
 
 1) For month `m`, extract the spot rate at every available maturity for that month.
@@ -258,12 +269,12 @@ chart_decomposed_spot_rate <- function(.decomposed_spot) {
 
 This procedure was streamlined into a single function, parameterized by the month
 to allow for easy plotting and comparison of multiple months. For example, the 
-decomposed spot rate for January 2012 and January 1981 side by side is shown
+decomposed spot curve for January 2012 and January 1981 are shown side-by-side
 in Figure \@ref(fig:decomposed-spot). January of 1981 was definitely an interesting time period! The spot rate is
 essentially inverted, with lower maturity bonds having higher spot rates than
 longer maturity bonds.
 
-```{r decomposed-spot, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Decomposed Spot Rate for January of 2012 and 1981", warning=FALSE, fig.align='center', cache=TRUE}
+```{r decomposed-spot, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Decomposed spot rate for January of 2012 and 1981", warning=FALSE, fig.align='center', cache=TRUE}
 p1 <- rates %>%
   tidy_decomposed_spot_rate(nested_models, "2012-01") %>%
   mutate(line = recode(line, "spot_rate" = "Spot Rate", "level" = "Level",
@@ -287,14 +298,14 @@ p1 + p2 + plot_layout(ncol = 2)
 
 Another question worth asking is how stable the coefficients are throughout time. We can test this by running the same regression as before, but with a _rolling window_. This works
 by calculating the regression `spot_rate ~ level + slope + curvature` for the
-first 100 days, then shift forward 1 day and drop the last day, calculate the
-regression again, and repeat this for the length of the series. The `rsample`
+first 100 days, then shifting forward 1 day and dropping the last day, calculating the
+regression again, and repeating this for the length of the series. The `rsample`
 package provides a number of helpers for doing analysis exactly like this. The procedure for this is:
 
 1) Split the data into 14 nested groups by maturity, as done in Section \@ref(regression).
-2) Further split each of the 14 groups into 359 rolling subsets using `rolling_origin()` from `rsample`.
+2) Further split each of the 14 groups into 359 rolling subsets of 100 days each using `rolling_origin()` from `rsample`.
 3) For each maturity, and for each rolling split, run the regression from \@ref(regression). This results in
-5026 regressions, which on this computer can be run in parallel in ~8 seconds.
+5026 regressions, which, on this 4-core computer, can be run in parallel in ~8 seconds.
 
 ```{r, echo=FALSE}
 all_splits <- spot_rates_q2 %>%
@@ -345,9 +356,10 @@ all_splits <- all_splits %>%
 
 When the procedure has been run, a natural next step is to pick some of the 14 maturities
 and look at the stability of each coefficient over time. For example, the 1, 5, and 10 year coefficients over time
-are shown side by side in Figure \@ref(fig:coef-stability). Most of the coefficients are fairly stable
-over time, with the exception of curvature. The curvature of the 1 year has begun to rise up from `-0.5` to around `-0.25` in recent years. This change over time is not refected in the `-0.428` curvature estimate we get from running the model
-over the full time period, and might offer other interesting insights. The 10 year curvature coefficient follows a similar pattern,
+are shown side-by-side in Figure \@ref(fig:coef-stability). Most of the coefficients are fairly stable
+over time, with the exception of curvature. The curvature of the 1 year has begun to rise up from -0.5 to around -0.25 in recent years. This change over time is not refected in the static -0.428 curvature estimate we get from running the model
+over the full time period, and might offer other interesting insights or opportunities for trading strategies.
+The 10 year curvature coefficient follows a similar pattern,
 but the 5 year curvature follows the opposite trend, decreasing in recent years.
 
 ```{r, echo=FALSE}

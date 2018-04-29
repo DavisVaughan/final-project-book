@@ -11,7 +11,7 @@ biblio-style: apalike
 header-includes:
    - \usepackage{float}
 link-citations: yes
-description: "This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies."
+description: "This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies."
 ---
 
 ```{r, echo=FALSE}
@@ -26,12 +26,12 @@ knitr::opts_chunk$set("size" = "small")
 
 # Introduction {#titlepage}
 
-This is the final project of the Finn 6211 class, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.
+This is the final project of Finn 6211, with the intention of getting comfortable with spot rate data, their relation to yield curve factors, and various hedging strategies.
 
 An R package has been created to accompany the report. It contains a number of 
 helper functions for cleaning data, manipulating the time series, and creating
 the hedging strategies. The package is named `ratekit` and can be found on
-Github at [https://github.com/DavisVaughan/ratekit](https://github.com/DavisVaughan/ratekit).
+GitHub at [https://github.com/DavisVaughan/ratekit](https://github.com/DavisVaughan/ratekit).
 
 The structure of the report is as follows. Chapter 2 is dedicated to retrieving
 and cleaning the data. Chapter 3 is focused on the calculation of features used
@@ -43,7 +43,7 @@ of the attached zip file are the files used for downloading the data, cleaning i
 and creating the fixed income features. The actual analysis and answering of the 
 questions is done inside the `.Rmd` files found in the top level of the zip file.
 
-This report was written with [bookdown](https://bookdown.org/yihui/bookdown/), a
+This report was written with `[bookdown](https://bookdown.org/yihui/bookdown/)`, a
 book authoring package for R.
 
 ```{r include=FALSE}

@@ -10,24 +10,25 @@ options(tibble.print_min = 5)
 
 # Data {#data}
 
-## Getting the data {#retrieve}
+## Data Retrieval {#retrieve}
 
 The data is retrieved from the Federal Reserve website, under the discussion
 series: _The U.S. Treasury Yield Curve: 1961 to the Present_. The link for that
-site is [here](https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html).
-The specific data set downloaded was the XLS file included on that site. `ratekit` provides the 
+site is: [https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html](https://www.federalreserve.gov/pubs/feds/2006/200628/200628abs.html).
+The specific data set downloaded was the XLS file included on the site. `ratekit` provides the 
 `download_rates_xls()` helper function for this.
 
 The data was immediately opened in Excel, and resaved as an `xlsx` file.
-The format of the raw data is not a true `xls` file, rather, it is some flavor of `xml`
+The format of the raw data is not a true `xls` file, rather, it is some flavor of an `xml`
 file. This does not play nicely with R's packages for importing Excel data, so
 a resave was necessary and is done manually.
 
 ## Cleaning {#cleaning}
 
-Data is brought in using the `readxl` package and the `ratekit` helper, `read_rates()`.
-This function reads the rectangle of rates data only, and sets any `-999.99` values
-to `NA`. These are often found through the dataset, and it is assumed that they represent missing values.
+Data is brought into R using the `readxl` package and the `ratekit` helper, `read_rates()`.
+This function sets any `-999.99` values to `NA`. 
+These are often found through the dataset, especially in the parameters columns,
+and it is assumed that they represent missing values.
 
 ```{r, message=FALSE, warning=FALSE, echo=FALSE}
 library(skimr)
@@ -43,7 +44,8 @@ raw_params <- select(raw, date, contains("BETA"), contains("TAU"))
 ```
 
 The column names in the data correspond to different types and lengths of rates used in the 
-paper. The key for understanding the column names is below:
+paper, along with the names of the parameters in the model. The key for understanding the column names is
+shown in Table \@ref(tab:meta).
 
 ```{r meta, echo=FALSE}
 meta <- readRDS("data/cleaned/meta/meta.rds")
@@ -56,7 +58,11 @@ meta %>%
 
 Most of these columns are not important for this analysis. Only the parameter
 columns and the date column are kept. To further examine the missing values,
-the `skimr` package was used, producing the following report.
+the `skimr` package was used, producing the report shown below. The `TAU2` column 
+has a number of missing values (resulting from either being missing or from
+being `-999.99` values assumed to be missing). All of them occur before 1980,
+and were removed from the data set. After that removal, no missing values remain,
+and the values for the other parameters seemed to stabilize as well.
 
 ```{r par_yield_missing, echo=FALSE, results='asis'}
 params <- select(raw, date, contains("BETA"), contains("TAU"))
@@ -66,8 +72,6 @@ skim(params) %>%
   kable(booktabs = TRUE, caption = "`skimr` summary statistics for the parameters")
 ```
 
-The `TAU2` column has a number of missing values. All of them occur before 1980,
-and were removed from the data set. After that removal, no missing values remain.
 
 ## Monthly and Ascending {#monthly}
 
@@ -80,5 +84,5 @@ parameters_monthly <- parameters %>%
   as_period("monthly", side = "end")
 ```
 
-Monthly data is required for the report, but daily data is provided from the Fed.
-The data is converted to monthly using the `tibbletime` package. This leaves `r nrow(parameters_monthly)` rows of data for the project, spanning `r min(parameters_monthly$date)` to `r max(parameters_monthly$date)`.
+Monthly data is required for the report, but daily data is provided from the Federal
+Reserve data set. The data is converted to monthly (end-of-month) using the `tibbletime` package. This leaves `r nrow(parameters_monthly)` rows of data for the project, spanning `r min(parameters_monthly$date)` to `r max(parameters_monthly$date)`.

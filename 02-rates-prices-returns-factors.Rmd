@@ -12,7 +12,8 @@ options(tibble.print_min = 5)
 
 In this chapter, the construction of spot rates, zero coupon bond prices,
 excess returns, and yield factors are discussed. These features are used in
-hedging strategies and for general exploration of the data.
+hedging strategies and for general exploration of the data in Chapters 4-5,
+so only the implementation is discussed here.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
 library(readr)
@@ -24,8 +25,8 @@ library(tidyr)
 
 ## Spot Rates {#spot-rates}
 
-Spot rates series can be constructed from the 6 parameters in the cleaned dataset.
-The following formula is used to construct the spot rates. It is integrated
+Spot rates series can be constructed from the 6 parameters in the cleaned 
+Federal Reserve data set. The following formula is used to construct the spot rates. It is integrated
 form of the Svensson extension of the Nelson and Siegal approach to calculating
 instantaneous forward rates. Svensson added a second hump term to the model
 that Nelson and Siegal created. Integrating the instantaneous forward rates gives
@@ -40,19 +41,12 @@ $$
 \end{aligned}
 $$
 
-To construct this, a programming concept known as a _function factory_ was used.
-This is a specialized function that returns a function. This extends naturally
-to this use case because the outer function can accept the time series of the
-6 parameters, and the inner function that is returned is parameterized by
-`n`, corresponding to the n-year spot rate at time t. This `spot_rate_factory()`
-function lives in `ratekit`.
-
-Spot rates are examined in detail in Question 1, but the following graph provides
+Spot rates are examined in detail in Chapter \@ref(q1), but Figure \@ref(fig:spot-rate-time-series) provides
 a quick look at the major ones. As expected, longer maturity spot rates are consistently
 higher than short term spot rates. The 1980's were a time of incredibly high
 interest rates, and in recent years rates have been incredibly low.
 
-```{r, fig.cap="Spot rates at various maturities from 1980 onward.", fig.align='center', echo=FALSE, fig.width=10, fig.pos = 'H', cache=TRUE}
+```{r spot-rate-time-series, fig.cap="Spot rates at various maturities from 1980 onward.", fig.align='center', echo=FALSE, fig.width=10, fig.pos = 'H', cache=TRUE}
 spot_rates <- read_rds("data/computed/rates.rds")
 
 spot_rates %>%
@@ -64,21 +58,18 @@ spot_rates %>%
   theme_minimal()
 ```
 
-## Zero Coupon Bond Prices
+## Zero Coupon Bond Prices {#zero-prices}
 
 N-year zero coupon bond prices can be calculated easily from their corresponding
-spot rates. The following formula is used to represent the relationship between the two.
+spot rates. The following formula is used to represent the relationship between the two series.
 
 $$ P_t(n) = \exp(-y_t(n) \times n) $$
 
-Similar to spot rates, a function factory named `zero_bond_price_factory()` was constructed that accepted the spot rate function, and returned a function that calculates a vector of bond
-prices parameterized by `n`.
-
-Zero prices naturally exhibit an inverse relationship to spot rates. The impact of the
-high interest rates in the 1980's can be seen clearly here, with a large price spread
+Zero prices, by design, exhibit an inverse relationship to spot rates. The impact of the
+high interest rates in the 1980's can be seen clearly in Figure \@ref(fig:zero-prices-time-series), with a large price spread
 between the short and long term maturity zeroes.
 
-```{r, fig.cap="Zero prices at various maturities from 1980 onward.", fig.align='center', echo=FALSE, fig.width=10, fig.pos = 'H', cache=TRUE}
+```{r zero-prices-time-series, fig.cap="Zero prices at various maturities from 1980 onward.", fig.align='center', echo=FALSE, fig.width=10, fig.pos = 'H', cache=TRUE}
 zero_prices <- read_rds("data/computed/prices.rds")
 
 zero_prices %>%
@@ -92,15 +83,16 @@ zero_prices %>%
 
 ## One Month Returns
 
-The time $t+\Delta$ return on an n-year bond is:
+The time $t+\Delta$ return on an n-year bond is defined as:
 
 $$ RET_{t+\Delta}(n) = \frac{P_{t+\Delta}(n - \Delta)}{P_t(n)} - 1 $$
 
-Using the zero bond prices from the previous section, it is straightforward to calculate returns. Care must be taken to align the price from next month's $n-\Delta$ maturity bond with today's $n$ maturity bond, but otherwise the procedure is simple.
+Using the zero coupon bond prices from Section \@ref(zero-prices), it is straightforward to calculate returns. Care must be taken to align the price from next month's $n-\Delta$ maturity bond with today's $n$ maturity bond, but otherwise the procedure is simple.
 
-The distribution of returns is shown in Figure \@ref(fig:returns-dist). As seen in both the figure
+The distribution of 1-month ($\Delta = 1/12$) returns is shown in Figure \@ref(fig:returns-dist). As seen in both the figure
 and Table \@ref(tab:returns-summary), higher maturity zeros have both larger average returns and
-more variance.
+more variance. In general, this is unsurprising, and the drop in standard deviation
+is roughly linear as the maturity decreases.
 
 ```{r returns-dist, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Return distributions for various maturities.", warning=FALSE, fig.align='center', cache=TRUE}
 returns <- read_rds("data/computed/returns.rds")
@@ -135,14 +127,12 @@ $$ ER_{t+\Delta}(n) = RET_{t+\Delta}(n) - RET_{t+\Delta}(\Delta) $$
 
 with $\Delta = 1 / 12$. Excess returns are only calculated for $n = 1, 3, 5, 7, \text{and } 10$ year zeros.
 
-The implementation of this is easy since returns for all maturities have already been calculated.
-The only potentially tricky thing to remember when calculating $RET_{t+\Delta}(\Delta)$ is that $P_{t+\Delta}(n-\Delta) = 1$.
-
-Excess returns show a similar distribution as returns, just shifted downwards by the 1 month treasury return.
+The implementation of this is straightforward since returns for all maturities have already been calculated. 
+Excess returns show a similar distribution as returns, just shifted downwards by the 1-month treasury return.
 
 ## Yield Curve Factors {#yield-curve-factors}
 
-Finally, the yield curve factors: level, slope, and curvature are calculated as:
+Finally, the yield curve factors, level, slope, and curvature are calculated as:
 
 $$
 \begin{aligned}
@@ -155,7 +145,7 @@ As seen in Figure \@ref(fig:yield-factors), the raw values of the yield curve fa
 do not offer much insight on their own, but they will be useful later in decomposing
 the spot rate and in multiplicative regression hedging.
 
-```{r yield-factors, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Yield Curve Factors over time", warning=FALSE, fig.align='center', cache=TRUE}
+```{r yield-factors, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Yield curve factors over time.", warning=FALSE, fig.align='center', cache=TRUE}
 # From ?toupper examples
 capwords <- function(s, strict = FALSE) {
     cap <- function(s) paste(toupper(substring(s, 1, 1)),

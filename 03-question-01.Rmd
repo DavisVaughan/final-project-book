@@ -25,7 +25,7 @@ library(purrr)
 ```
 
 In this question, data for the $y_t(1)$, $y_t(5)$, and $y_t(10)$ spot rates
-will be used. This has been calculated in Section \@ref(spot-rates), and the
+is required. This has been calculated in Section \@ref(spot-rates), and the
 results from there are used here.
 
 ```{r, echo=FALSE}
@@ -39,6 +39,15 @@ spot_rates_q1 <- rates %>%
 ## Summary Statistics
 
 Reported in Table \@ref(tab:spot-rate-summary) are summary statistics on the three spot rate series.
+Unsurprisingly, the average spot rate increases with the maturity, but interestingly,
+the shorter maturity spot rates have higher volatility. The kurtosis of all three
+are less than that of a normal distribution, but the 1-year maturity is very close.
+All three are right-skewed, with longer right tails, which makes sense considering 
+extremely high interest rate periods do happen, but are rare. The histograms
+in Figure \@ref(fig:spot-rate-hist) are a nice visual confirmation of the 
+results in the table. The skewness is clear, and the higher standard deviation
+for lower maturities might be attributed to the higher density at the extreme
+tails.
 
 ```{r spot-rate-summary, echo=FALSE, warning=FALSE}
 spot_rates_q1 %>%
@@ -64,20 +73,13 @@ spot_rates_q1 %>%
   labs(x = "Spot Rate", y = "Count")
 ```
 
-Unsurprisingly, the average spot rate increases with the maturity, but interestingly,
-the shorter maturity spot rates have higher volatility. The kurtosis of all three
-are less than that of a normal distribution, but the 1 year maturity is very close.
-All three are right-skewed, with longer right tails, which makes sense considering 
-extremely high interest rate periods do happen, but are rare. The histograms
-in Figure \@ref(fig:spot-rate-hist) are a nice visual confirmation of the 
-results in the table. The skewness is clear, and the higher standard deviation
-for lower maturities might be attributed to the higher density at the extreme
-tails.
-
 ## Autocorrelations
 
-The first four autocorrelation correlation coefficients of the 3 series are 
-reported in Table \@ref(tab:acf-table), along with a plot of the ACF for the series in Figure \@ref(fig:acf-chart). Each of the series are highly autocorrelated.
+The first four autocorrelation coefficients of the 3 series are 
+reported in Table \@ref(tab:acf-table), along with a plot of the ACF for the entire series in Figure \@ref(fig:acf-chart). 
+Each of the series are highly autocorrelated, with autocorrelation above 0.6 out past
+the 25th lag. By looking at the entire ACF, one can note that the amount of and persistance of autocorrelation increases
+in maturity.
 
 ```{r acf-table, echo=FALSE, warning=FALSE}
 acf_coef <- spot_rates_q1 %>%
@@ -100,9 +102,6 @@ acf_coef_1_to_4 %>%
   kableExtra::kable_styling(position = "center", latex_options = "HOLD_position")
 ```
 
-By looking at the entire ACF, we can see that the amount of autocorrelation increases
-in maturity. At farther out lags, 1 is less autocorrelated than 5 and 5 less than 10.
-
 ```{r acf-chart, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="ACF for the 1, 5, and 10 year spot rates", warning=FALSE, fig.align='center', cache=TRUE}
 acf_coef %>%
   mutate(maturity = as.factor(maturity)) %>%
@@ -115,9 +114,10 @@ acf_coef %>%
 
 ## Correlations
 
-Moving on to correlations, it is clear that the the series are _highly_ 
-correlated. This should not be surprising whatsoever. Intuitively, the 1 year
-is more correlated with the 5 year than with the 10 year.
+Correlations between the 1, 5, and 10 year spot rates are reported in Table \@ref(tab:correlations).
+It is clear that the the series are _highly_ correlated. This should not be surprising whatsoever. 
+Intuitively, the 1 year is more correlated with the 5 year than with the 10 year, 
+but the overall correlations are so high that this likely has no significant meaning.
 
 ```{r correlations, warning=FALSE, echo=FALSE}
 spot_rates_q1 %>%

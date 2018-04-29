@@ -10,15 +10,16 @@ options(tibble.print_min = 5)
 
 # Conclusion {#conclusion}
 
-In this project, spot rates from the Fed were analyzed along with their corresponding 
+In this project, spot rates from the Federal Reserve were analyzed along with their corresponding 
 zero prices and returns over time. In addition, multiple hedging models
 were implemented and analyzed. The simple regression hedging model outperformed the
 two duration models, and was on par with the much more complicated multiplicative
-regression model.
+regression model. This leads me to conclude that the simple regression model
+is the most useful out of the four.
 
 I was particularly impressed with how well the yield curve factors explained the variation
-in the rates for other maturities. Apparently, using linear combinations of cetain
-maturity spot rates creates powerful explanatory variables for other maturities.
+in the rates for other maturities. Using linear combinations of certain
+maturity spot rates seems to create powerful explanatory variables for other maturities.
 
 Further research could be done by including transactions costs in hedging performance
 calculations. This would likely penalize the multiplicative regression even further.
