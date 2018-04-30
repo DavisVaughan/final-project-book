@@ -298,7 +298,7 @@ p1 + p2 + plot_layout(ncol = 2)
 
 Another question worth asking is how stable the coefficients are throughout time. We can test this by running the same regression as before, but with a _rolling window_. This works
 by calculating the regression `spot_rate ~ level + slope + curvature` for the
-first 100 days, then shifting forward 1 day and dropping the last day, calculating the
+first 100 months, then shifting forward 1 month and dropping the last day, calculating the
 regression again, and repeating this for the length of the series. The `rsample`
 package provides a number of helpers for doing analysis exactly like this. The procedure for this is:
 
@@ -382,7 +382,7 @@ plot_coef_stability <- function(.x, .maturity) {
 }
 ```
 
-```{r coef-stability, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Coefficient stability for 1, 5, and 10 year spot rates. 100 day rolling window.", warning=FALSE, fig.align='center', fig.height=8, cache=TRUE}
+```{r coef-stability, fig.width=10, echo=FALSE, fig.pos = 'H', fig.cap="Coefficient stability for 1, 5, and 10 year spot rates. 100 month rolling window.", warning=FALSE, fig.align='center', fig.height=8, cache=TRUE}
 
 coef_p1 <- plot_coef_stability(all_splits, 1) + labs(title = "One Year Coefficients")
 coef_p2 <- plot_coef_stability(all_splits, 5) + labs(title = "Five Year Coefficients", y = "")
