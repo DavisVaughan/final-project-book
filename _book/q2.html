@@ -25,7 +25,7 @@
 <meta name="author" content="mvaugh15@uncc.edu">
 
 
-<meta name="date" content="2018-04-29">
+<meta name="date" content="2018-04-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -498,7 +498,7 @@ Figure 5.2: Decomposed spot rate for January of 2012 and 1981
 <h2><span class="header-section-number">5.6</span> Coefficient Stability</h2>
 <p>Another question worth asking is how stable the coefficients are throughout time. We can test this by running the same regression as before, but with a <em>rolling window</em>. This works
 by calculating the regression <code>spot_rate ~ level + slope + curvature</code> for the
-first 100 days, then shifting forward 1 day and dropping the last day, calculating the
+first 100 months, then shifting forward 1 month and dropping the last day, calculating the
 regression again, and repeating this for the length of the series. The <code>rsample</code>
 package provides a number of helpers for doing analysis exactly like this. The procedure for this is:</p>
 <ol style="list-style-type: decimal">
@@ -524,9 +524,9 @@ but the 5 year curvature follows the opposite trend, decreasing in recent years.
 
 
 <div class="figure" style="text-align: center"><span id="fig:coef-stability"></span>
-<img src="final-project-book_files/figure-html/coef-stability-1.png" alt="Coefficient stability for 1, 5, and 10 year spot rates. 100 day rolling window." width="960" />
+<img src="final-project-book_files/figure-html/coef-stability-1.png" alt="Coefficient stability for 1, 5, and 10 year spot rates. 100 month rolling window." width="960" />
 <p class="caption">
-Figure 5.3: Coefficient stability for 1, 5, and 10 year spot rates. 100 day rolling window.
+Figure 5.3: Coefficient stability for 1, 5, and 10 year spot rates. 100 month rolling window.
 </p>
 </div>
 

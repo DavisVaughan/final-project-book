@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2018-04-29}
+    \date{2018-04-30}
 
 \usepackage{booktabs}
 \usepackage{float}
@@ -961,7 +961,7 @@ throughout time. We can test this by running the same regression as
 before, but with a \emph{rolling window}. This works by calculating the
 regression
 \texttt{spot\_rate\ \textasciitilde{}\ level\ +\ slope\ +\ curvature}
-for the first 100 days, then shifting forward 1 day and dropping the
+for the first 100 months, then shifting forward 1 month and dropping the
 last day, calculating the regression again, and repeating this for the
 length of the series. The \texttt{rsample} package provides a number of
 helpers for doing analysis exactly like this. The procedure for this is:
@@ -1018,7 +1018,7 @@ trend, decreasing in recent years.
 
 }
 
-\caption{Coefficient stability for 1, 5, and 10 year spot rates. 100 day rolling window.}\label{fig:coef-stability}
+\caption{Coefficient stability for 1, 5, and 10 year spot rates. 100 month rolling window.}\label{fig:coef-stability}
 \end{figure}
 
 \normalsize
