@@ -47,7 +47,7 @@ The column names in the data correspond to different types and lengths of rates 
 paper, along with the names of the parameters in the model. The key for understanding the column names is
 shown in Table \@ref(tab:meta).
 
-```{r meta, echo=FALSE}
+```{r meta, echo=FALSE, warning=FALSE}
 meta <- readRDS("data/cleaned/meta/meta.rds")
 
 meta %>%

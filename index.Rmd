@@ -45,7 +45,7 @@ of the attached zip file are the files used for downloading the data, cleaning i
 and creating the fixed income features. The actual analysis and answering of the 
 questions is done inside the `.Rmd` files found in the top level of the zip file.
 
-This report was written with `[bookdown](https://bookdown.org/yihui/bookdown/)`, a
+This report was written with [bookdown](https://bookdown.org/yihui/bookdown/), a
 book authoring package for R.
 
 ```{r include=FALSE}
